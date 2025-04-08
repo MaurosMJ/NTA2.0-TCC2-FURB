@@ -8,9 +8,14 @@ package UI;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Image;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JFormattedTextField;
 import javax.swing.UIManager;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -179,6 +184,20 @@ public class LoginForm extends javax.swing.JFrame {
 
     private void setScaledImage(javax.swing.JLabel label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
+    }
+    
+    private void inicializaFTF(){
+        // Máscara: dd/MM/yyyy HH:mm:ss
+        MaskFormatter dateMask = null;
+        try {
+            dateMask = new MaskFormatter("##/##/#### ##:##:##");
+        } catch (ParseException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dateMask.setPlaceholderCharacter('_');
+
+        JFormattedTextField dateTimeField = new JFormattedTextField(dateMask);
+        dateTimeField.setColumns(20);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

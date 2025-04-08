@@ -5,18 +5,24 @@
  */
 package Utils;
 
+import Entities.LogOccurrence;
 import Enum.LogLevel;
 import UserConfig.UserProperties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *
  * @author Mauros
  */
 public class HostConfig {
+
+    private static DateTimeFormatter formatterDTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static SimpleDateFormat formatterSDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public static String obterSistemaOperacional() {
         String os = System.getProperty("os.name").toLowerCase();
@@ -45,9 +51,12 @@ public class HostConfig {
         }
     }
 
+    public static Date obterDataAtual() {
+        return new Date();
+    }
+
     public static String getDataHoraAtual() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.now().format(formatter);
+        return LocalDateTime.now().format(formatterDTF);
     }
 
     public static String getLogFormat(LogLevel nivel, String mensagem) {
@@ -60,6 +69,21 @@ public class HostConfig {
                     obterNomeUsuario(),
                     obterSistemaOperacional(),
                     mensagem);
+        } else {
+            return "";
+        }
+    }
+
+    public static String getLogFormatFromLogOccurrence(LogOccurrence log) {
+
+        if (permitirLogGeracao(log.getSeverity())) {
+            return String.format("[%s] [%s] [%s] [%s] [%s] %s",
+                    formatterSDF.format(log.getOccurrence()),
+                    log.getSeverity(),
+                    log.getHost(),
+                    log.getUser(),
+                    log.getSystem(),
+                    log.getData());
         } else {
             return "";
         }

@@ -84,6 +84,7 @@ public class MainApplication extends javax.swing.JFrame {
         errorL1 = new javax.swing.JLabel();
         warningL = new javax.swing.JLabel();
         fineL = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
 
@@ -321,6 +322,9 @@ public class MainApplication extends javax.swing.JFrame {
             }
         });
         getContentPane().add(fineL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 690, 150, 70));
+
+        jLabel1.setText("TCC2 de Mauros Milach");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, -1, -1));
 
         jMenu1.setText("Sobre");
         jMenuBar1.add(jMenu1);
@@ -641,6 +645,7 @@ public class MainApplication extends javax.swing.JFrame {
     private javax.swing.JLabel hostL;
     private javax.swing.JLabel hostsLogoL;
     private javax.swing.JLabel httpLogoL;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JLabel mailLogoL;

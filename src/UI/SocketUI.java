@@ -5,9 +5,12 @@
  */
 package UI;
 
+import Entities.LogOccurrence;
 import Enum.LogLevel;
+import UserConfig.UserProperties;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
+import static Utils.HostConfig.permitirLogGeracao;
 import Utils.RoundedBorder;
 import java.awt.Color;
 import java.awt.Image;
@@ -18,18 +21,27 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.swing.BorderFactory;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
  * @author Mauros
  */
 public class SocketUI extends javax.swing.JFrame {
+
+    private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
 
     /**
      * Creates new form SocketUI
@@ -41,7 +53,7 @@ public class SocketUI extends javax.swing.JFrame {
         addLog(LogLevel.INFO, "Inicializando componentes");
         setLayout(null);
         this.initImg();
-
+        inicializaFTF();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -70,7 +82,6 @@ public class SocketUI extends javax.swing.JFrame {
     private void initComponents() {
 
         systemL = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
         remoteHostL = new javax.swing.JLabel();
         rHostPortTF = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -82,7 +93,6 @@ public class SocketUI extends javax.swing.JFrame {
         addMonitoringL = new javax.swing.JLabel();
         RecycleBinL = new javax.swing.JLabel();
         playL = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
         homeL = new javax.swing.JLabel();
         fundoHomeL = new javax.swing.JLabel();
         fundoPlayL = new javax.swing.JLabel();
@@ -97,21 +107,34 @@ public class SocketUI extends javax.swing.JFrame {
         exportB = new javax.swing.JButton();
         editTB = new javax.swing.JToggleButton();
         openDocumentB = new javax.swing.JButton();
+        levelSL = new javax.swing.JSlider();
+        dataCHB = new javax.swing.JCheckBox();
+        dataFinalFTF = new javax.swing.JFormattedTextField();
+        deL = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        dataInicialFTF = new javax.swing.JFormattedTextField();
+        filtrarB = new javax.swing.JButton();
+        levelL = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        fundoFiltroL = new javax.swing.JLabel();
+        fundoToolbarL = new javax.swing.JLabel();
+        fundoConsoleLogL = new javax.swing.JLabel();
+        fundoControleL = new javax.swing.JLabel();
+        fundoUIL = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NTA - Configuração de monitoramento (Socket)");
-        setMaximumSize(new java.awt.Dimension(580, 670));
-        setMinimumSize(new java.awt.Dimension(580, 670));
-        setPreferredSize(new java.awt.Dimension(580, 670));
+        setMaximumSize(new java.awt.Dimension(650, 760));
+        setMinimumSize(new java.awt.Dimension(650, 760));
+        setPreferredSize(new java.awt.Dimension(650, 760));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         systemL.setText("jLabel1");
-        getContentPane().add(systemL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 60, 80, 80));
-        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 580, 10));
+        getContentPane().add(systemL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 80, 80));
 
         remoteHostL.setText("jLabel1");
-        getContentPane().add(remoteHostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, 190, 170));
+        getContentPane().add(remoteHostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 190, 170));
 
         rHostPortTF.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -136,10 +159,10 @@ public class SocketUI extends javax.swing.JFrame {
                 rHostPortTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 220, 200, -1));
+        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, 90, -1));
 
         jLabel1.setText("Porta");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 200, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 200, -1, -1));
 
         rHostTF.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -164,10 +187,10 @@ public class SocketUI extends javax.swing.JFrame {
                 rHostTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 200, -1));
+        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 280, -1));
 
         jLabel2.setText("Servidor Remoto");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
 
         areaFocoRHost.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -177,11 +200,12 @@ public class SocketUI extends javax.swing.JFrame {
                 areaFocoRHostMouseExited(evt);
             }
         });
-        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 580, 100));
-        getContentPane().add(remoteHostFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 30, 220, 110));
+        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 610, 70));
+        getContentPane().add(remoteHostFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 220, 110));
 
+        nomeRHost.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nomeRHost.setText(" ");
-        getContentPane().add(nomeRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 13, 90, -1));
+        getContentPane().add(nomeRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, 220, -1));
 
         addMonitoringL.setText("jLabel3");
         addMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -192,7 +216,7 @@ public class SocketUI extends javax.swing.JFrame {
                 addMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 300, 80, 60));
+        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 60, 50));
 
         RecycleBinL.setText("jLabel3");
         RecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -206,14 +230,13 @@ public class SocketUI extends javax.swing.JFrame {
                 RecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 300, 80, 60));
+        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(355, 295, 60, 50));
 
         playL.setText("jLabel3");
-        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 310, 50, 40));
-        getContentPane().add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 580, 10));
+        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(85, 300, 40, 40));
 
         homeL.setText("jLabel3");
-        getContentPane().add(homeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(465, 305, 70, 50));
+        getContentPane().add(homeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 300, 50, 40));
 
         fundoHomeL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -226,7 +249,7 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoHomeLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoHomeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 290, 120, 80));
+        getContentPane().add(fundoHomeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 290, 90, 60));
 
         fundoPlayL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -239,7 +262,7 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoPlayLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 120, 80));
+        getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 90, 60));
 
         fundoAddMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -249,7 +272,7 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoAddMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoAddMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 290, 120, 80));
+        getContentPane().add(fundoAddMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 90, 60));
 
         fundoRecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -262,8 +285,8 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoRecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoRecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 290, 120, 80));
-        getContentPane().add(LoadingLineLeftL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 300, 40));
+        getContentPane().add(fundoRecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 90, 60));
+        getContentPane().add(LoadingLineLeftL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 300, 40));
 
         logTA.setEditable(false);
         logTA.setColumns(20);
@@ -273,8 +296,8 @@ public class SocketUI extends javax.swing.JFrame {
         logTA.setWrapStyleWord(true);
         jScrollPane1.setViewportView(logTA);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 390, 480, 220));
-        getContentPane().add(LoadingLineRightL, new org.netbeans.lib.awtextra.AbsoluteConstraints(165, 70, 300, 40));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 440, 470, 250));
+        getContentPane().add(LoadingLineRightL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 230, 40));
 
         copyB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/eraser.png"))); // NOI18N
         copyB.addActionListener(new java.awt.event.ActionListener() {
@@ -282,35 +305,98 @@ public class SocketUI extends javax.swing.JFrame {
                 copyBActionPerformed(evt);
             }
         });
-        getContentPane().add(copyB, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, 50, 40));
+        getContentPane().add(copyB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 450, 50, 40));
 
         eraserB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eraserBActionPerformed(evt);
             }
         });
-        getContentPane().add(eraserB, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 430, 50, 40));
+        getContentPane().add(eraserB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 500, 50, 40));
 
         exportB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportBActionPerformed(evt);
             }
         });
-        getContentPane().add(exportB, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 480, 50, 40));
+        getContentPane().add(exportB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, 50, 40));
 
         editTB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editTBActionPerformed(evt);
             }
         });
-        getContentPane().add(editTB, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 580, 50, 40));
+        getContentPane().add(editTB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 640, 50, 40));
 
         openDocumentB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openDocumentBActionPerformed(evt);
             }
         });
-        getContentPane().add(openDocumentB, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 530, 50, 40));
+        getContentPane().add(openDocumentB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 50, 40));
+
+        levelSL.setMaximum(5);
+        levelSL.setPaintLabels(true);
+        levelSL.setPaintTicks(true);
+        levelSL.setSnapToTicks(true);
+        levelSL.setToolTipText("");
+        levelSL.setValue(0);
+        levelSL.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                levelSLStateChanged(evt);
+            }
+        });
+        getContentPane().add(levelSL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 160, 20));
+
+        dataCHB.setText("Considerar datas");
+        dataCHB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dataCHBActionPerformed(evt);
+            }
+        });
+        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 365, -1, -1));
+
+        dataFinalFTF.setText("jFormattedTextField1");
+        dataFinalFTF.setEnabled(false);
+        getContentPane().add(dataFinalFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 400, 140, -1));
+
+        deL.setText("De");
+        getContentPane().add(deL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 370, -1, -1));
+
+        jLabel3.setText("Até");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 400, -1, -1));
+
+        dataInicialFTF.setText("jFormattedTextField1");
+        dataInicialFTF.setEnabled(false);
+        getContentPane().add(dataInicialFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 370, 140, -1));
+
+        filtrarB.setText("Filtrar");
+        filtrarB.setEnabled(false);
+        filtrarB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrarBActionPerformed(evt);
+            }
+        });
+        getContentPane().add(filtrarB, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 370, -1, 50));
+
+        levelL.setText("Level: Debug");
+        getContentPane().add(levelL, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 390, 110, -1));
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, 10, 50));
+
+        fundoFiltroL.setText(".");
+        getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 550, 70));
+
+        fundoToolbarL.setText(".");
+        getContentPane().add(fundoToolbarL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 440, 70, 250));
+
+        fundoConsoleLogL.setText(".");
+        getContentPane().add(fundoConsoleLogL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 590, 440));
+
+        fundoControleL.setText(".");
+        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 590, 70));
+        getContentPane().add(fundoUIL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 450, 150));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -322,17 +408,6 @@ public class SocketUI extends javax.swing.JFrame {
     private void rHostTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rHostTFActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rHostTFActionPerformed
-
-    private void areaFocoRHostMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaFocoRHostMouseEntered
-        // TODO add your handling code here:
-        // remoteHostFundo.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-        remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 20 = quão arredondado fica
-    }//GEN-LAST:event_areaFocoRHostMouseEntered
-
-    private void areaFocoRHostMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaFocoRHostMouseExited
-        // TODO add your handling code here:
-        remoteHostFundo.setBorder(new RoundedBorder(Color.GRAY, 1, 20));
-    }//GEN-LAST:event_areaFocoRHostMouseExited
 
     private void rHostTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rHostTFMouseEntered
         // TODO add your handling code here:
@@ -406,7 +481,7 @@ public class SocketUI extends javax.swing.JFrame {
 
     private void RecycleBinLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RecycleBinLMouseExited
         // TODO add your handling code here:
-        //      fundoRecycleBinL.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1)); 
+        fundoRecycleBinL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
     }//GEN-LAST:event_RecycleBinLMouseExited
 
     private void fundoAddMonitoringLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoAddMonitoringLMouseEntered
@@ -540,36 +615,96 @@ public class SocketUI extends javax.swing.JFrame {
 
     private void openDocumentBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDocumentBActionPerformed
         // TODO add your handling code here:
-            String conteudoLog = logTA.getText();
+        String conteudoLog = logTA.getText();
 
-    try {
-        // Cria arquivo temporário
-        File tempFile = File.createTempFile("log_temp_", ".txt");
-        tempFile.deleteOnExit(); // apaga ao fechar app
+        try {
+            // Cria arquivo temporário
+            File tempFile = File.createTempFile("log_temp_", ".txt");
+            tempFile.deleteOnExit(); // apaga ao fechar app
 
-        // Escreve o conteúdo no arquivo
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-            writer.write(conteudoLog);
+            // Escreve o conteúdo no arquivo
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+                writer.write(conteudoLog);
+            }
+
+            String os = HostConfig.obterSistemaOperacional();
+
+            // Comando para abrir o arquivo dependendo do SO
+            if (os.equals("Windows")) {
+                Runtime.getRuntime().exec(new String[]{"notepad.exe", tempFile.getAbsolutePath()});
+                addLog(LogLevel.DEBUG, "Encaminhado o log para o notepad.");
+            } else if (os.equals("Mac")) {
+                Runtime.getRuntime().exec(new String[]{"open", tempFile.getAbsolutePath()});
+                addLog(LogLevel.DEBUG, "Encaminhado o log para o editor de textos.");
+            } else if (os.equals("Linux")) {
+                Runtime.getRuntime().exec(new String[]{"xdg-open", tempFile.getAbsolutePath()});
+                addLog(LogLevel.DEBUG, "Encaminhado o log para o editor de textos..");
+            } else {
+                JOptionPane.showMessageDialog(this, "Sistema operacional não suportado para abrir o editor de texto.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao abrir o editor de texto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
-        String os = HostConfig.obterSistemaOperacional();
-
-        // Comando para abrir o arquivo dependendo do SO
-        if (os.equals("Windows")) {
-            Runtime.getRuntime().exec(new String[]{"notepad.exe", tempFile.getAbsolutePath()});
-        } else if (os.equals("Mac")) {
-            Runtime.getRuntime().exec(new String[]{"open", tempFile.getAbsolutePath()});
-        } else if (os.equals("Linux")) {
-            Runtime.getRuntime().exec(new String[]{"xdg-open", tempFile.getAbsolutePath()});
-        } else {
-            JOptionPane.showMessageDialog(this, "Sistema operacional não suportado para abrir o editor de texto.", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-
-    } catch (IOException ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Erro ao abrir o editor de texto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_openDocumentBActionPerformed
+
+    private void dataCHBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataCHBActionPerformed
+        // TODO add your handling code here:
+
+        if (dataCHB.isSelected()) {
+            dataInicialFTF.setEnabled(true);
+            dataFinalFTF.setEnabled(true);
+            filtrarB.setEnabled(true);
+        } else {
+            dataInicialFTF.setEnabled(false);
+            dataFinalFTF.setEnabled(false);
+            filtrarB.setEnabled(false);
+        }
+    }//GEN-LAST:event_dataCHBActionPerformed
+
+    private void levelSLStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_levelSLStateChanged
+        // TODO add your handling code here:
+        System.out.println(levelSL.getValue());
+        switch (levelSL.getValue()) {
+            case 1:
+                levelL.setText("Level: Fine");
+                break;
+            case 2:
+                levelL.setText("Level: Info");
+                break;
+            case 3:
+                levelL.setText("Level: Warning");
+                break;
+            case 4:
+                levelL.setText("Level: Error");
+                break;
+            case 5:
+                levelL.setText("Level: Severe");
+                break;
+            // ...
+            default:
+                levelL.setText("Level: Debug");
+        }
+        filterDisplayResults();
+
+    }//GEN-LAST:event_levelSLStateChanged
+
+    private void areaFocoRHostMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaFocoRHostMouseExited
+        // TODO add your handling code here:
+        remoteHostFundo.setBorder(new RoundedBorder(Color.GRAY, 1, 20));
+    }//GEN-LAST:event_areaFocoRHostMouseExited
+
+    private void areaFocoRHostMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_areaFocoRHostMouseEntered
+        // TODO add your handling code here:
+        // remoteHostFundo.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+        remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 20 = quão arredondado fica
+    }//GEN-LAST:event_areaFocoRHostMouseEntered
+
+    private void filtrarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarBActionPerformed
+        // TODO add your handling code here:
+        filterDisplayResults();
+    }//GEN-LAST:event_filtrarBActionPerformed
 
     /**
      * @param args the command line arguments
@@ -602,6 +737,11 @@ public class SocketUI extends javax.swing.JFrame {
         fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoRecycleBinL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoHomeL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoFiltroL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoToolbarL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoConsoleLogL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
+        fundoControleL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
+        fundoUIL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
 
         Image systemLogo;
         switch (HostConfig.obterSistemaOperacional()) {
@@ -648,11 +788,6 @@ public class SocketUI extends javax.swing.JFrame {
         setScaledImage(LoadingLineLeftL, LoadingLineRightIcon);
         setScaledImage(LoadingLineRightL, LoadingLineLeftIcon);
 
-        setScaledImage(LoadingLineLeftL, exportFileIcon);
-        setScaledImage(LoadingLineRightL, eraserIcon);
-        setScaledImage(LoadingLineLeftL, copyIcon);
-        setScaledImage(LoadingLineRightL, editorIcon);
-
         setScaledImage(exportB, exportFileIcon);
         setScaledImage(eraserB, eraserIcon);
         setScaledImage(copyB, copyIcon);
@@ -662,6 +797,46 @@ public class SocketUI extends javax.swing.JFrame {
 
     private void addLog(LogLevel level, String input) {
         logTA.setText(logTA.getText() + "\n" + getLogFormat(level, input));
+        addToArray(input, level);
+    }
+
+    private void addToArray(String input, LogLevel level) {
+
+        LogOccurrence log = new LogOccurrence(input, level);
+        this.LogArray.add(log);
+    }
+
+    private void filterDisplayResults() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // <-- Aqui está o ajuste
+        logTA.setText("ConsoleLog:");
+
+        if (dataCHB.isSelected()) {
+            try {
+                Date dataInicial = sdf.parse(dataInicialFTF.getText());
+                Date dataFinal = sdf.parse(dataFinalFTF.getText());
+
+                for (LogOccurrence log : LogArray) {
+                    if (permitirLogGeracao(log.getSeverity())) {
+                        Date dataLog = log.getOccurrence();
+                        if (dataLog != null && !dataLog.before(dataInicial) && !dataLog.after(dataFinal)) {
+                            logTA.setText(logTA.getText() + "\n" + HostConfig.getLogFormatFromLogOccurrence(log));
+                        }
+                    }
+                }
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha corretamente as datas nos campos!", "Data inválida", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            for (LogOccurrence log : LogArray) {
+                if (permitirLogGeracao(log.getSeverity())) {
+                    logTA.setText(logTA.getText() + "\n" + HostConfig.getLogFormatFromLogOccurrence(log));
+                }
+            }
+        }
+    }
+
+    public boolean permitirLogGeracao(LogLevel nivelGerado) {
+        return nivelGerado.getPrioridade() >= (levelSL.getValue() + 1);
     }
 
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
@@ -712,6 +887,25 @@ public class SocketUI extends javax.swing.JFrame {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
 
+    private void inicializaFTF() {
+        // Máscara: dd/MM/yyyy HH:mm:ss
+        MaskFormatter dateMask = null;
+
+        try {
+            dateMask = new MaskFormatter("##/##/#### ##:##:##");
+        } catch (ParseException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        dateMask.setPlaceholderCharacter('_');
+
+        dataInicialFTF.setColumns(20);
+        dataInicialFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
+        dataFinalFTF.setColumns(20);
+        dataFinalFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel LoadingLineLeftL;
     private javax.swing.JLabel LoadingLineRightL;
@@ -719,19 +913,31 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel addMonitoringL;
     private javax.swing.JLabel areaFocoRHost;
     private javax.swing.JButton copyB;
+    private javax.swing.JCheckBox dataCHB;
+    private javax.swing.JFormattedTextField dataFinalFTF;
+    private javax.swing.JFormattedTextField dataInicialFTF;
+    private javax.swing.JLabel deL;
     private javax.swing.JToggleButton editTB;
     private javax.swing.JButton eraserB;
     private javax.swing.JButton exportB;
+    private javax.swing.JButton filtrarB;
     private javax.swing.JLabel fundoAddMonitoringL;
+    private javax.swing.JLabel fundoConsoleLogL;
+    private javax.swing.JLabel fundoControleL;
+    private javax.swing.JLabel fundoFiltroL;
     private javax.swing.JLabel fundoHomeL;
     private javax.swing.JLabel fundoPlayL;
     private javax.swing.JLabel fundoRecycleBinL;
+    private javax.swing.JLabel fundoToolbarL;
+    private javax.swing.JLabel fundoUIL;
     private javax.swing.JLabel homeL;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel levelL;
+    private javax.swing.JSlider levelSL;
     private javax.swing.JTextArea logTA;
     private javax.swing.JLabel nomeRHost;
     private javax.swing.JButton openDocumentB;

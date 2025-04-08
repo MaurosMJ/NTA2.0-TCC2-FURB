@@ -13,6 +13,9 @@ import static Utils.HostConfig.getLogFormat;
 import static Utils.HostConfig.permitirLogGeracao;
 import Utils.RoundedBorder;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -42,6 +45,8 @@ import javax.swing.text.MaskFormatter;
 public class SocketUI extends javax.swing.JFrame {
 
     private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
+    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private boolean barraPesquisaPrimeiroAcesso = true;
 
     /**
      * Creates new form SocketUI
@@ -63,6 +68,7 @@ public class SocketUI extends javax.swing.JFrame {
         });
 
         setLocationRelativeTo(null);
+        defaultInfoButtonTxt();
 
         // Usa SwingUtilities para garantir que a UI esteja renderizada
         SwingUtilities.invokeLater(() -> {
@@ -81,6 +87,7 @@ public class SocketUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel4 = new javax.swing.JLabel();
         systemL = new javax.swing.JLabel();
         remoteHostL = new javax.swing.JLabel();
         rHostPortTF = new javax.swing.JTextField();
@@ -113,29 +120,40 @@ public class SocketUI extends javax.swing.JFrame {
         deL = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         dataInicialFTF = new javax.swing.JFormattedTextField();
+        campoPesquisaTF = new javax.swing.JTextField();
+        searchL = new javax.swing.JLabel();
         filtrarB = new javax.swing.JButton();
         levelL = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        jComboBox1 = new javax.swing.JComboBox();
         fundoFiltroL = new javax.swing.JLabel();
         fundoToolbarL = new javax.swing.JLabel();
         fundoConsoleLogL = new javax.swing.JLabel();
         fundoControleL = new javax.swing.JLabel();
         fundoUIL = new javax.swing.JLabel();
+        InfoL = new javax.swing.JLabel();
+        userInfoL = new javax.swing.JLabel();
+        fundoPesquisaL = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NTA - Configuração de monitoramento (Socket)");
-        setMaximumSize(new java.awt.Dimension(650, 760));
-        setMinimumSize(new java.awt.Dimension(650, 760));
-        setPreferredSize(new java.awt.Dimension(650, 760));
+        setMaximumSize(new java.awt.Dimension(650, 790));
+        setMinimumSize(new java.awt.Dimension(650, 790));
+        setPreferredSize(new java.awt.Dimension(650, 790));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
+        jLabel4.setText("Workspace");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
+
         systemL.setText("jLabel1");
-        getContentPane().add(systemL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 90, 80, 80));
+        getContentPane().add(systemL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 80, 80));
 
         remoteHostL.setText("jLabel1");
-        getContentPane().add(remoteHostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 30, 190, 170));
+        getContentPane().add(remoteHostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 190, 170));
 
+        rHostPortTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         rHostPortTF.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rHostPortTFFocusGained(evt);
@@ -148,6 +166,9 @@ public class SocketUI extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 rHostPortTFMouseEntered(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                rHostPortTFMouseExited(evt);
+            }
         });
         rHostPortTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,11 +180,13 @@ public class SocketUI extends javax.swing.JFrame {
                 rHostPortTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, 90, -1));
+        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 240, 90, -1));
 
+        jLabel1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jLabel1.setText("Porta");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 200, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, -1, -1));
 
+        rHostTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         rHostTF.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 rHostTFFocusGained(evt);
@@ -176,6 +199,9 @@ public class SocketUI extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 rHostTFMouseEntered(evt);
             }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                rHostTFMouseExited(evt);
+            }
         });
         rHostTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -187,10 +213,11 @@ public class SocketUI extends javax.swing.JFrame {
                 rHostTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, 280, -1));
+        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, 280, -1));
 
+        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jLabel2.setText("Servidor Remoto");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 200, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, -1, -1));
 
         areaFocoRHost.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -200,12 +227,12 @@ public class SocketUI extends javax.swing.JFrame {
                 areaFocoRHostMouseExited(evt);
             }
         });
-        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, 610, 70));
-        getContentPane().add(remoteHostFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 220, 110));
+        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 610, 70));
+        getContentPane().add(remoteHostFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 80, 220, 110));
 
         nomeRHost.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nomeRHost.setText(" ");
-        getContentPane().add(nomeRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, 220, -1));
+        getContentPane().add(nomeRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 60, 220, -1));
 
         addMonitoringL.setText("jLabel3");
         addMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -216,7 +243,7 @@ public class SocketUI extends javax.swing.JFrame {
                 addMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 60, 50));
+        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, 60, 50));
 
         RecycleBinL.setText("jLabel3");
         RecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -230,13 +257,29 @@ public class SocketUI extends javax.swing.JFrame {
                 RecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(355, 295, 60, 50));
+        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 310, 60, 50));
 
         playL.setText("jLabel3");
-        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(85, 300, 40, 40));
+        playL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                playLMouseEntered(evt);
+            }
+        });
+        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, 40, 40));
 
         homeL.setText("jLabel3");
-        getContentPane().add(homeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 300, 50, 40));
+        homeL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                homeLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeLMouseEntered(evt);
+            }
+        });
+        getContentPane().add(homeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 320, 50, 40));
 
         fundoHomeL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -249,7 +292,7 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoHomeLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoHomeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 290, 90, 60));
+        getContentPane().add(fundoHomeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 310, 90, 60));
 
         fundoPlayL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -262,7 +305,7 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoPlayLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 290, 90, 60));
+        getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, 90, 60));
 
         fundoAddMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -272,7 +315,7 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoAddMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoAddMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 90, 60));
+        getContentPane().add(fundoAddMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 310, 90, 60));
 
         fundoRecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -285,55 +328,101 @@ public class SocketUI extends javax.swing.JFrame {
                 fundoRecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoRecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 290, 90, 60));
-        getContentPane().add(LoadingLineLeftL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 300, 40));
+        getContentPane().add(fundoRecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 310, 90, 60));
+        getContentPane().add(LoadingLineLeftL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, 300, 40));
 
         logTA.setEditable(false);
         logTA.setColumns(20);
+        logTA.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         logTA.setLineWrap(true);
         logTA.setRows(5);
         logTA.setText("ConsoleLog:");
         logTA.setWrapStyleWord(true);
         jScrollPane1.setViewportView(logTA);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 440, 470, 250));
-        getContentPane().add(LoadingLineRightL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 100, 230, 40));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 520, 470, 190));
+        getContentPane().add(LoadingLineRightL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 230, 40));
 
+        copyB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         copyB.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgs/eraser.png"))); // NOI18N
+        copyB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                copyBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                copyBMouseExited(evt);
+            }
+        });
         copyB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 copyBActionPerformed(evt);
             }
         });
-        getContentPane().add(copyB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 450, 50, 40));
+        getContentPane().add(copyB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 470, 50, 40));
 
+        eraserB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        eraserB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                eraserBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                eraserBMouseExited(evt);
+            }
+        });
         eraserB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eraserBActionPerformed(evt);
             }
         });
-        getContentPane().add(eraserB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 500, 50, 40));
+        getContentPane().add(eraserB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 520, 50, 40));
 
+        exportB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        exportB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                exportBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                exportBMouseExited(evt);
+            }
+        });
         exportB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportBActionPerformed(evt);
             }
         });
-        getContentPane().add(exportB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, 50, 40));
+        getContentPane().add(exportB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 560, 50, 40));
 
+        editTB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        editTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                editTBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                editTBMouseExited(evt);
+            }
+        });
         editTB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editTBActionPerformed(evt);
             }
         });
-        getContentPane().add(editTB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 640, 50, 40));
+        getContentPane().add(editTB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 660, 50, 40));
 
+        openDocumentB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        openDocumentB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openDocumentBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openDocumentBMouseExited(evt);
+            }
+        });
         openDocumentB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 openDocumentBActionPerformed(evt);
             }
         });
-        getContentPane().add(openDocumentB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 590, 50, 40));
+        getContentPane().add(openDocumentB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 610, 50, 40));
 
         levelSL.setMaximum(5);
         levelSL.setPaintLabels(true);
@@ -346,57 +435,145 @@ public class SocketUI extends javax.swing.JFrame {
                 levelSLStateChanged(evt);
             }
         });
-        getContentPane().add(levelSL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 160, 20));
+        levelSL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                levelSLMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                levelSLMouseExited(evt);
+            }
+        });
+        getContentPane().add(levelSL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 430, 160, 20));
 
+        dataCHB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         dataCHB.setText("Considerar datas");
+        dataCHB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dataCHBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dataCHBMouseExited(evt);
+            }
+        });
         dataCHB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dataCHBActionPerformed(evt);
             }
         });
-        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 365, -1, -1));
+        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, -1, -1));
 
-        dataFinalFTF.setText("jFormattedTextField1");
         dataFinalFTF.setEnabled(false);
-        getContentPane().add(dataFinalFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 400, 140, -1));
+        dataFinalFTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dataFinalFTFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dataFinalFTFMouseExited(evt);
+            }
+        });
+        getContentPane().add(dataFinalFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 140, -1));
 
+        deL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         deL.setText("De");
-        getContentPane().add(deL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 370, -1, -1));
+        getContentPane().add(deL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 390, -1, -1));
 
+        jLabel3.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jLabel3.setText("Até");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 400, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 420, -1, -1));
 
-        dataInicialFTF.setText("jFormattedTextField1");
         dataInicialFTF.setEnabled(false);
-        getContentPane().add(dataInicialFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 370, 140, -1));
+        dataInicialFTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dataInicialFTFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dataInicialFTFMouseExited(evt);
+            }
+        });
+        getContentPane().add(dataInicialFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 390, 140, -1));
 
+        campoPesquisaTF.setFont(new java.awt.Font("SansSerif", 2, 16)); // NOI18N
+        campoPesquisaTF.setText("   Pesquisar");
+        campoPesquisaTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                campoPesquisaTFMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                campoPesquisaTFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                campoPesquisaTFMouseExited(evt);
+            }
+        });
+        campoPesquisaTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                campoPesquisaTFActionPerformed(evt);
+            }
+        });
+        campoPesquisaTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoPesquisaTFKeyReleased(evt);
+            }
+        });
+        getContentPane().add(campoPesquisaTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 470, 410, 30));
+        getContentPane().add(searchL, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 470, 30, 30));
+
+        filtrarB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         filtrarB.setText("Filtrar");
         filtrarB.setEnabled(false);
+        filtrarB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                filtrarBMouseEntered(evt);
+            }
+        });
         filtrarB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filtrarBActionPerformed(evt);
             }
         });
-        getContentPane().add(filtrarB, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 370, -1, 50));
+        getContentPane().add(filtrarB, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 390, -1, 50));
 
+        levelL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         levelL.setText("Level: Debug");
-        getContentPane().add(levelL, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 390, 110, -1));
+        getContentPane().add(levelL, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 410, 110, -1));
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 370, 10, 50));
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 390, 10, 50));
+
+        jComboBox1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
+        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jComboBox1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jComboBox1MouseExited(evt);
+            }
+        });
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 50, -1));
 
         fundoFiltroL.setText(".");
-        getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 550, 70));
+        getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 550, 70));
 
         fundoToolbarL.setText(".");
-        getContentPane().add(fundoToolbarL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 440, 70, 250));
+        getContentPane().add(fundoToolbarL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, 70, 250));
 
         fundoConsoleLogL.setText(".");
-        getContentPane().add(fundoConsoleLogL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 590, 440));
+        getContentPane().add(fundoConsoleLogL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 590, 440));
 
         fundoControleL.setText(".");
-        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 590, 70));
-        getContentPane().add(fundoUIL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 30, 450, 150));
+        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 590, 70));
+        getContentPane().add(fundoUIL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 450, 150));
+        getContentPane().add(InfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 15, 30, 30));
+
+        userInfoL.setBackground(new java.awt.Color(255, 255, 255));
+        userInfoL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        userInfoL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        userInfoL.setText("Selecione uma das opções abaixo.");
+        userInfoL.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        userInfoL.setOpaque(true);
+        getContentPane().add(userInfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 15, 360, -1));
+        getContentPane().add(fundoPesquisaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 460, 470, 50));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -412,11 +589,13 @@ public class SocketUI extends javax.swing.JFrame {
     private void rHostTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rHostTFMouseEntered
         // TODO add your handling code here:
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 20 = quão arredondado fica
+        setTextInfoButton("Informe o endereço de IP da máquina destino.");
     }//GEN-LAST:event_rHostTFMouseEntered
 
     private void rHostPortTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rHostPortTFMouseEntered
         // TODO add your handling code here:
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 20 = quão arredondado fica
+        setTextInfoButton("Informe a porta da máquina destino.");
     }//GEN-LAST:event_rHostPortTFMouseEntered
 
     private void rHostTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_rHostTFFocusGained
@@ -452,15 +631,18 @@ public class SocketUI extends javax.swing.JFrame {
     private void fundoPlayLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoPlayLMouseEntered
         // TODO add your handling code here:
         fundoPlayL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Utilize essa opção para estabelecer comunicação com o servidor destino.");
     }//GEN-LAST:event_fundoPlayLMouseEntered
 
     private void fundoPlayLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoPlayLMouseExited
         // TODO add your handling code here:
         fundoPlayL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        defaultInfoButtonTxt();
     }//GEN-LAST:event_fundoPlayLMouseExited
 
     private void addMonitoringLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMonitoringLMouseEntered
         // TODO add your handling code here:
+        setTextInfoButton("Utilize essa opção para adicionar essa funcionalidade ao monitoramento.");
         if (!addMonitoringL.isEnabled()) {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 3, 20));
 
@@ -472,78 +654,99 @@ public class SocketUI extends javax.swing.JFrame {
     private void addMonitoringLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMonitoringLMouseExited
         // TODO add your handling code here:
         fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        defaultInfoButtonTxt();
     }//GEN-LAST:event_addMonitoringLMouseExited
 
     private void RecycleBinLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RecycleBinLMouseEntered
         // TODO add your handling code here:
         fundoRecycleBinL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Utilize essa opção para zerar informações em tela.");
     }//GEN-LAST:event_RecycleBinLMouseEntered
 
     private void RecycleBinLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RecycleBinLMouseExited
         // TODO add your handling code here:
         fundoRecycleBinL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        defaultInfoButtonTxt();
     }//GEN-LAST:event_RecycleBinLMouseExited
 
     private void fundoAddMonitoringLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoAddMonitoringLMouseEntered
-        // TODO add your handling code here:
+        fundoAddMonitoringLMouseAction();
+    }//GEN-LAST:event_fundoAddMonitoringLMouseEntered
+
+    private void fundoAddMonitoringLMouseAction() {
+        setTextInfoButton("Utilize essa opção para adicionar essa funcionalidade ao monitoramento.");
         if (!addMonitoringL.isEnabled()) {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 3, 20));
 
         } else {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
         }
-    }//GEN-LAST:event_fundoAddMonitoringLMouseEntered
+    }
 
     private void fundoAddMonitoringLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoAddMonitoringLMouseExited
         // TODO add your handling code here:
         fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        defaultInfoButtonTxt();
     }//GEN-LAST:event_fundoAddMonitoringLMouseExited
 
     private void fundoRecycleBinLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoRecycleBinLMouseEntered
         // TODO add your handling code here:
+        setTextInfoButton("Utilize essa opção para zerar informações em tela.");
         fundoRecycleBinL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
     }//GEN-LAST:event_fundoRecycleBinLMouseEntered
 
     private void fundoRecycleBinLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoRecycleBinLMouseExited
         // TODO add your handling code here:
         fundoRecycleBinL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        defaultInfoButtonTxt();
     }//GEN-LAST:event_fundoRecycleBinLMouseExited
 
     private void fundoHomeLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoHomeLMouseEntered
         // TODO add your handling code here:
+        setTextInfoButton("Utilize essa opção para retornar ao menu do sistema.");
         fundoHomeL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
     }//GEN-LAST:event_fundoHomeLMouseEntered
 
     private void fundoHomeLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoHomeLMouseExited
         // TODO add your handling code here:
         fundoHomeL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        defaultInfoButtonTxt();
     }//GEN-LAST:event_fundoHomeLMouseExited
 
     private void fundoHomeLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoHomeLMouseClicked
-        // TODO add your handling code here:
-        this.dispose(); // Fecha o login
-        new MainApplication().setVisible(true); // Abre o sistema
+        fundoHomeAction();
     }//GEN-LAST:event_fundoHomeLMouseClicked
 
+    private void fundoHomeAction() {
+        this.dispose();
+        new MainApplication().setVisible(true);
+    }
+
     private void fundoRecycleBinLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoRecycleBinLMouseClicked
-        // TODO add your handling code here:
+        fundoRecycleBinAction();
+    }//GEN-LAST:event_fundoRecycleBinLMouseClicked
+
+    private void fundoRecycleBinAction() {
         rHostTF.setText("");
         rHostPortTF.setText("");
         nomeRHost.setText("");
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);
-    }//GEN-LAST:event_fundoRecycleBinLMouseClicked
+    }
 
     private void fundoPlayLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoPlayLMouseClicked
-        // TODO add your handling code here:
+        fundoPlayAction();
+    }//GEN-LAST:event_fundoPlayLMouseClicked
+
+    private void fundoPlayAction() {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
-    }//GEN-LAST:event_fundoPlayLMouseClicked
+    }
 
     private void RecycleBinLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RecycleBinLMouseClicked
-        // TODO add your handling code here:
+        fundoRecycleBinAction();
     }//GEN-LAST:event_RecycleBinLMouseClicked
 
     private void copyBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyBActionPerformed
@@ -706,6 +909,173 @@ public class SocketUI extends javax.swing.JFrame {
         filterDisplayResults();
     }//GEN-LAST:event_filtrarBActionPerformed
 
+    private void jComboBox1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Essa opção persiste informações dessa área de trabalho.");
+
+    }//GEN-LAST:event_jComboBox1MouseEntered
+
+    private void jComboBox1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_jComboBox1MouseExited
+
+    private void rHostTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rHostTFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_rHostTFMouseExited
+
+    private void rHostPortTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rHostPortTFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_rHostPortTFMouseExited
+
+    private void dataCHBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataCHBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Ativar/Desativar filtros por datas.");
+    }//GEN-LAST:event_dataCHBMouseEntered
+
+    private void dataCHBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataCHBMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_dataCHBMouseExited
+
+    private void levelSLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_levelSLMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Defina o nível de Log a ser exibido no ConsoleLog.");
+    }//GEN-LAST:event_levelSLMouseEntered
+
+    private void levelSLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_levelSLMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_levelSLMouseExited
+
+    private void dataInicialFTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataInicialFTFMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Defina uma data inicial para filtrar os logs.");
+    }//GEN-LAST:event_dataInicialFTFMouseEntered
+
+    private void dataFinalFTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataFinalFTFMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Defina uma data final para filtrar os logs.");
+    }//GEN-LAST:event_dataFinalFTFMouseEntered
+
+    private void dataInicialFTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataInicialFTFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_dataInicialFTFMouseExited
+
+    private void dataFinalFTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dataFinalFTFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_dataFinalFTFMouseExited
+
+    private void filtrarBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtrarBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Utilize essa opção para filtrar os registros do ConsoleLog.");
+    }//GEN-LAST:event_filtrarBMouseEntered
+
+    private void copyBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_copyBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Copiar registros do ConsoleLog para área de transferência.");
+    }//GEN-LAST:event_copyBMouseEntered
+
+    private void copyBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_copyBMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_copyBMouseExited
+
+    private void eraserBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eraserBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Apagar todos os registros do consoleLog.");
+    }//GEN-LAST:event_eraserBMouseEntered
+
+    private void exportBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Exportar registros do ConsoleLog para um arquivo de textos.");
+    }//GEN-LAST:event_exportBMouseEntered
+
+    private void openDocumentBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDocumentBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Abrir o editor de textos padrão com os registros do consoleLog");
+    }//GEN-LAST:event_openDocumentBMouseEntered
+
+    private void editTBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editTBMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Ativar/Desativar o modo editor do ConsoleLog.");
+    }//GEN-LAST:event_editTBMouseEntered
+
+    private void eraserBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eraserBMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_eraserBMouseExited
+
+    private void exportBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportBMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_exportBMouseExited
+
+    private void openDocumentBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_openDocumentBMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_openDocumentBMouseExited
+
+    private void editTBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editTBMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_editTBMouseExited
+
+    private void campoPesquisaTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoPesquisaTFActionPerformed
+        // TODO add your handling code here:
+        campoPesquisaTF.setFont(new java.awt.Font("SansSerif", 1, 16));
+    }//GEN-LAST:event_campoPesquisaTFActionPerformed
+
+    private void campoPesquisaTFMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoPesquisaTFMouseClicked
+        // TODO add your handling code here:
+        if (isBarraPesquisaPrimeiroAcesso()) {
+            campoPesquisaTF.setText("");
+            campoPesquisaTF.setFont(new java.awt.Font("SansSerif", 4, 16));
+            setBarraPesquisaPrimeiroAcesso(false);
+        }
+    }//GEN-LAST:event_campoPesquisaTFMouseClicked
+
+    private void campoPesquisaTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoPesquisaTFKeyReleased
+        // TODO add your handling code here:
+        searchBarAction();
+    }//GEN-LAST:event_campoPesquisaTFKeyReleased
+
+    private void campoPesquisaTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoPesquisaTFMouseEntered
+        // TODO add your handling code here:
+        setTextInfoButton("Utilize essa opção para pesquisar informações no conteúdo dos registros.");
+    }//GEN-LAST:event_campoPesquisaTFMouseEntered
+
+    private void campoPesquisaTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_campoPesquisaTFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_campoPesquisaTFMouseExited
+
+    private void playLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playLMouseClicked
+        fundoPlayAction();
+    }//GEN-LAST:event_playLMouseClicked
+
+    private void homeLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeLMouseClicked
+        fundoHomeAction();
+    }//GEN-LAST:event_homeLMouseClicked
+
+    private void homeLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeLMouseEntered
+        setTextInfoButton("Utilize essa opção para retornar ao menu do sistema.");
+        fundoHomeL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_homeLMouseEntered
+
+    private void playLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playLMouseEntered
+        fundoPlayL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Utilize essa opção para estabelecer comunicação com o servidor destino.");
+    }//GEN-LAST:event_playLMouseEntered
+
+    private void defaultInfoButtonTxt() {
+        setTextInfoButton("Selecione uma das opções abaixo.");
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -742,6 +1112,11 @@ public class SocketUI extends javax.swing.JFrame {
         fundoConsoleLogL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
         fundoControleL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
         fundoUIL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
+        fundoPesquisaL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+
+        campoPesquisaTF.setBorder(new RoundedBorder(Color.GRAY, 2, 30)); // Arredondado
+        campoPesquisaTF.setOpaque(false); // Para evitar o fundo quadrado em alguns L&F
+        campoPesquisaTF.setPreferredSize(new Dimension(300, 35)); // Tamanho desejado
 
         Image systemLogo;
         switch (HostConfig.obterSistemaOperacional()) {
@@ -767,6 +1142,7 @@ public class SocketUI extends javax.swing.JFrame {
         Image addMonitoringLogo = this.getScaledImage("imgs/addMonitoring.png", addMonitoringL, true);
         Image homeLogo = this.getScaledImage("imgs/home_Icon.png", homeL, true);
         Image recycleBinIcon = this.getScaledImage("imgs/recicleByn_Icon.png", RecycleBinL, true);
+        Image searchIcon = this.getScaledImage("imgs/search_Icon.png", searchL, true);
 
         Image LoadingLineRightIcon = this.getScaledImage("imgs/line.gif", LoadingLineLeftL, false);
         Image LoadingLineLeftIcon = this.getScaledImage("imgs/lineR.gif", LoadingLineRightL, false);
@@ -777,13 +1153,17 @@ public class SocketUI extends javax.swing.JFrame {
         Image editorIcon = this.getScaledImage("imgs/edit_Icon.png", editTB, true);
         Image openDocumentIcon = this.getScaledImage("imgs/notepad_Icon.png", openDocumentB, true);
 
+        Image infoButtonIcon = this.getScaledImage("imgs/info_Button.png", InfoL, true);
+
         setScaledImage(remoteHostL, serverLogo);
         setScaledImage(systemL, systemLogo);
+        setScaledImage(searchL, homeLogo);
 
         setScaledImage(playL, playLogo);
         setScaledImage(addMonitoringL, addMonitoringLogo);
         setScaledImage(homeL, homeLogo);
         setScaledImage(RecycleBinL, recycleBinIcon);
+        setScaledImage(searchL, searchIcon);
 
         setScaledImage(LoadingLineLeftL, LoadingLineRightIcon);
         setScaledImage(LoadingLineRightL, LoadingLineLeftIcon);
@@ -793,6 +1173,8 @@ public class SocketUI extends javax.swing.JFrame {
         setScaledImage(copyB, copyIcon);
         setScaledImage(editTB, editorIcon);
         setScaledImage(openDocumentB, openDocumentIcon);
+
+        setScaledImage(InfoL, infoButtonIcon);
     }
 
     private void addLog(LogLevel level, String input) {
@@ -804,6 +1186,17 @@ public class SocketUI extends javax.swing.JFrame {
 
         LogOccurrence log = new LogOccurrence(input, level);
         this.LogArray.add(log);
+    }
+
+    private void searchBarAction() {
+        StringBuilder resultado = new StringBuilder("ConsoleLog");
+
+        for (LogOccurrence log : LogArray) {
+            if (log.getData().toLowerCase().contains(campoPesquisaTF.getText().trim().toLowerCase())) {
+                resultado.append("\n").append(HostConfig.getLogFormatFromLogOccurrence(log));
+            }
+        }
+        logTA.setText(resultado.toString());
     }
 
     private void filterDisplayResults() {
@@ -833,6 +1226,32 @@ public class SocketUI extends javax.swing.JFrame {
                 }
             }
         }
+    }
+
+    private void setTextInfoButton(String input) {
+        userInfoL.setText(input);
+        ajustarTamanhoLabel(userInfoL);
+        userInfoL.setBounds(obterPosicaoCentralEixoX(), userInfoL.getY(), userInfoL.getPreferredSize().width, userInfoL.getPreferredSize().height);
+        InfoL.setBounds(obterPosicaoCentralEixoX() - 35, userInfoL.getY(), userInfoL.getPreferredSize().width, userInfoL.getPreferredSize().height);
+    }
+
+    private int obterPosicaoCentralEixoX() {
+        int frameWidth = getWidth(); // largura da janela
+        int labelWidth = userInfoL.getPreferredSize().width;
+        int labelX = (frameWidth - labelWidth) / 2;
+        return labelX;
+    }
+
+    private void ajustarTamanhoLabel(javax.swing.JLabel lbl) {
+        FontMetrics metrics = lbl.getFontMetrics(lbl.getFont());
+        int larguraTexto = metrics.stringWidth(lbl.getText());
+        int alturaTexto = metrics.getHeight();
+
+        // Margens para não ficar muito justo
+        int margemHorizontal = 20;
+        int margemVertical = 10;
+
+        lbl.setSize(larguraTexto + margemHorizontal, alturaTexto + margemVertical);
     }
 
     public boolean permitirLogGeracao(LogLevel nivelGerado) {
@@ -905,13 +1324,23 @@ public class SocketUI extends javax.swing.JFrame {
         dataFinalFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
     }
 
+    public boolean isBarraPesquisaPrimeiroAcesso() {
+        return barraPesquisaPrimeiroAcesso;
+    }
+
+    public void setBarraPesquisaPrimeiroAcesso(boolean barraPesquisaPrimeiroAcesso) {
+        this.barraPesquisaPrimeiroAcesso = barraPesquisaPrimeiroAcesso;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel InfoL;
     private javax.swing.JLabel LoadingLineLeftL;
     private javax.swing.JLabel LoadingLineRightL;
     private javax.swing.JLabel RecycleBinL;
     private javax.swing.JLabel addMonitoringL;
     private javax.swing.JLabel areaFocoRHost;
+    private javax.swing.JTextField campoPesquisaTF;
     private javax.swing.JButton copyB;
     private javax.swing.JCheckBox dataCHB;
     private javax.swing.JFormattedTextField dataFinalFTF;
@@ -926,14 +1355,17 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel fundoControleL;
     private javax.swing.JLabel fundoFiltroL;
     private javax.swing.JLabel fundoHomeL;
+    private javax.swing.JLabel fundoPesquisaL;
     private javax.swing.JLabel fundoPlayL;
     private javax.swing.JLabel fundoRecycleBinL;
     private javax.swing.JLabel fundoToolbarL;
     private javax.swing.JLabel fundoUIL;
     private javax.swing.JLabel homeL;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel levelL;
@@ -946,6 +1378,8 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JTextField rHostTF;
     private javax.swing.JLabel remoteHostFundo;
     private javax.swing.JLabel remoteHostL;
+    private javax.swing.JLabel searchL;
     private javax.swing.JLabel systemL;
+    private javax.swing.JLabel userInfoL;
     // End of variables declaration//GEN-END:variables
 }

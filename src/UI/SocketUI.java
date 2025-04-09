@@ -145,7 +145,7 @@ public class SocketUI extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 13)); // NOI18N
         jLabel4.setText("Workspace");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, -1, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 75, -1, -1));
 
         systemL.setText("jLabel1");
         getContentPane().add(systemL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 80, 80));
@@ -257,7 +257,7 @@ public class SocketUI extends javax.swing.JFrame {
                 RecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 310, 60, 50));
+        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(355, 315, 60, 50));
 
         playL.setText("jLabel3");
         playL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -268,7 +268,7 @@ public class SocketUI extends javax.swing.JFrame {
                 playLMouseEntered(evt);
             }
         });
-        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 320, 40, 40));
+        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(85, 320, 40, 40));
 
         homeL.setText("jLabel3");
         homeL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -460,7 +460,7 @@ public class SocketUI extends javax.swing.JFrame {
                 dataCHBActionPerformed(evt);
             }
         });
-        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 380, -1, -1));
+        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 382, -1, -1));
 
         dataFinalFTF.setEnabled(false);
         dataFinalFTF.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -542,6 +542,9 @@ public class SocketUI extends javax.swing.JFrame {
 
         jComboBox1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
+        jComboBox1.setMaximumSize(new java.awt.Dimension(36, 35));
+        jComboBox1.setMinimumSize(new java.awt.Dimension(36, 35));
+        jComboBox1.setPreferredSize(new java.awt.Dimension(36, 35));
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jComboBox1MouseEntered(evt);
@@ -550,7 +553,7 @@ public class SocketUI extends javax.swing.JFrame {
                 jComboBox1MouseExited(evt);
             }
         });
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 50, -1));
+        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 50, 30));
 
         fundoFiltroL.setText(".");
         getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 550, 70));

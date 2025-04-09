@@ -105,6 +105,9 @@ public class MainApplication extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 httpLogoLMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                httpLogoLMouseEntered(evt);
+            }
         });
         getContentPane().add(httpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 150, 120));
 
@@ -112,6 +115,9 @@ public class MainApplication extends javax.swing.JFrame {
         socketLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 socketLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                socketLogoLMouseEntered(evt);
             }
         });
         getContentPane().add(socketLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, 150, 120));
@@ -121,6 +127,9 @@ public class MainApplication extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 smbLogoLMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                smbLogoLMouseEntered(evt);
+            }
         });
         getContentPane().add(smbLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 110, 150, 120));
 
@@ -128,6 +137,9 @@ public class MainApplication extends javax.swing.JFrame {
         mailLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mailLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mailLogoLMouseEntered(evt);
             }
         });
         getContentPane().add(mailLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, 150, 120));
@@ -574,6 +586,23 @@ public class MainApplication extends javax.swing.JFrame {
     private void fundoMonitoramentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoMonitoramentoMouseClicked
         fundoMonitoramentoAction();
     }//GEN-LAST:event_fundoMonitoramentoMouseClicked
+
+    private void mailLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mailLogoLMouseEntered
+        // TODO add your handling code here:
+        fundoMail.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_mailLogoLMouseEntered
+
+    private void socketLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_socketLogoLMouseEntered
+        fundoSocket.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_socketLogoLMouseEntered
+
+    private void httpLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_httpLogoLMouseEntered
+        fundoHttp.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_httpLogoLMouseEntered
+
+    private void smbLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_smbLogoLMouseEntered
+        fundoSmb.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_smbLogoLMouseEntered
 
     private void fundoMonitoramentoAction() {
 

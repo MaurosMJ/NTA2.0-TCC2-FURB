@@ -7,11 +7,16 @@ package UI;
 
 import Entities.LogOccurrence;
 import Enum.LogLevel;
+import Persistence.JsonPersistence;
+import static Persistence.JsonPersistence.salvarJsonEmAppData;
+import Persistence.SocketPersistence.Config;
 import UserConfig.UserProperties;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
 import static Utils.HostConfig.permitirLogGeracao;
 import Utils.RoundedBorder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -69,7 +74,7 @@ public class SocketUI extends javax.swing.JFrame {
 
         setLocationRelativeTo(null);
         defaultInfoButtonTxt();
-
+        carregarInformacoes();
         // Usa SwingUtilities para garantir que a UI esteja renderizada
         SwingUtilities.invokeLater(() -> {
             long fim = System.nanoTime();
@@ -125,7 +130,7 @@ public class SocketUI extends javax.swing.JFrame {
         filtrarB = new javax.swing.JButton();
         levelL = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jComboBox1 = new javax.swing.JComboBox();
+        workspaceCBX = new javax.swing.JComboBox();
         fundoFiltroL = new javax.swing.JLabel();
         fundoToolbarL = new javax.swing.JLabel();
         fundoConsoleLogL = new javax.swing.JLabel();
@@ -236,6 +241,9 @@ public class SocketUI extends javax.swing.JFrame {
 
         addMonitoringL.setText("jLabel3");
         addMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                addMonitoringLMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 addMonitoringLMouseEntered(evt);
             }
@@ -308,6 +316,9 @@ public class SocketUI extends javax.swing.JFrame {
         getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 310, 90, 60));
 
         fundoAddMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fundoAddMonitoringLMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 fundoAddMonitoringLMouseEntered(evt);
             }
@@ -447,6 +458,11 @@ public class SocketUI extends javax.swing.JFrame {
 
         dataCHB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         dataCHB.setText("Considerar datas");
+        dataCHB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                dataCHBStateChanged(evt);
+            }
+        });
         dataCHB.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 dataCHBMouseEntered(evt);
@@ -471,6 +487,11 @@ public class SocketUI extends javax.swing.JFrame {
                 dataFinalFTFMouseExited(evt);
             }
         });
+        dataFinalFTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                dataFinalFTFKeyReleased(evt);
+            }
+        });
         getContentPane().add(dataFinalFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 420, 140, -1));
 
         deL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
@@ -488,6 +509,11 @@ public class SocketUI extends javax.swing.JFrame {
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 dataInicialFTFMouseExited(evt);
+            }
+        });
+        dataInicialFTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                dataInicialFTFKeyReleased(evt);
             }
         });
         getContentPane().add(dataInicialFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 390, 140, -1));
@@ -540,20 +566,25 @@ public class SocketUI extends javax.swing.JFrame {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 390, 10, 50));
 
-        jComboBox1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
-        jComboBox1.setMaximumSize(new java.awt.Dimension(36, 35));
-        jComboBox1.setMinimumSize(new java.awt.Dimension(36, 35));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(36, 35));
-        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jComboBox1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jComboBox1MouseExited(evt);
+        workspaceCBX.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        workspaceCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
+        workspaceCBX.setMaximumSize(new java.awt.Dimension(36, 35));
+        workspaceCBX.setMinimumSize(new java.awt.Dimension(36, 35));
+        workspaceCBX.setPreferredSize(new java.awt.Dimension(36, 35));
+        workspaceCBX.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                workspaceCBXItemStateChanged(evt);
             }
         });
-        getContentPane().add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 50, 30));
+        workspaceCBX.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                workspaceCBXMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                workspaceCBXMouseExited(evt);
+            }
+        });
+        getContentPane().add(workspaceCBX, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 50, 30));
 
         fundoFiltroL.setText(".");
         getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 550, 70));
@@ -624,11 +655,13 @@ public class SocketUI extends javax.swing.JFrame {
     private void rHostTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rHostTFKeyReleased
         // TODO add your handling code here:
         nomeRHost.setText((rHostTF.getText() + ":" + rHostPortTF.getText()));
+        persistirInformacoes();
     }//GEN-LAST:event_rHostTFKeyReleased
 
     private void rHostPortTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rHostPortTFKeyReleased
         // TODO add your handling code here:
         nomeRHost.setText((rHostTF.getText() + ":" + rHostPortTF.getText()));
+        persistirInformacoes();
     }//GEN-LAST:event_rHostPortTFKeyReleased
 
     private void fundoPlayLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoPlayLMouseEntered
@@ -720,7 +753,12 @@ public class SocketUI extends javax.swing.JFrame {
         fundoHomeAction();
     }//GEN-LAST:event_fundoHomeLMouseClicked
 
+    private void fundoAddMonitoringAction() {
+        persistirInformacoes();
+    }
+
     private void fundoHomeAction() {
+        persistirInformacoes();
         this.dispose();
         new MainApplication().setVisible(true);
     }
@@ -736,6 +774,7 @@ public class SocketUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);
+        persistirInformacoes();
     }
 
     private void fundoPlayLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoPlayLMouseClicked
@@ -746,6 +785,8 @@ public class SocketUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
+        persistirInformacoes();
+        persistirInformacoes();
     }
 
     private void RecycleBinLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RecycleBinLMouseClicked
@@ -816,7 +857,7 @@ public class SocketUI extends javax.swing.JFrame {
             logTA.setEditable(false);
             addLog(LogLevel.INFO, "Desativado o modo editor do ConsoleLog.");
         }
-
+        persistirInformacoes();
     }//GEN-LAST:event_editTBActionPerformed
 
     private void openDocumentBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDocumentBActionPerformed
@@ -912,16 +953,16 @@ public class SocketUI extends javax.swing.JFrame {
         filterDisplayResults();
     }//GEN-LAST:event_filtrarBActionPerformed
 
-    private void jComboBox1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseEntered
+    private void workspaceCBXMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workspaceCBXMouseEntered
         // TODO add your handling code here:
         setTextInfoButton("Essa opção persiste informações dessa área de trabalho.");
 
-    }//GEN-LAST:event_jComboBox1MouseEntered
+    }//GEN-LAST:event_workspaceCBXMouseEntered
 
-    private void jComboBox1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseExited
+    private void workspaceCBXMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workspaceCBXMouseExited
         // TODO add your handling code here:
         defaultInfoButtonTxt();
-    }//GEN-LAST:event_jComboBox1MouseExited
+    }//GEN-LAST:event_workspaceCBXMouseExited
 
     private void rHostTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rHostTFMouseExited
         // TODO add your handling code here:
@@ -1074,6 +1115,30 @@ public class SocketUI extends javax.swing.JFrame {
         fundoPlayL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
         setTextInfoButton("Utilize essa opção para estabelecer comunicação com o servidor destino.");
     }//GEN-LAST:event_playLMouseEntered
+
+    private void workspaceCBXItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_workspaceCBXItemStateChanged
+        carregarInformacoes();
+    }//GEN-LAST:event_workspaceCBXItemStateChanged
+
+    private void addMonitoringLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMonitoringLMouseClicked
+        fundoAddMonitoringAction();
+    }//GEN-LAST:event_addMonitoringLMouseClicked
+
+    private void fundoAddMonitoringLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoAddMonitoringLMouseClicked
+        fundoAddMonitoringAction();
+    }//GEN-LAST:event_fundoAddMonitoringLMouseClicked
+
+    private void dataCHBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_dataCHBStateChanged
+        persistirInformacoes();
+    }//GEN-LAST:event_dataCHBStateChanged
+
+    private void dataInicialFTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataInicialFTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_dataInicialFTFKeyReleased
+
+    private void dataFinalFTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dataFinalFTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_dataFinalFTFKeyReleased
 
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");
@@ -1327,6 +1392,55 @@ public class SocketUI extends javax.swing.JFrame {
         dataFinalFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
     }
 
+    public void persistirInformacoes() {
+        Config config = new Config();
+        config.workspace = String.valueOf(workspaceCBX.getSelectedItem());
+        config.session = new Config.SessionValues();
+        config.session.considerarData = dataCHB.isSelected();
+        config.session.dataFinal = dataFinalFTF.getText();
+        config.session.dataInicial = dataInicialFTF.getText();
+        config.session.executar = fundoPlayL.isEnabled();
+        config.session.filtrar = fundoFiltroL.isEnabled();
+        config.session.home = fundoHomeL.isEnabled();
+        config.session.level = levelSL.getValue();
+        config.session.lixeira = fundoRecycleBinL.isEnabled();
+        config.session.monitorar = addMonitoringL.isEnabled();
+        config.session.porta = rHostPortTF.getText();
+        config.session.servidor = rHostTF.getText();
+        config.session.toggleEditor = editTB.isSelected();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        salvarJsonEmAppData("socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config));
+    }
+
+    public void carregarInformacoes() {
+        String nomeArquivo = "socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
+        Config config = JsonPersistence.carregarJsonAppdata(nomeArquivo);
+
+        if (config == null || config.session == null) {
+            System.out.println("⚠️ Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+
+        try {
+            dataCHB.setSelected(config.session.considerarData);
+            dataFinalFTF.setText(config.session.dataFinal);
+            dataInicialFTF.setText(config.session.dataInicial);
+            fundoPlayL.setEnabled(config.session.executar);
+            fundoFiltroL.setEnabled(config.session.filtrar);
+            fundoHomeL.setEnabled(config.session.home);
+            levelSL.setValue(config.session.level);
+            fundoRecycleBinL.setEnabled(config.session.lixeira);
+            addMonitoringL.setEnabled(config.session.monitorar);
+            rHostPortTF.setText(config.session.porta);
+            rHostTF.setText(config.session.servidor);
+            editTB.setSelected(config.session.toggleEditor);
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public boolean isBarraPesquisaPrimeiroAcesso() {
         return barraPesquisaPrimeiroAcesso;
     }
@@ -1364,7 +1478,6 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel fundoToolbarL;
     private javax.swing.JLabel fundoUIL;
     private javax.swing.JLabel homeL;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1384,5 +1497,6 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel searchL;
     private javax.swing.JLabel systemL;
     private javax.swing.JLabel userInfoL;
+    private javax.swing.JComboBox workspaceCBX;
     // End of variables declaration//GEN-END:variables
 }

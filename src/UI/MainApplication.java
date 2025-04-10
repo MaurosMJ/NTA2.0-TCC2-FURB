@@ -60,14 +60,14 @@ public class MainApplication extends javax.swing.JFrame {
         smbLogoL = new javax.swing.JLabel();
         mailLogoL = new javax.swing.JLabel();
         fundoSmb = new javax.swing.JLabel();
-        fundoSocket = new javax.swing.JLabel();
-        fundoHttp = new javax.swing.JLabel();
-        fundoMail = new javax.swing.JLabel();
-        InfoL = new javax.swing.JLabel();
-        fundoAdmSistema = new javax.swing.JLabel();
-        fundoMonitoramento = new javax.swing.JLabel();
         admSistemaLogoL = new javax.swing.JLabel();
         monitoramentoLogoL = new javax.swing.JLabel();
+        fundoSocket = new javax.swing.JLabel();
+        fundoHttp = new javax.swing.JLabel();
+        fundoAdmSistema = new javax.swing.JLabel();
+        fundoMonitoramento = new javax.swing.JLabel();
+        fundoMail = new javax.swing.JLabel();
+        InfoL = new javax.swing.JLabel();
         userInfoL = new javax.swing.JLabel();
         fineLogoL = new javax.swing.JLabel();
         errorLogoL = new javax.swing.JLabel();
@@ -160,6 +160,28 @@ public class MainApplication extends javax.swing.JFrame {
         });
         getContentPane().add(fundoSmb, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 80, 300, 170));
 
+        admSistemaLogoL.setText(".");
+        admSistemaLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                admSistemaLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                admSistemaLogoLMouseEntered(evt);
+            }
+        });
+        getContentPane().add(admSistemaLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 515, 130, 100));
+
+        monitoramentoLogoL.setText(".");
+        monitoramentoLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                monitoramentoLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                monitoramentoLogoLMouseEntered(evt);
+            }
+        });
+        getContentPane().add(monitoramentoLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 500, 150, 120));
+
         fundoSocket.setBackground(new java.awt.Color(204, 204, 204));
         fundoSocket.setForeground(new java.awt.Color(204, 204, 204));
         fundoSocket.setToolTipText("");
@@ -191,23 +213,6 @@ public class MainApplication extends javax.swing.JFrame {
             }
         });
         getContentPane().add(fundoHttp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 300, 170));
-
-        fundoMail.setBackground(new java.awt.Color(204, 204, 204));
-        fundoMail.setForeground(new java.awt.Color(204, 204, 204));
-        fundoMail.setToolTipText("");
-        fundoMail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fundoMailMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fundoMailMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                fundoMailMouseExited(evt);
-            }
-        });
-        getContentPane().add(fundoMail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 300, 170));
-        getContentPane().add(InfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(185, 27, 30, 30));
 
         fundoAdmSistema.setBackground(new java.awt.Color(204, 204, 204));
         fundoAdmSistema.setForeground(new java.awt.Color(204, 204, 204));
@@ -241,21 +246,22 @@ public class MainApplication extends javax.swing.JFrame {
         });
         getContentPane().add(fundoMonitoramento, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 480, 300, 170));
 
-        admSistemaLogoL.setText(".");
-        admSistemaLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+        fundoMail.setBackground(new java.awt.Color(204, 204, 204));
+        fundoMail.setForeground(new java.awt.Color(204, 204, 204));
+        fundoMail.setToolTipText("");
+        fundoMail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                admSistemaLogoLMouseClicked(evt);
+                fundoMailMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fundoMailMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fundoMailMouseExited(evt);
             }
         });
-        getContentPane().add(admSistemaLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 515, 130, 100));
-
-        monitoramentoLogoL.setText(".");
-        monitoramentoLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                monitoramentoLogoLMouseClicked(evt);
-            }
-        });
-        getContentPane().add(monitoramentoLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 500, 150, 120));
+        getContentPane().add(fundoMail, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, 300, 170));
+        getContentPane().add(InfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(185, 27, 30, 30));
 
         userInfoL.setBackground(new java.awt.Color(255, 255, 255));
         userInfoL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -590,19 +596,37 @@ public class MainApplication extends javax.swing.JFrame {
     private void mailLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mailLogoLMouseEntered
         // TODO add your handling code here:
         fundoMail.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo SMTP.");
+        ajustarTamanhoLabel(userInfoL);
     }//GEN-LAST:event_mailLogoLMouseEntered
 
     private void socketLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_socketLogoLMouseEntered
         fundoSocket.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento através de uma conexão Socket.");
+        ajustarTamanhoLabel(userInfoL);
     }//GEN-LAST:event_socketLogoLMouseEntered
 
     private void httpLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_httpLogoLMouseEntered
         fundoHttp.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo HTTP.");
+        ajustarTamanhoLabel(userInfoL);
     }//GEN-LAST:event_httpLogoLMouseEntered
 
     private void smbLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_smbLogoLMouseEntered
         fundoSmb.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo SMB.");
+        ajustarTamanhoLabel(userInfoL);
     }//GEN-LAST:event_smbLogoLMouseEntered
+
+    private void admSistemaLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_admSistemaLogoLMouseEntered
+        setTextInfoButton("Configurar parametrizações do sistema.");
+        ajustarTamanhoLabel(userInfoL);
+    }//GEN-LAST:event_admSistemaLogoLMouseEntered
+
+    private void monitoramentoLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_monitoramentoLogoLMouseEntered
+        setTextInfoButton("Acessar o painel de monitoramento remoto.");
+        ajustarTamanhoLabel(userInfoL);
+    }//GEN-LAST:event_monitoramentoLogoLMouseEntered
 
     private void fundoMonitoramentoAction() {
 

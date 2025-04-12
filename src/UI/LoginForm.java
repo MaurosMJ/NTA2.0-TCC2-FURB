@@ -118,7 +118,7 @@ public class LoginForm extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
         this.dispose(); // Fecha o login
-        new MainApplication().setVisible(true); // Abre o sistema
+        new MainMenuForm().setVisible(true); // Abre o sistema
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

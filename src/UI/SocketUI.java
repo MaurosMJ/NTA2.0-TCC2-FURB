@@ -9,7 +9,7 @@ import Entities.LogOccurrence;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.SocketPersistence.Config;
+import Persistence.SocketPersistence.SocketConfig;
 import UserConfig.UserProperties;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -760,7 +760,7 @@ public class SocketUI extends javax.swing.JFrame {
     private void fundoHomeAction() {
         persistirInformacoes();
         this.dispose();
-        new MainApplication().setVisible(true);
+        new MainMenuForm().setVisible(true);
     }
 
     private void fundoRecycleBinLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoRecycleBinLMouseClicked
@@ -1183,7 +1183,7 @@ public class SocketUI extends javax.swing.JFrame {
         fundoPesquisaL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         campoPesquisaTF.setBorder(new RoundedBorder(Color.GRAY, 2, 30)); // Arredondado
-        campoPesquisaTF.setOpaque(false); // Para evitar o fundo quadrado em alguns L&F
+        campoPesquisaTF.setOpaque(false); //
         campoPesquisaTF.setPreferredSize(new Dimension(300, 35)); // Tamanho desejado
 
         Image systemLogo;
@@ -1393,9 +1393,9 @@ public class SocketUI extends javax.swing.JFrame {
     }
 
     public void persistirInformacoes() {
-        Config config = new Config();
+        SocketConfig config = new SocketConfig();
         config.workspace = String.valueOf(workspaceCBX.getSelectedItem());
-        config.session = new Config.SessionValues();
+        config.session = new SocketConfig.SessionValues();
         config.session.considerarData = dataCHB.isSelected();
         config.session.dataFinal = dataFinalFTF.getText();
         config.session.dataInicial = dataInicialFTF.getText();
@@ -1415,17 +1415,15 @@ public class SocketUI extends javax.swing.JFrame {
 
     public void carregarInformacoes() {
         String nomeArquivo = "socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        Config config = JsonPersistence.carregarJsonAppdata(nomeArquivo);
+        SocketConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SocketConfig.class);
 
         if (config == null || config.session == null) {
-            System.out.println("⚠️ Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
             return;
         }
 
         try {
             dataCHB.setSelected(config.session.considerarData);
-            dataFinalFTF.setText(config.session.dataFinal);
-            dataInicialFTF.setText(config.session.dataInicial);
             fundoPlayL.setEnabled(config.session.executar);
             fundoFiltroL.setEnabled(config.session.filtrar);
             fundoHomeL.setEnabled(config.session.home);

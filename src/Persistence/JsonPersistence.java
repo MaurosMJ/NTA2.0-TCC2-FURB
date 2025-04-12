@@ -5,7 +5,8 @@
  */
 package Persistence;
 
-import Persistence.SocketPersistence.Config;
+import Persistence.SmtpPersistence.SmtpConfig;
+import Persistence.SocketPersistence.SocketConfig;
 import Utils.HostConfig;
 import com.google.gson.Gson;
 import java.io.File;
@@ -60,22 +61,21 @@ public class JsonPersistence {
         }
     }
 
-    public static Config carregarJsonAppdata(String nomeArquivo) {
+    public static <T> T carregarJsonAppdata(String nomeArquivo, Class<T> clazz) {
         String conteudoJson = lerJsonDeAppData(nomeArquivo);
-        Config config = null;
+
         if (conteudoJson == null || conteudoJson.isEmpty()) {
             System.out.println("Arquivo de configuração não encontrado: " + nomeArquivo);
-            return config;
+            return null;
         }
 
         Gson gson = new Gson();
-        config = gson.fromJson(conteudoJson, Config.class);
-        if (config == null || config.session == null) {
-            System.out.println("Falha ao carregar as configurações do JSON.");
-            return config;
+        try {
+            return gson.fromJson(conteudoJson, clazz);
+        } catch (Exception e) {
+            System.err.println("Erro ao desserializar JSON para " + clazz.getSimpleName() + ": " + e.getMessage());
+            return null;
         }
-        
-        return config;
     }
 
     private static String lerJsonDeAppData(String nomeArquivo) {

@@ -15,7 +15,7 @@ import com.google.gson.GsonBuilder;
 public class SocketPersistence {
 
     // Classe exemplo que representa sua configuração
-    public static class Config {
+    public static class SocketConfig {
 
         
         
@@ -42,18 +42,4 @@ public class SocketPersistence {
 
         }
 
-    // Gera o conteúdo JSON de exemplo
-    public static String gerarConteudoJson() {
-        Config config = new Config();
-//        config.usuario = "thalles";
-//        config.tema = "dark";
-//        config.tamanhoFonte = 14;
-
-//        config.autenticacao = new Configuracoes.Autenticacao();
-//        config.autenticacao.token = "abc123xyz";
-//        config.autenticacao.expiraEm = "2025-12-31T23:59:59";
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(config);
-    }
 }}

@@ -676,7 +676,7 @@ public class MainMenuForm extends javax.swing.JFrame {
 
     private void fundoHttpAction() {
         this.dispose();
-        new SmtpUI().setVisible(true);
+        new HttpUI().setVisible(true);
     }
 
     /**

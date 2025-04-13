@@ -25,6 +25,7 @@ public class SocketPersistence {
         public static class SessionValues {
             //Configurações do modulo
             public String servidor;
+            public int portaPadrao;
             public String porta;
             
             //Configurações padrões

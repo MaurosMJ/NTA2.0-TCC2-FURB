@@ -712,7 +712,7 @@ public class HttpUI extends javax.swing.JFrame {
     private void endPointTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_endPointTFMouseEntered
         // TODO add your handling code here:
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 20 = quão arredondado fica
-        setTextInfoButton("Informe o endereço de IP da máquina destino.");
+        setTextInfoButton("Informe a URI (Uniform Resource Identifier).");
     }//GEN-LAST:event_endPointTFMouseEntered
 
     private void endPointTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_endPointTFFocusGained
@@ -1210,7 +1210,7 @@ public class HttpUI extends javax.swing.JFrame {
 
     private void parametrosTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametrosTFMouseEntered
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
-        setTextInfoButton("Informe o nome do usuário deste domínio.");
+        setTextInfoButton("Informe o nome o parâmetro do método.");
     }//GEN-LAST:event_parametrosTFMouseEntered
 
     private void parametrosTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parametrosTFMouseExited
@@ -1236,7 +1236,7 @@ public class HttpUI extends javax.swing.JFrame {
 
     private void urlTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_urlTFMouseEntered
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
-        setTextInfoButton("Informe o diretório destino.");
+        setTextInfoButton("URL gerada com os dados informados.");
     }//GEN-LAST:event_urlTFMouseEntered
 
     private void urlTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_urlTFMouseExited
@@ -1262,7 +1262,7 @@ public class HttpUI extends javax.swing.JFrame {
 
     private void protocoloCHBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_protocoloCHBMouseEntered
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
-        setTextInfoButton("Informe a versão do protocolo utilizado para dados em trânsito.");
+        setTextInfoButton("Informe o protocolo utilizado para dados em trânsito.");
     }//GEN-LAST:event_protocoloCHBMouseEntered
 
     private void protocoloCHBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_protocoloCHBMouseExited
@@ -1290,7 +1290,7 @@ public class HttpUI extends javax.swing.JFrame {
 
     private void operacaoCHBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_operacaoCHBMouseEntered
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
-        setTextInfoButton("Informe o tipo de operação a ser realizada.");
+        setTextInfoButton("Informe o tipo de operação HTTP a ser realizada.");
     }//GEN-LAST:event_operacaoCHBMouseEntered
 
     private void operacaoCHBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_operacaoCHBMouseExited

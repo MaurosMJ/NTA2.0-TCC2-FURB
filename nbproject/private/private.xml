@@ -4,17 +4,19 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/SmbUI.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/httpPersistence.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SocketPersistence.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/MainMenuForm.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/JanelaValidacao.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Utils/HostConfig.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SmtpPersistence.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/JsonPersistence.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/SocketUI.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Enum/LogLevel.java</file>
-            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SocketPersistence.java</file>
-            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/MainMenuForm.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/HttpUI.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/LoginForm.java</file>
-            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/JanelaValidacao.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/SmtpUI.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SmbPersistence.java</file>
-            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Utils/HostConfig.java</file>
-            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SmtpPersistence.java</file>
         </group>
     </open-files>
 </project-private>

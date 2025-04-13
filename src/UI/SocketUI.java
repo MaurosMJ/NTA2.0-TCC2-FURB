@@ -33,6 +33,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -51,6 +53,7 @@ public class SocketUI extends javax.swing.JFrame {
 
     private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final Map<Integer, String> portasPadrao = new HashMap<>();
     private boolean barraPesquisaPrimeiroAcesso = true;
 
     /**
@@ -64,6 +67,7 @@ public class SocketUI extends javax.swing.JFrame {
         setLayout(null);
         this.initImg();
         inicializaFTF();
+        inicializarPortasPadrao();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -75,6 +79,7 @@ public class SocketUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         defaultInfoButtonTxt();
         carregarInformacoes();
+        operacaoCHB();
         // Usa SwingUtilities para garantir que a UI esteja renderizada
         SwingUtilities.invokeLater(() -> {
             long fim = System.nanoTime();
@@ -96,10 +101,9 @@ public class SocketUI extends javax.swing.JFrame {
         systemL = new javax.swing.JLabel();
         remoteHostL = new javax.swing.JLabel();
         rHostPortTF = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        portaL = new javax.swing.JLabel();
         rHostTF = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        areaFocoRHost = new javax.swing.JLabel();
         remoteHostFundo = new javax.swing.JLabel();
         nomeRHost = new javax.swing.JLabel();
         addMonitoringL = new javax.swing.JLabel();
@@ -134,10 +138,13 @@ public class SocketUI extends javax.swing.JFrame {
         fundoFiltroL = new javax.swing.JLabel();
         fundoToolbarL = new javax.swing.JLabel();
         fundoConsoleLogL = new javax.swing.JLabel();
-        fundoControleL = new javax.swing.JLabel();
         fundoUIL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
         userInfoL = new javax.swing.JLabel();
+        ppadraoCHB = new javax.swing.JComboBox();
+        ppadraoL = new javax.swing.JLabel();
+        areaFocoRHost = new javax.swing.JLabel();
+        fundoControleL = new javax.swing.JLabel();
         fundoPesquisaL = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -158,6 +165,7 @@ public class SocketUI extends javax.swing.JFrame {
         remoteHostL.setText("jLabel1");
         getContentPane().add(remoteHostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 50, 190, 170));
 
+        rHostPortTF.setEditable(false);
         rHostPortTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         rHostPortTF.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -185,11 +193,11 @@ public class SocketUI extends javax.swing.JFrame {
                 rHostPortTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 240, 90, -1));
+        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 240, 90, -1));
 
-        jLabel1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
-        jLabel1.setText("Porta");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, -1, -1));
+        portaL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        portaL.setText("Valor");
+        getContentPane().add(portaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 220, -1, -1));
 
         rHostTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         rHostTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -218,21 +226,11 @@ public class SocketUI extends javax.swing.JFrame {
                 rHostTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 240, 280, -1));
+        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, 200, -1));
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jLabel2.setText("Servidor Remoto");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, -1, -1));
-
-        areaFocoRHost.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                areaFocoRHostMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                areaFocoRHostMouseExited(evt);
-            }
-        });
-        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 610, 70));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 220, -1, -1));
         getContentPane().add(remoteHostFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 80, 220, 110));
 
         nomeRHost.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -594,9 +592,6 @@ public class SocketUI extends javax.swing.JFrame {
 
         fundoConsoleLogL.setText(".");
         getContentPane().add(fundoConsoleLogL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 590, 440));
-
-        fundoControleL.setText(".");
-        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 590, 70));
         getContentPane().add(fundoUIL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 450, 150));
         getContentPane().add(InfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 15, 30, 30));
 
@@ -607,6 +602,30 @@ public class SocketUI extends javax.swing.JFrame {
         userInfoL.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         userInfoL.setOpaque(true);
         getContentPane().add(userInfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 15, 360, -1));
+
+        ppadraoCHB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FTP (TCP)", "SSH (TCP)", "Telnet (TCP)", "SMTP (TCP)", "HTTP (TCP)", "POP3 (TCP)", "IMAP (TCP)", "HTTPS (TCP)", "SMB (TCP)", "SMTP com SSL/TLS (TCP)", "SMTP com STARTTLS (TCP)", "IMAP com SSL/TLS (TCP)", "POP3 com SSL/TLS (TCP)", "SQL Server (TCP)", "Oracle DB (TCP)", "MySQL/MariaDB (TCP)", "RDP (TCP)", "PostgreSQL (TCP)", "VNC (TCP)", "HTTP alternativo/proxy (TCP)", "DHCP (UDP)", "TFTP (UDP)", "NTP (UDP)", "SNMP (UDP)", "Syslog (UDP)", "DNS (UDP/TCP)", "LDAP (UDP/TCP)", "Especificar" }));
+        ppadraoCHB.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                ppadraoCHBItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(ppadraoCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 240, 140, 24));
+
+        ppadraoL.setText("Porta Padrão");
+        getContentPane().add(ppadraoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 220, -1, -1));
+
+        areaFocoRHost.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                areaFocoRHostMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                areaFocoRHostMouseExited(evt);
+            }
+        });
+        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 610, 70));
+
+        fundoControleL.setText(".");
+        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 590, 70));
         getContentPane().add(fundoPesquisaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 460, 470, 50));
 
         pack();
@@ -1140,6 +1159,11 @@ public class SocketUI extends javax.swing.JFrame {
         persistirInformacoes();
     }//GEN-LAST:event_dataFinalFTFKeyReleased
 
+    private void ppadraoCHBItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ppadraoCHBItemStateChanged
+        operacaoCHB();
+        persistirInformacoes();
+    }//GEN-LAST:event_ppadraoCHBItemStateChanged
+
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");
     }
@@ -1408,6 +1432,7 @@ public class SocketUI extends javax.swing.JFrame {
         config.session.porta = rHostPortTF.getText();
         config.session.servidor = rHostTF.getText();
         config.session.toggleEditor = editTB.isSelected();
+        config.session.portaPadrao = ppadraoCHB.getSelectedIndex();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         salvarJsonEmAppData("socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config));
@@ -1431,6 +1456,7 @@ public class SocketUI extends javax.swing.JFrame {
             fundoRecycleBinL.setEnabled(config.session.lixeira);
             addMonitoringL.setEnabled(config.session.monitorar);
             rHostPortTF.setText(config.session.porta);
+            ppadraoCHB.setSelectedIndex(config.session.portaPadrao);
             rHostTF.setText(config.session.servidor);
             editTB.setSelected(config.session.toggleEditor);
         } catch (Exception e) {
@@ -1445,6 +1471,50 @@ public class SocketUI extends javax.swing.JFrame {
 
     public void setBarraPesquisaPrimeiroAcesso(boolean barraPesquisaPrimeiroAcesso) {
         this.barraPesquisaPrimeiroAcesso = barraPesquisaPrimeiroAcesso;
+    }
+
+    private void inicializarPortasPadrao() {
+        portasPadrao.put(0, "20");    // FTP
+        portasPadrao.put(1, "22");    // SSH
+        portasPadrao.put(2, "23");    // Telnet
+        portasPadrao.put(3, "25");    // SMTP
+        portasPadrao.put(4, "80");    // HTTP
+        portasPadrao.put(5, "110");   // POP3
+        portasPadrao.put(6, "143");   // IMAP
+        portasPadrao.put(7, "443");   // HTTPS
+        portasPadrao.put(8, "445");   // SMB
+        portasPadrao.put(9, "465");   // SMTP com SSL/TLS
+        portasPadrao.put(10, "587");  // SMTP com STARTTLS
+        portasPadrao.put(11, "993");  // IMAP com SSL/TLS
+        portasPadrao.put(12, "995");  // POP3 com SSL/TLS
+        portasPadrao.put(13, "1433"); // SQL Server
+        portasPadrao.put(14, "1521"); // Oracle DB
+        portasPadrao.put(15, "3306"); // MySQL/MariaDB
+        portasPadrao.put(16, "3389"); // RDP
+        portasPadrao.put(17, "5432"); // PostgreSQL
+        portasPadrao.put(18, "5900"); // VNC
+        portasPadrao.put(19, "8080"); // HTTP alternativo
+        portasPadrao.put(20, "67");   // DHCP
+        portasPadrao.put(21, "69");   // TFTP
+        portasPadrao.put(22, "123");  // NTP
+        portasPadrao.put(23, "161");  // SNMP
+        portasPadrao.put(24, "514");  // Syslog
+        portasPadrao.put(25, "53");   // DNS
+        portasPadrao.put(26, "389");  // LDAP
+    }
+
+    public void operacaoCHB() {
+
+        int selectedIndex = ppadraoCHB.getSelectedIndex();
+
+        if (portasPadrao.containsKey(selectedIndex)) {
+            rHostPortTF.setText(portasPadrao.get(selectedIndex));
+            rHostPortTF.setEditable(false);
+        } else {
+            portaL.setEnabled(true);
+            rHostPortTF.setText("");
+            rHostPortTF.setEditable(true);
+        }
     }
 
 
@@ -1476,7 +1546,6 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel fundoToolbarL;
     private javax.swing.JLabel fundoUIL;
     private javax.swing.JLabel homeL;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1488,6 +1557,9 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel nomeRHost;
     private javax.swing.JButton openDocumentB;
     private javax.swing.JLabel playL;
+    private javax.swing.JLabel portaL;
+    private javax.swing.JComboBox ppadraoCHB;
+    private javax.swing.JLabel ppadraoL;
     private javax.swing.JTextField rHostPortTF;
     private javax.swing.JTextField rHostTF;
     private javax.swing.JLabel remoteHostFundo;
@@ -1497,4 +1569,5 @@ public class SocketUI extends javax.swing.JFrame {
     private javax.swing.JLabel userInfoL;
     private javax.swing.JComboBox workspaceCBX;
     // End of variables declaration//GEN-END:variables
+
 }

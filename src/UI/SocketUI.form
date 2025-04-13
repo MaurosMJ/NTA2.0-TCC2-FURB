@@ -71,6 +71,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="rHostPortTF">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="13" style="0"/>
         </Property>
@@ -85,20 +86,20 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="430" y="240" width="90" height="-1"/>
+          <AbsoluteConstraints x="450" y="240" width="90" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="portaL">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="13" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Porta"/>
+        <Property name="text" type="java.lang.String" value="Valor"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="430" y="220" width="-1" height="-1"/>
+          <AbsoluteConstraints x="450" y="220" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -118,7 +119,7 @@
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="90" y="240" width="280" height="-1"/>
+          <AbsoluteConstraints x="70" y="240" width="200" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -131,18 +132,7 @@
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="90" y="220" width="-1" height="-1"/>
-        </Constraint>
-      </Constraints>
-    </Component>
-    <Component class="javax.swing.JLabel" name="areaFocoRHost">
-      <Events>
-        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="areaFocoRHostMouseEntered"/>
-        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="areaFocoRHostMouseExited"/>
-      </Events>
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="10" y="210" width="610" height="70"/>
+          <AbsoluteConstraints x="70" y="220" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -627,16 +617,6 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JLabel" name="fundoControleL">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="."/>
-      </Properties>
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="20" y="210" width="590" height="70"/>
-        </Constraint>
-      </Constraints>
-    </Component>
     <Component class="javax.swing.JLabel" name="fundoUIL">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -671,6 +651,81 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="160" y="15" width="360" height="-1"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="ppadraoCHB">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="28">
+            <StringItem index="0" value="FTP (TCP)"/>
+            <StringItem index="1" value="SSH (TCP)"/>
+            <StringItem index="2" value="Telnet (TCP)"/>
+            <StringItem index="3" value="SMTP (TCP)"/>
+            <StringItem index="4" value="HTTP (TCP)"/>
+            <StringItem index="5" value="POP3 (TCP)"/>
+            <StringItem index="6" value="IMAP (TCP)"/>
+            <StringItem index="7" value="HTTPS (TCP)"/>
+            <StringItem index="8" value="SMB (TCP)"/>
+            <StringItem index="9" value="SMTP com SSL/TLS (TCP)"/>
+            <StringItem index="10" value="SMTP com STARTTLS (TCP)"/>
+            <StringItem index="11" value="IMAP com SSL/TLS (TCP)"/>
+            <StringItem index="12" value="POP3 com SSL/TLS (TCP)"/>
+            <StringItem index="13" value="SQL Server (TCP)"/>
+            <StringItem index="14" value="Oracle DB (TCP)"/>
+            <StringItem index="15" value="MySQL/MariaDB (TCP)"/>
+            <StringItem index="16" value="RDP (TCP)"/>
+            <StringItem index="17" value="PostgreSQL (TCP)"/>
+            <StringItem index="18" value="VNC (TCP)"/>
+            <StringItem index="19" value="HTTP alternativo/proxy (TCP)"/>
+            <StringItem index="20" value="DHCP (UDP)"/>
+            <StringItem index="21" value="TFTP (UDP)"/>
+            <StringItem index="22" value="NTP (UDP)"/>
+            <StringItem index="23" value="SNMP (UDP)"/>
+            <StringItem index="24" value="Syslog (UDP)"/>
+            <StringItem index="25" value="DNS (UDP/TCP)"/>
+            <StringItem index="26" value="LDAP (UDP/TCP)"/>
+            <StringItem index="27" value="Especificar"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="ppadraoCHBItemStateChanged"/>
+      </Events>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="290" y="240" width="140" height="24"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="ppadraoL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Porta Padr&#xe3;o"/>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="290" y="220" width="-1" height="-1"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="areaFocoRHost">
+      <Events>
+        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="areaFocoRHostMouseEntered"/>
+        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="areaFocoRHostMouseExited"/>
+      </Events>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="10" y="210" width="610" height="70"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="fundoControleL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="."/>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="20" y="210" width="590" height="70"/>
         </Constraint>
       </Constraints>
     </Component>

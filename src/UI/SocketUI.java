@@ -10,6 +10,7 @@ import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.SocketPersistence.SocketConfig;
+import Service.SocketClient;
 import UserConfig.UserProperties;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -55,6 +56,7 @@ public class SocketUI extends javax.swing.JFrame {
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final Map<Integer, String> portasPadrao = new HashMap<>();
     private boolean barraPesquisaPrimeiroAcesso = true;
+    private SocketClient socket;
 
     /**
      * Creates new form SocketUI
@@ -804,7 +806,9 @@ public class SocketUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
-        persistirInformacoes();
+        socket = new SocketClient();
+        addToArray(socket.PerformServerConnection(rHostTF.getText(), rHostPortTF.getText()));
+        filterDisplayResults();
         persistirInformacoes();
     }
 
@@ -1278,6 +1282,13 @@ public class SocketUI extends javax.swing.JFrame {
 
         LogOccurrence log = new LogOccurrence(input, level);
         this.LogArray.add(log);
+    }
+
+    private void addToArray(ArrayList<LogOccurrence> logArray) {
+
+        for (LogOccurrence log : logArray) {
+            this.LogArray.add(log);
+        }
     }
 
     private void searchBarAction() {

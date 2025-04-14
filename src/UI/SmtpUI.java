@@ -10,19 +10,14 @@ import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.SmtpPersistence.SmtpConfig;
-import Persistence.SocketPersistence.SocketConfig;
-import UI.LoginForm;
-import UI.MainMenuForm;
-import UserConfig.UserProperties;
+import Service.SmtpClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
-import static Utils.HostConfig.permitirLogGeracao;
 import Utils.RoundedBorder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -52,9 +47,9 @@ import javax.swing.text.MaskFormatter;
  */
 public class SmtpUI extends javax.swing.JFrame {
 
-    private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final ArrayList<LogOccurrence> LogArray = new ArrayList<>();
     private boolean barraPesquisaPrimeiroAcesso = true;
+    private SmtpClient smtp;
 
     /**
      * Creates new form SocketUI
@@ -694,7 +689,7 @@ public class SmtpUI extends javax.swing.JFrame {
         protocoloL.setText("Protocolo");
         getContentPane().add(protocoloL, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 270, -1, -1));
 
-        protocoloTF.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TLS", "SSL" }));
+        protocoloTF.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TLSv1.2", "SSLv3.0" }));
         protocoloTF.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 protocoloTFItemStateChanged(evt);
@@ -1041,7 +1036,11 @@ public class SmtpUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
-        persistirInformacoes();
+        smtp = new SmtpClient();
+        //String host, String port, String aut, String prot, String stls, String rem, String pwd, String des, String tmsg, String pmsg
+        //startTlsCHB.isSelected() ? "true" : "false"
+        addToArray(smtp.PerformServerConnection(hostTF.getText(), portaTF.getText(), autenticacaoCHB.isSelected() ? "true" : "false", (String) protocoloTF.getSelectedItem(), startTlsCHB.isSelected() ? "true" : "false", remetenteTF.getText(), new String(senhaPF.getPassword()), destinatarioTF.getText(), tituloTF.getText(), corpoEmailL.getText()));
+        filterDisplayResults();
         persistirInformacoes();
     }
 
@@ -1697,6 +1696,13 @@ public class SmtpUI extends javax.swing.JFrame {
 
         LogOccurrence log = new LogOccurrence(input, level);
         this.LogArray.add(log);
+    }
+
+    private void addToArray(ArrayList<LogOccurrence> logArray) {
+
+        for (LogOccurrence log : logArray) {
+            this.LogArray.add(log);
+        }
     }
 
     private void searchBarAction() {

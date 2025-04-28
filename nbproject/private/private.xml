@@ -5,13 +5,17 @@
         <group>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/SmbUI.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/httpPersistence.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Entities/LogOccurrence.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Service/SmtpClient.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SocketPersistence.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/MainMenuForm.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Service/SocketClient.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/JanelaValidacao.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Service/SmbClient.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Utils/HostConfig.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/SmtpPersistence.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Persistence/JsonPersistence.java</file>
+            <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UserConfig/UserProperties.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/SocketUI.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/Enum/LogLevel.java</file>
             <file>file:/C:/Users/320167484/Documents/netbeans-ws/NTA2.0-TCC2-FURB/src/UI/HttpUI.java</file>

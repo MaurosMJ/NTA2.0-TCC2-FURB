@@ -11,6 +11,7 @@ import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.SmbPersistence.SmbConfig;
 import Persistence.SmtpPersistence.SmtpConfig;
+import Service.SmbClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
 import Utils.RoundedBorder;
@@ -27,6 +28,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbException;
 
 /**
  *
@@ -50,6 +54,7 @@ public class SmbUI extends javax.swing.JFrame {
     private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private boolean barraPesquisaPrimeiroAcesso = true;
+    private SmbClient smb;
 
     /**
      * Creates new form SocketUI
@@ -970,8 +975,50 @@ public class SmbUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
+
+//        smb = new SmbClient(usuarioTF.getText(), "\\\\whebdc", hostTF.getText(), new String(senhaPF.getPassword()));
+//        smb = new SmbClient("java.osweb", "", "\\\\192.168.252.100\\Temp\\Mauros\\Temp", "@Philips2013");
+        //public SmbClient(String usr, String dmn, String shost, String spwd) {
+//                smb = new SmbClient("mmjunior", "whebdc", hostTF.getText(), "m4UR0$M1L4C49");
+        smb = new SmbClient(usuarioTF.getText(), "whebdc", hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText());
+
+//        addToArray(smtp.PerformServerConnection());
+        switch (operacaoCHB.getSelectedIndex()) {
+            case 0:
+                //Autenticação
+                addToArray(smb.smbAuth());
+                break;
+            case 1: {
+                //Escrita
+                addToArray(smb.writeToFile());
+
+            }
+            break;
+            case 2:
+                //Leitura
+      //          smb.readFromFile();
+                break;
+            case 3:
+                //Escrita e Leitura
+                break;
+            case 4:
+                //Renomear Arquivo
+                break;
+            case 5:
+                //Listar Arquivos
+                addToArray(smb.smbListDir());
+                break;
+            case 6:
+                //Truncar Diretório
+                break;
+            default:
+                //Listar arquivos;
+                addToArray(smb.smbListDir());
+        }
+
+        filterDisplayResults();
         persistirInformacoes();
-        persistirInformacoes();
+
     }
 
     private void RecycleBinLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RecycleBinLMouseClicked
@@ -1668,6 +1715,13 @@ public class SmbUI extends javax.swing.JFrame {
 
         LogOccurrence log = new LogOccurrence(input, level);
         this.LogArray.add(log);
+    }
+
+    private void addToArray(ArrayList<LogOccurrence> logArray) {
+
+        for (LogOccurrence log : logArray) {
+            this.LogArray.add(log);
+        }
     }
 
     private void searchBarAction() {

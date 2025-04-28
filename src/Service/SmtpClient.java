@@ -40,7 +40,9 @@ public class SmtpClient {
             sendEmail(mensagem);
             addToArray("Email sent successfully!", LogLevel.INFO);
         } catch (MessagingException e) {
+            e.printStackTrace(pw);
             addToArray("Error sending the email: " + e.getMessage(), LogLevel.ERROR);
+            this.addToArray(sw.toString(), LogLevel.DEBUG);
         }
 
         return getLogArray();

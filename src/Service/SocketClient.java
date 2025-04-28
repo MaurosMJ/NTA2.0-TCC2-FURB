@@ -35,6 +35,7 @@ public class SocketClient {
         } catch (IOException e) {
             e.printStackTrace(pw);
             this.addToArray("Unable to connect to " + host + ":" + Integer.parseInt(port), LogLevel.SEVERE);
+            this.addToArray(sw.toString(), LogLevel.DEBUG);
 
         }
         return getLogArray();

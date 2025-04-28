@@ -9,8 +9,6 @@ import Entities.LogOccurrence;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.SmbPersistence.SmbConfig;
-import Persistence.SmtpPersistence.SmtpConfig;
 import Persistence.httpPersistence.HttpConfig;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;

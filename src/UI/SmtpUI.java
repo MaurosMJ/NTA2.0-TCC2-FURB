@@ -1037,8 +1037,6 @@ public class SmtpUI extends javax.swing.JFrame {
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
         smtp = new SmtpClient();
-        //String host, String port, String aut, String prot, String stls, String rem, String pwd, String des, String tmsg, String pmsg
-        //startTlsCHB.isSelected() ? "true" : "false"
         addToArray(smtp.PerformServerConnection(hostTF.getText(), portaTF.getText(), autenticacaoCHB.isSelected() ? "true" : "false", (String) protocoloTF.getSelectedItem(), startTlsCHB.isSelected() ? "true" : "false", remetenteTF.getText(), new String(senhaPF.getPassword()), destinatarioTF.getText(), tituloTF.getText(), corpoEmailL.getText()));
         filterDisplayResults();
         persistirInformacoes();

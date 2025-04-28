@@ -10,7 +10,6 @@ import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.SmbPersistence.SmbConfig;
-import Persistence.SmtpPersistence.SmtpConfig;
 import Service.SmbClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -28,11 +27,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -980,7 +979,7 @@ public class SmbUI extends javax.swing.JFrame {
 //        smb = new SmbClient("java.osweb", "", "\\\\192.168.252.100\\Temp\\Mauros\\Temp", "@Philips2013");
         //public SmbClient(String usr, String dmn, String shost, String spwd) {
 //                smb = new SmbClient("mmjunior", "whebdc", hostTF.getText(), "m4UR0$M1L4C49");
-        smb = new SmbClient(usuarioTF.getText(), "whebdc", hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText());
+        smb = new SmbClient(usuarioTF.getText(), "whebdc", hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText(), diretorioTF.getText(), valorAnteriorTF.getText());
 
 //        addToArray(smtp.PerformServerConnection());
         switch (operacaoCHB.getSelectedIndex()) {
@@ -996,13 +995,16 @@ public class SmbUI extends javax.swing.JFrame {
             break;
             case 2:
                 //Leitura
-      //          smb.readFromFile();
+                addToArray(smb.readTextFileFromDirectory());
                 break;
             case 3:
                 //Escrita e Leitura
+                addToArray(smb.writeToFile());
+                addToArray(smb.readTextFileFromDirectory());
                 break;
             case 4:
                 //Renomear Arquivo
+                addToArray(smb.renameFileInDirectory());
                 break;
             case 5:
                 //Listar Arquivos
@@ -1010,6 +1012,7 @@ public class SmbUI extends javax.swing.JFrame {
                 break;
             case 6:
                 //Truncar Diretório
+                addToArray(smb.truncateDirectory());
                 break;
             default:
                 //Listar arquivos;
@@ -1468,7 +1471,7 @@ public class SmbUI extends javax.swing.JFrame {
                 diretorioTF.setEnabled(true);
                 conteudoTF.setEnabled(false);
                 valorAnteriorTF.setEnabled(false);
-                novoValorTF.setEnabled(false);
+                novoValorTF.setEnabled(true);
                 break;
             case 3:
                 //Escrita/Leitura
@@ -1717,9 +1720,9 @@ public class SmbUI extends javax.swing.JFrame {
         this.LogArray.add(log);
     }
 
-    private void addToArray(ArrayList<LogOccurrence> logArray) {
+    private void addToArray(List<LogOccurrence> list) {
 
-        for (LogOccurrence log : logArray) {
+        for (LogOccurrence log : list) {
             this.LogArray.add(log);
         }
     }

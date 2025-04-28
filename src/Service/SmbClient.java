@@ -7,21 +7,12 @@ package Service;
 
 import Entities.LogOccurrence;
 import Enum.LogLevel;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jcifs.smb.*;
 import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbException;
-import jcifs.smb.SmbFile;
-import jcifs.smb.SmbFileInputStream;
-import jcifs.smb.SmbFileOutputStream;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.logging.*;
 
 /**
  *
@@ -29,230 +20,302 @@ import jcifs.smb.SmbFileOutputStream;
  */
 public class SmbClient {
 
-    private final StringWriter sw = new StringWriter();
-    private final PrintWriter pw = new PrintWriter(sw);
-    private final ArrayList<LogOccurrence> LogArray = new ArrayList<>();
-    private String usr;
-    private String dmn;
-    private String shost;
-    private String spwd;
+    private final String usr;
+    private final String dmn;
+    private final String spwd;
     private String fileName;
-    private String fileContent;
-    private NtlmPasswordAuthentication auth = null;
+    private final String fileContent;
+    private final String antigoValor;
+    private final String shost;
+    private NtlmPasswordAuthentication auth;
+    private final List<LogOccurrence> logArray = new ArrayList<>();
 
-    public SmbClient(String usr, String dmn, String shost, String spwd, String fileName, String fileContent) {
-
-        if (!shost.contains("\\\\")) {
-            shost = "\\\\" + shost;
-        }
-
+    public SmbClient(String usr, String dmn, String shost, String spwd, String fileName, String fileContent, String dir, String antigoValor) {
         this.usr = usr;
         this.dmn = dmn;
-        this.shost = shost;
         this.spwd = spwd;
-        if (fileName.length() > 0) {
-            this.fileName = fileName;
-        } else {
-            this.fileName = "Nta";
-        }
-        if (fileContent.length() > 0) {
-            this.fileContent = fileContent;
-        } else {
-            this.fileContent = "Arquivo encaminhado ao servidor!";
-        }
+        this.fileName = fileName;
+        this.antigoValor = antigoValor;
+        this.fileContent = fileContent.isEmpty() ? "Arquivo encaminhado ao servidor!" : fileContent;
+        this.shost = formatHost(shost, dir);
     }
 
-    public ArrayList<LogOccurrence> smbAuth() {
+    private String formatHost(String host, String dir) {
+        if (!host.startsWith("\\\\")) {
+            host = "\\\\" + host;
+        }
+        if (!dir.startsWith("\\")) {
+            dir = "\\" + dir;
+        }
+        return host + dir;
+    }
+
+    public List<LogOccurrence> smbAuth() {
         System.out.println("Iniciando autenticação com o host destino.");
 
-        shost = shost.replace("\\", "/");
-        //       shost = "smb:" + shost + "/";
-        NtlmPasswordAuthentication auth = null;
         try {
-            auth = new NtlmPasswordAuthentication(dmn, usr, spwd);
-            this.auth = auth;
-            addToArray("Autenticado no servidor.", LogLevel.INFO);
+            this.auth = new NtlmPasswordAuthentication(dmn, usr, spwd);
+            SmbFile file = new SmbFile(getSmbUrl(), auth);
+            file.connect(); // Força autenticação
+
+            addLog("Autenticado no servidor.", LogLevel.INFO);
         } catch (Exception e) {
-            addToArray("Ocorreu um erro ao autenticar.", LogLevel.ERROR);
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            System.out.println(sw.toString());
-            System.out.println(pw.toString());
+            logException("Erro ao autenticar no servidor.", e);
         }
-
-        /*
-         shost = shost.replace("\\", "/");
-         shost = "smb:" + shost;
-         String timestamp = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ssss").format(new Date());
-         String fileName = "/smbRW-" + timestamp.replaceAll("[: ]", "") + ".txt";
-         shost += fileName + "/";
-         System.out.println(shost);
-
-         try {
-         NtlmPasswordAuthentication authentication = new NtlmPasswordAuthentication(dmn, usr, spwd);
-         writeToFile(shost, authentication);
-         } catch (Exception e) {
-         e.printStackTrace();
-         }
-         */
-        return this.getLogArray();
+        return logArray;
     }
 
-    public ArrayList<LogOccurrence> writeToFile() {
-        this.smbAuth();
-
-        String smbPath = shost.replace("\\", "/");
-        smbPath = "smb:" + smbPath;
-
-        String timestamp = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ssss").format(new Date());
-        String fileName = "/" + this.fileName + "-" + timestamp.replaceAll("[: ]", "") + ".txt";
-        smbPath += fileName;
-
-        System.out.println("Caminho SMB final: " + smbPath);
-
-        SmbFile remoteFile;
-        try {
-            remoteFile = new SmbFile(smbPath, this.auth);
-        } catch (MalformedURLException e) {
-            logException("URL do arquivo SMB é inválida.", e);
-            return this.getLogArray();
+    public List<LogOccurrence> writeToFile() {
+        if (!authenticate()) {
+            return logArray;
         }
 
-        byte[] content = this.fileContent.getBytes();
+        this.fileName = fileName.isEmpty() ? "Nta" : fileName;
+        String filePath = getSmbUrl() + "/" + generateFileName();
+        this.fileName = "";
+        System.out.println("Caminho SMB final: " + filePath);
 
-        try (SmbFileOutputStream outputStream = new SmbFileOutputStream(remoteFile)) {
-            outputStream.write(content);
-            addToArray("[WRITE = OK] Arquivo enviado com sucesso ao servidor!", LogLevel.INFO);
+        try (SmbFileOutputStream outputStream = new SmbFileOutputStream(new SmbFile(filePath, auth))) {
+            outputStream.write(fileContent.getBytes());
+            addLog("[WRITE = OK] Arquivo enviado com sucesso ao servidor!", LogLevel.INFO);
         } catch (IOException e) {
-            logException("Erro ao escrever ou fechar o arquivo SMB.", e);
+            logException("Erro ao escrever arquivo no servidor SMB.", e);
         }
-
-        return this.getLogArray();
+        return logArray;
     }
 
-    private void logException(String message, Exception e) {
-        Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, message, e);
-        this.addToArray(message, LogLevel.ERROR);
-        this.addToArray(getStackTraceAsString(e), LogLevel.DEBUG);
-    }
+    public List<LogOccurrence> renameFileInDirectory() {
+        System.out.println("Iniciando renomeação de arquivo no diretório.");
 
-    private String getStackTraceAsString(Exception e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        return sw.toString();
-    }
-
-    public void readFromFile(String fileName) {
-        SmbFile remoteFile = null;
-
-        this.smbAuth();
+        this.smbAuth(); // Autenticação SMB
 
         String smbPath = shost.replace("\\", "/");
-        smbPath = "smb:" + smbPath;
-
-        String timestamp = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ssss").format(new Date());
-//        String fileName = "/" + this.fileName + "-" + timestamp.replaceAll("[: ]", "") + ".txt";
-        smbPath += fileName;
-
-        System.out.println("Caminho SMB final: " + smbPath);
+        smbPath = "smb:" + smbPath + "/";
 
         try {
-            remoteFile = new SmbFile(smbPath, auth);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        SmbFileInputStream inputStream = null;
-        try {
-            inputStream = new SmbFileInputStream(remoteFile);
-        } catch (SmbException ex) {
-            Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        StringBuilder fileContent = new StringBuilder();
-        try {
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                fileContent.append(new String(buffer, 0, bytesRead));
+            SmbFile directory = new SmbFile(smbPath, auth);
+
+            if (directory.exists() && directory.isDirectory()) {
+                SmbFile[] files = directory.listFiles();
+
+                if (files == null || files.length == 0) {
+                    addLog("Nenhum arquivo encontrado no diretório.", LogLevel.ERROR);
+                    return getLogArray();
+                }
+
+                SmbFile sourceFile = null;
+                for (SmbFile file : files) {
+                    if (file.isFile() && file.getName().equalsIgnoreCase(antigoValor)) {
+                        sourceFile = file;
+                        break;
+                    }
+                }
+
+                if (sourceFile == null) {
+                    addLog("Arquivo a ser renomeado não encontrado: " + antigoValor, LogLevel.ERROR);
+                    return getLogArray();
+                }
+
+                // Preparar novo caminho (lembrando que o caminho completo é necessário)
+                String newFilePath = smbPath + fileName;
+                SmbFile destinationFile = new SmbFile(newFilePath, auth);
+
+                sourceFile.renameTo(destinationFile);
+
+                addLog("Arquivo renomeado de '" + antigoValor + "' para '" + fileName + "'.", LogLevel.INFO);
+
+            } else {
+                addLog("Diretório não encontrado ou não é um diretório.", LogLevel.ERROR);
             }
-        } catch (IOException ex) {
-            Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, null, ex);
+
+        } catch (Exception e) {
+            logException("Erro ao renomear o arquivo no diretório.", e);
         }
-        try {
-            inputStream.close();
-        } catch (IOException ex) {
-            Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        addToArray("[READ = OK] File content read from the server: \n", LogLevel.INFO);
+
+        return getLogArray();
     }
 
-    /**
-     * Initiates authentication with the target host and lists folders and files
-     * in the directory.
-     *
-     * @param user The username for authentication.
-     * @param passW The password for authentication.
-     * @param host The host address for the SMB server.
-     */
-    public ArrayList<LogOccurrence> smbListDir() {
-        System.out.println("Initiating authentication with the target host.");
-
-        shost = shost.replace("\\", "/");
-        shost = "smb:" + shost + "/";
+    public List<LogOccurrence> smbListDir() {
+        if (!authenticate()) {
+            return getLogArray();
+        }
 
         try {
-            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication("", usr, spwd);
-            listFilesInDirectory(shost, auth);
-        } catch (Exception e) {
-            handleAuthenticationError(e);
-            this.addToArray(sw.toString(), LogLevel.DEBUG);
+            SmbFile directory = new SmbFile(getSmbUrl() + "/", auth);
+            if (directory.exists() && directory.isDirectory()) {
+                addLog("INICIANDO LISTAGEM:", LogLevel.INFO);
+                for (SmbFile file : directory.listFiles()) {
+                    addLog("Arquivo encontrado: " + file.getName(), LogLevel.INFO);
+                }
+            }
+        } catch (IOException e) {
+            logException("Erro ao listar diretórios no servidor SMB.", e);
         }
         return getLogArray();
     }
 
-    private void listFilesInDirectory(String host, NtlmPasswordAuthentication authentication) {
+    public List<LogOccurrence> truncateDirectory() {
+        System.out.println("Iniciando truncamento do diretório.");
+
+        smbAuth();
+
+        String smbPath = "smb:" + shost.replace("\\", "/") + "/";
+
         try {
-            SmbFile directory = new SmbFile(host, authentication);
+            SmbFile directory = new SmbFile(smbPath, auth);
 
-            if (directory.exists() && directory.isDirectory()) {
-                addToArray("INITIATING SEARCH:", LogLevel.INFO);
-                addToArray("Folders and files in the directory:", LogLevel.INFO);
+            if (!directory.exists() || !directory.isDirectory()) {
+                addLog("Diretório não encontrado ou não é um diretório.", LogLevel.ERROR);
+                return getLogArray();
+            }
 
-                SmbFile[] files = directory.listFiles();
-                for (SmbFile file : files) {
-                    addToArray(" File Found: " + file.getName(), LogLevel.INFO);
+            SmbFile[] files = directory.listFiles();
+            for (SmbFile file : files) {
+                if (file.isFile()) {
+                    try {
+                        file.delete();
+                        addLog(String.format("Arquivo deletado: %s", file.getName()), LogLevel.INFO);
+                    } catch (Exception e) {
+                        addLog(String.format("Erro ao deletar arquivo: %s", file.getName()), LogLevel.ERROR);
+                        addLog(getStackTraceAsString(e), LogLevel.DEBUG);
+                    }
+                } else if (file.isDirectory()) {
+                    addLog(String.format("Ignorando subdiretório: %s", file.getName()), LogLevel.WARNING);
                 }
             }
+
+            addLog("Diretório truncado com sucesso.", LogLevel.INFO);
+
         } catch (Exception e) {
-            // Log the exception and continue execution
-            addToArray(" Error while listing files in directory:  " + e.getMessage(), LogLevel.ERROR);
-
-            e.printStackTrace(pw);
-            this.addToArray(sw.toString(), LogLevel.DEBUG);
+            logException("Erro ao truncar o diretório.", e);
         }
+
+        return getLogArray();
     }
 
-    private void handleAuthenticationError(Exception e) {
-        // Log the authentication error and continue execution
-        addToArray(" Error while listing files in directory:  " + e.getMessage(), LogLevel.ERROR);
-        addToArray("Authentication error: " + e.getMessage(), LogLevel.ERROR);
-        e.printStackTrace(pw);
-        this.addToArray(sw.toString(), LogLevel.DEBUG);
+    public List<LogOccurrence> readTextFileFromDirectory() {
+        System.out.println("Iniciando leitura de arquivo de texto do diretório.");
+
+        this.smbAuth(); // Autenticação SMB
+
+        String smbPath = shost.replace("\\", "/");
+        smbPath = "smb:" + smbPath + "/";
+
+        String fileName = "";
+
+        if (this.fileName.length() > 0) {
+            fileName = this.fileName;
+
+        }
+
+        try {
+            SmbFile directory = new SmbFile(smbPath, auth);
+
+            if (directory.exists() && directory.isDirectory()) {
+                SmbFile[] files = directory.listFiles();
+
+                if (files == null || files.length == 0) {
+                    addLog("Nenhum arquivo encontrado no diretório.", LogLevel.ERROR);
+                    return this.getLogArray();
+                }
+
+                SmbFile targetFile = null;
+
+                if (fileName != null && !fileName.trim().isEmpty()) {
+                    // Usuário informou um nome de arquivo
+                    for (SmbFile file : files) {
+                        if (file.isFile() && file.getName().equalsIgnoreCase(fileName)) {
+                            targetFile = file;
+                            break;
+                        }
+                    }
+                    if (targetFile == null) {
+                        addLog("Arquivo informado não encontrado no diretório.", LogLevel.ERROR);
+                        return this.getLogArray();
+                    }
+                } else {
+                    // Usuário não informou nome -> pega o primeiro arquivo de texto
+                    for (SmbFile file : files) {
+                        if (file.isFile() && isTextFile(file.getName())) {
+                            targetFile = file;
+                            break;
+                        }
+                    }
+                    if (targetFile == null) {
+                        addLog("Nenhum arquivo de texto encontrado no diretório.", LogLevel.ERROR);
+                        return this.getLogArray();
+                    }
+                }
+
+                // Agora temos o arquivo alvo -> fazer a leitura
+                try (InputStream is = targetFile.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+                    StringBuilder content = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        content.append(line).append(System.lineSeparator());
+                    }
+
+                    addLog("Conteúdo lido com sucesso do arquivo: " + targetFile.getName(), LogLevel.INFO);
+                    addLog("Conteúdo do arquivo: " + content.toString(), LogLevel.DEBUG); // Aqui adiciona o conteúdo lido
+                }
+
+            } else {
+                addLog("Diretório não encontrado ou não é um diretório.", LogLevel.ERROR);
+            }
+
+        } catch (Exception e) {
+            logException("Erro ao ler o arquivo do diretório.", e);
+        }
+
+        return this.getLogArray();
     }
 
-    private void addToArray(String input, LogLevel level) {
-
-        LogOccurrence log = new LogOccurrence(input, level);
-        this.LogArray.add(log);
+    /**
+     * Método auxiliar para verificar se é um arquivo de texto.
+     */
+    private boolean isTextFile(String fileName) {
+        String lowerName = fileName.toLowerCase();
+        return lowerName.endsWith(".txt") || lowerName.endsWith(".log") || lowerName.endsWith(".csv")
+                || lowerName.endsWith(".json") || lowerName.endsWith(".xml");
     }
 
-    public ArrayList<LogOccurrence> getLogArray() {
-        return LogArray;
+    private boolean authenticate() {
+        if (auth == null) {
+            smbAuth();
+        }
+        return auth != null;
     }
 
+    private String getSmbUrl() {
+        return "smb:" + shost.replace("\\", "/");
+    }
+
+    private String generateFileName() {
+        String timestamp = new SimpleDateFormat("dd-MM-yyyy-HH:mm:ssss").format(new Date());
+        return this.fileName + "-" + timestamp.replaceAll("[: ]", "") + ".txt";
+    }
+
+    private void logException(String message, Exception e) {
+        Logger.getLogger(SmbClient.class.getName()).log(Level.SEVERE, message, e);
+        addLog(message, LogLevel.ERROR);
+        addLog(getStackTraceAsString(e), LogLevel.DEBUG);
+    }
+
+    private String getStackTraceAsString(Exception e) {
+        StringWriter sw = new StringWriter();
+        try (PrintWriter pw = new PrintWriter(sw)) {
+            e.printStackTrace(pw);
+        }
+        return sw.toString();
+    }
+
+    private void addLog(String message, LogLevel level) {
+        logArray.add(new LogOccurrence(message, level));
+    }
+
+    public List<LogOccurrence> getLogArray() {
+        return logArray;
+    }
 }

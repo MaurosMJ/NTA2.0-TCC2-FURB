@@ -10,6 +10,7 @@ import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.httpPersistence.HttpConfig;
+import Service.HttpClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
 import Utils.RoundedBorder;
@@ -30,6 +31,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -49,6 +53,7 @@ public class HttpUI extends javax.swing.JFrame {
     private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private boolean barraPesquisaPrimeiroAcesso = true;
+    Map<String, String> parametrosMap;
 
     /**
      * Creates new form SocketUI
@@ -848,7 +853,16 @@ public class HttpUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
-        persistirInformacoes();
+
+        HttpClient http = new HttpClient(protocoloCHB.getSelectedItem().toString(), endPointTF.getText(), parametrosTF.getText());
+
+        if (operacaoCHB.getSelectedIndex() == 0) {
+            addToArray(http.sendGetRequest());
+        } else {
+            parametrosMap = this.parseParametersString(parametrosTF.getText());
+            addToArray(http.sendPutRequest(parametrosMap));
+        }
+        filterDisplayResults();
         persistirInformacoes();
     }
 
@@ -1280,6 +1294,30 @@ public class HttpUI extends javax.swing.JFrame {
         }
     }
 
+public Map<String, String> parseParametersString(String parameters) {
+    Map<String, String> paramMap = new HashMap<>();
+
+    if (parameters != null && !parameters.trim().isEmpty()) {
+        String[] tokens = parameters.trim().split("\\s+");
+
+        String currentKey = null;
+        for (String token : tokens) {
+            if (token.endsWith(":")) {
+                // Remover ":" do final para usar como chave
+                currentKey = token.substring(0, token.length() - 1).trim();
+            } else if (currentKey != null) {
+                // A palavra seguinte é o valor
+                paramMap.put(currentKey, token.trim());
+                currentKey = null; // Resetar para esperar nova chave
+            } else {
+                System.out.println("Par inválido ignorado: " + token);
+            }
+        }
+    }
+
+    return paramMap;
+}
+
 
     private void operacaoCHBItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_operacaoCHBItemStateChanged
         operacaoCHB();
@@ -1413,6 +1451,13 @@ public class HttpUI extends javax.swing.JFrame {
 
         LogOccurrence log = new LogOccurrence(input, level);
         this.LogArray.add(log);
+    }
+
+    private void addToArray(List<LogOccurrence> list) {
+
+        for (LogOccurrence log : list) {
+            this.LogArray.add(log);
+        }
     }
 
     private void searchBarAction() {

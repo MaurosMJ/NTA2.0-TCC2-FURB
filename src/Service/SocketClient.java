@@ -33,8 +33,9 @@ public class SocketClient {
                 this.addToArray("Successful connection with " + host + ":" + Integer.parseInt(port), LogLevel.INFO);
             }
         } catch (IOException e) {
-            e.printStackTrace(pw);
+            
             this.addToArray("Unable to connect to " + host + ":" + Integer.parseInt(port), LogLevel.SEVERE);
+            e.printStackTrace(pw);
             this.addToArray(sw.toString(), LogLevel.DEBUG);
 
         }

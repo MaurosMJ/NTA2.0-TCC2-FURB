@@ -477,7 +477,10 @@ public class MainMenuForm extends javax.swing.JFrame {
 
     private void fundoMonitoramentoMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoMonitoramentoMouseEntered
         // TODO add your handling code here:
-        fundoMonitoramentoAction();
+        fundoMonitoramento.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 3px de espessura  
+        setTextInfoButton("Acessar o painel de monitoramento remoto.");
+        ajustarTamanhoLabel(userInfoL);
+        ocultarLogoNTA();
     }//GEN-LAST:event_fundoMonitoramentoMouseEntered
 
     private void fundoMonitoramentoMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoMonitoramentoMouseExited
@@ -632,7 +635,10 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_admSistemaLogoLMouseEntered
 
     private void monitoramentoLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_monitoramentoLogoLMouseEntered
-        fundoMonitoramentoAction();
+        fundoMonitoramento.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 3px de espessura  
+        setTextInfoButton("Acessar o painel de monitoramento remoto.");
+        ajustarTamanhoLabel(userInfoL);
+        ocultarLogoNTA();
     }//GEN-LAST:event_monitoramentoLogoLMouseEntered
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -645,10 +651,10 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void fundoMonitoramentoAction() {
-        fundoMonitoramento.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 3px de espessura  
-        setTextInfoButton("Acessar o painel de monitoramento remoto.");
-        ajustarTamanhoLabel(userInfoL);
-        ocultarLogoNTA();
+
+        this.dispose();
+        new MonitoringUI().setVisible(true);
+
     }
 
     private void fundoAdmSistemaAction() {

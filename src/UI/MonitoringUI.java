@@ -5,6 +5,11 @@
  */
 package UI;
 
+import Utils.RoundedBorder;
+import java.awt.Color;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author Mauros
@@ -16,6 +21,53 @@ public class MonitoringUI extends javax.swing.JFrame {
      */
     public MonitoringUI() {
         initComponents();
+        initImg();
+    }
+
+    private void initImg() {
+        javax.swing.JLabel worker1LN = worker1L;
+        worker1LN.setBounds(worker1L.getX(), worker1L.getY(), worker1L.getWidth() - 60, worker1L.getHeight() - 20);
+        javax.swing.JLabel worker2LN = worker2L;
+        worker2LN.setBounds(worker2LN.getX(), worker2LN.getY(), worker2LN.getWidth() - 60, worker2LN.getHeight() - 20);
+        javax.swing.JLabel homeLN = homeL;
+        homeLN.setBounds(homeLN.getX(), homeLN.getY(), homeLN.getWidth() - 60, homeLN.getHeight() - 20);
+        javax.swing.JLabel configLN = configL;
+        configLN.setBounds(configLN.getX(), configLN.getY(), configLN.getWidth() - 60, configLN.getHeight() - 20);
+
+        
+        Image worker1Logo = this.getScaledImage("imgs/Worker.png", worker1LN, true);
+        Image worker2Logo = this.getScaledImage("imgs/notificationWorker.png", worker2LN, true);
+        Image homeLogo = this.getScaledImage("imgs/home_Icon.png", homeLN, true);
+        Image configLogo = this.getScaledImage("imgs/sysadmin_icon.png", configLN, true);
+
+        setScaledImage(worker1LN, worker1Logo);
+        setScaledImage(worker2L, worker2Logo);
+        setScaledImage(homeLN, homeLogo);
+        setScaledImage(configLN, configLogo);
+
+        worker1L.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        worker2L.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        WorkersL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        menuL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        homeL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        configL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+
+    }
+
+    private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(directory));
+        Image image = icon.getImage();
+
+        if (scaled) {
+            Image ScaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
+            return ScaledImage;
+        } else {
+            return image;
+        }
+    }
+
+    private void setScaledImage(javax.swing.JLabel label, Image image) {
+        label.setIcon(new javax.swing.ImageIcon(image));
     }
 
     /**
@@ -33,7 +85,13 @@ public class MonitoringUI extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        worker2L = new javax.swing.JLabel();
+        worker1L = new javax.swing.JLabel();
+        WorkersL = new javax.swing.JLabel();
+        homeL = new javax.swing.JLabel();
+        menuL = new javax.swing.JLabel();
+        configL = new javax.swing.JLabel();
+        menuL1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NTA - Painel de monitoramento");
@@ -42,28 +100,33 @@ public class MonitoringUI extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
+        jPanel3.setMaximumSize(new java.awt.Dimension(16383, 16383));
+        jPanel3.setPreferredSize(new java.awt.Dimension(50, 487));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 50, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGap(0, 465, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.LINE_START);
+
+        jPanel4.setPreferredSize(new java.awt.Dimension(50, 487));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 50, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 486, Short.MAX_VALUE)
+            .addGap(0, 465, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel4, java.awt.BorderLayout.LINE_END);
@@ -72,7 +135,7 @@ public class MonitoringUI extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 950, Short.MAX_VALUE)
+            .addGap(0, 1126, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,29 +146,175 @@ public class MonitoringUI extends javax.swing.JFrame {
 
         jPanel1.setMinimumSize(new java.awt.Dimension(100, 150));
 
-        jButton1.setText("jButton1");
+        worker2L.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        worker2L.setToolTipText("");
+        worker2L.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                worker2LMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                worker2LMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                worker2LMouseExited(evt);
+            }
+        });
+
+        worker1L.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        worker1L.setToolTipText("");
+        worker1L.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                worker1LMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                worker1LMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                worker1LMouseExited(evt);
+            }
+        });
+
+        WorkersL.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        WorkersL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        WorkersL.setText("Workers");
+
+        homeL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        homeL.setToolTipText("");
+        homeL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                homeLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeLMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeLMouseExited(evt);
+            }
+        });
+
+        menuL.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        menuL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        menuL.setText("Menu");
+
+        configL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        configL.setToolTipText("");
+        configL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                configLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                configLMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                configLMouseExited(evt);
+            }
+        });
+
+        menuL1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        menuL1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        menuL1.setText("Status");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(440, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(437, 437, 437))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(122, 122, 122)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(worker1L, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(worker2L, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(WorkersL, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(homeL, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(configL, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(menuL, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(menuL1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(130, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(jButton1)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(WorkersL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menuL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(menuL1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(homeL, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(worker1L, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(worker2L, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(configL, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void worker2LMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker2LMouseClicked
+
+    }//GEN-LAST:event_worker2LMouseClicked
+
+    private void worker2LMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker2LMouseEntered
+        worker2L.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_worker2LMouseEntered
+
+    private void worker2LMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker2LMouseExited
+        // TODO add your handling code here:
+        worker2L.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_worker2LMouseExited
+
+    private void worker1LMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker1LMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_worker1LMouseClicked
+
+    private void worker1LMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker1LMouseEntered
+        // TODO add your handling code here:
+        worker1L.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_worker1LMouseEntered
+
+    private void worker1LMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker1LMouseExited
+        // TODO add your handling code here:
+        worker1L.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_worker1LMouseExited
+
+    private void homeLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeLMouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+        new MainMenuForm().setVisible(true);
+    }//GEN-LAST:event_homeLMouseClicked
+
+    private void homeLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeLMouseEntered
+        // TODO add your handling code here:
+        homeL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_homeLMouseEntered
+
+    private void homeLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeLMouseExited
+        // TODO add your handling code here:
+        homeL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_homeLMouseExited
+
+    private void configLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_configLMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_configLMouseClicked
+
+    private void configLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_configLMouseEntered
+        // TODO add your handling code here:
+        configL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_configLMouseEntered
+
+    private void configLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_configLMouseExited
+        // TODO add your handling code here:
+        configL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_configLMouseExited
 
     /**
      * @param args the command line arguments
@@ -143,12 +352,18 @@ public class MonitoringUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel WorkersL;
+    private javax.swing.JLabel configL;
+    private javax.swing.JLabel homeL;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JLabel menuL;
+    private javax.swing.JLabel menuL1;
+    private javax.swing.JLabel worker1L;
+    private javax.swing.JLabel worker2L;
     // End of variables declaration//GEN-END:variables
 }

@@ -41,8 +41,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbException;
+
 
 /**
  *

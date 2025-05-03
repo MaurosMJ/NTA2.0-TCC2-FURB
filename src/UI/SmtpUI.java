@@ -9,7 +9,7 @@ import Entities.LogOccurrence;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.SmtpPersistence.SmtpConfig;
+import Persistence.Modules.SmtpPersistence.SmtpConfig;
 import Service.SmtpClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -1868,12 +1868,12 @@ public class SmtpUI extends javax.swing.JFrame {
         config.session.isAutenticacao = autenticacaoCHB.isSelected();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("emailConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config));
+        salvarJsonEmAppData("emailConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "emailConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        SmtpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmtpConfig.class);
+        SmtpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmtpConfig.class, "/Persistence");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

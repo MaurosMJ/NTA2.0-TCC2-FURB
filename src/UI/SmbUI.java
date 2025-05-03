@@ -9,7 +9,7 @@ import Entities.LogOccurrence;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.SmbPersistence.SmbConfig;
+import Persistence.Modules.SmbPersistence.SmbConfig;
 import Service.SmbClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -1889,12 +1889,12 @@ public class SmbUI extends javax.swing.JFrame {
         config.session.conteudo = conteudoTF.getText();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("smbConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config));
+        salvarJsonEmAppData("smbConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "smbConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        SmbConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmbConfig.class);
+        SmbConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmbConfig.class, "/Persistence");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

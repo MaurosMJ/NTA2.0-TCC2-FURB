@@ -9,18 +9,15 @@ import Entities.LogOccurrence;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.SocketPersistence.SocketConfig;
+import Persistence.Modules.SocketPersistence.SocketConfig;
 import Service.SocketClient;
-import UserConfig.UserProperties;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
-import static Utils.HostConfig.permitirLogGeracao;
 import Utils.RoundedBorder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -1446,12 +1443,12 @@ public class SocketUI extends javax.swing.JFrame {
         config.session.portaPadrao = ppadraoCHB.getSelectedIndex();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config));
+        salvarJsonEmAppData("socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        SocketConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SocketConfig.class);
+        SocketConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SocketConfig.class, "/Persistence");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

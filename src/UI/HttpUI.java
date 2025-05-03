@@ -9,7 +9,7 @@ import Entities.LogOccurrence;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.httpPersistence.HttpConfig;
+import Persistence.Modules.httpPersistence.HttpConfig;
 import Service.HttpClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -1619,12 +1619,12 @@ public Map<String, String> parseParametersString(String parameters) {
         config.session.parametros = parametrosTF.getText();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("httpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config));
+        salvarJsonEmAppData("httpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "httpConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        HttpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, HttpConfig.class);
+        HttpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, HttpConfig.class, "/Persistence");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

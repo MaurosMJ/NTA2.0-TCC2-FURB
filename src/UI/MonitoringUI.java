@@ -68,6 +68,8 @@ public final class MonitoringUI extends javax.swing.JFrame {
         homeLN.setBounds(homeLN.getX(), homeLN.getY(), homeLN.getWidth() - 60, homeLN.getHeight() - 20);
         javax.swing.JLabel configLN = configL;
         configLN.setBounds(configLN.getX(), configLN.getY(), configLN.getWidth() - 60, configLN.getHeight() - 20);
+        javax.swing.JLabel refreshLN = refreshL;
+        refreshLN.setBounds(refreshLN.getX(), refreshLN.getY(), refreshLN.getWidth() - 60, refreshLN.getHeight() - 20);
 
         Image worker1Logo = this.getScaledImage("imgs/Worker.png", worker1LN, true);
         Image worker2Logo = this.getScaledImage("imgs/notificationWorker.png", worker2LN, true);
@@ -75,6 +77,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         Image configLogo = this.getScaledImage("imgs/sysadmin_icon.png", configLN, true);
         Image pesquisaLogo = this.getScaledImage("imgs/search_Icon.png", pesquisaL1, true);
         Image ntaLogo = this.getScaledImage("imgs/nta_logo2.png", ntaL, true);
+        Image refreshLogo = this.getScaledImage("imgs/refresh_icon.png", refreshL, true);
 
         setScaledImage(worker1LN, worker1Logo);
         setScaledImage(worker2L, worker2Logo);
@@ -82,6 +85,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         setScaledImage(configLN, configLogo);
         setScaledImage(pesquisaL1, pesquisaLogo);
         setScaledImage(ntaL, ntaLogo);
+        setScaledImage(refreshLN, refreshLogo);
 
         worker1L.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         worker2L.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -90,6 +94,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         homeL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         configL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         statusL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        refreshL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         campoPesquisaTF.setBorder(new RoundedBorder(Color.GRAY, 2, 30)); // Arredondado
         campoPesquisaTF.setOpaque(false); //
@@ -170,7 +175,6 @@ public final class MonitoringUI extends javax.swing.JFrame {
     public void carregarInformacoesArquivo() {
         String nomeArquivo = "LogNTA.json";
         List<LogPersistence> listaLogs = JsonPersistence.carregarJsonAppdataLog(nomeArquivo);
-
         if (listaLogs == null || listaLogs.isEmpty()) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
             return;
@@ -231,6 +235,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         } else {
             worker2LL.setText("Worker2: NOK");
         }
+
     }
 
     //Metodo adiciona tudo oque recebe do arquivo de leitura ao ARRAY
@@ -382,6 +387,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         worker1LL = new javax.swing.JLabel();
         maquinasL = new javax.swing.JLabel();
         changeL = new javax.swing.JLabel();
+        refreshL = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -700,6 +706,20 @@ public final class MonitoringUI extends javax.swing.JFrame {
 
         changeL.setText("Atualização: 0");
 
+        refreshL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        refreshL.setToolTipText("");
+        refreshL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refreshLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                refreshLMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                refreshLMouseExited(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -721,9 +741,6 @@ public final class MonitoringUI extends javax.swing.JFrame {
                     .addComponent(menuL, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(statusL, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(56, 56, 56)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(avisosL)
@@ -735,8 +752,13 @@ public final class MonitoringUI extends javax.swing.JFrame {
                             .addComponent(worker2LL)
                             .addComponent(worker1LL)
                             .addComponent(maquinasL)
-                            .addComponent(changeL))))
-                .addContainerGap(301, Short.MAX_VALUE))
+                            .addComponent(changeL))
+                        .addGap(35, 35, 35)
+                        .addComponent(refreshL, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(statusL, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -761,13 +783,17 @@ public final class MonitoringUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bemL))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(maquinasL)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(worker1LL)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(worker2LL)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeL)))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(refreshL, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(maquinasL)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(worker1LL)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(worker2LL)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(changeL)))))
                 .addGap(23, 23, 23))
         );
 
@@ -961,6 +987,26 @@ public final class MonitoringUI extends javax.swing.JFrame {
         searchBarAction();
     }//GEN-LAST:event_campoPesquisaTFKeyReleased
 
+    private void refreshLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshLMouseClicked
+        // TODO add your handling code here:
+        atualizaResultados();
+    }//GEN-LAST:event_refreshLMouseClicked
+
+    private void refreshLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshLMouseEntered
+        // TODO add your handling code here:
+        refreshL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_refreshLMouseEntered
+
+    private void refreshLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshLMouseExited
+        refreshL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_refreshLMouseExited
+
+    private void atualizaResultados() {
+        LogArray.clear();
+        carregarInformacoesArquivo();
+        exibirInformacoesArray();
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -1026,6 +1072,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
     private javax.swing.JLabel menuL;
     private javax.swing.JLabel ntaL;
     private javax.swing.JLabel pesquisaL1;
+    private javax.swing.JLabel refreshL;
     private javax.swing.JLabel registrosL;
     private javax.swing.JLabel statusL;
     private javax.swing.JLabel worker1L;

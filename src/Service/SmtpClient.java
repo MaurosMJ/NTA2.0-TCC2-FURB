@@ -5,7 +5,7 @@
  */
 package Service;
 
-import Entities.LogOccurrence;
+import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,9 +22,9 @@ public class SmtpClient {
 
     private final StringWriter sw = new StringWriter();
     private final PrintWriter pw = new PrintWriter(sw);
-    private final ArrayList<LogOccurrence> LogArray = new ArrayList<>();
+    private final ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
 
-    public ArrayList<LogOccurrence> PerformServerConnection(String host, String port, String aut, String prot, String stls, String rem, String pwd, String des, String tmsg, String pmsg) {
+    public ArrayList<LogOccurrenceModule> PerformServerConnection(String host, String port, String aut, String prot, String stls, String rem, String pwd, String des, String tmsg, String pmsg) {
 
         Properties props = new Properties();
         configureSmtpProperties(props, aut, stls, host, port, prot);
@@ -71,11 +71,11 @@ public class SmtpClient {
 
     private void addToArray(String input, LogLevel level) {
 
-        LogOccurrence log = new LogOccurrence(input, level);
+        LogOccurrenceModule log = new LogOccurrenceModule(input, level);
         this.LogArray.add(log);
     }
 
-    public ArrayList<LogOccurrence> getLogArray() {
+    public ArrayList<LogOccurrenceModule> getLogArray() {
         return LogArray;
     }
 

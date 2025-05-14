@@ -5,7 +5,7 @@
  */
 package Service;
 
-import Entities.LogOccurrence;
+import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,9 +21,9 @@ public class SocketClient {
 
     private final StringWriter sw = new StringWriter();
     private final PrintWriter pw = new PrintWriter(sw);
-    private final ArrayList<LogOccurrence> LogArray = new ArrayList<>();
+    private final ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
 
-    public ArrayList<LogOccurrence> PerformServerConnection(String host, String port) {
+    public ArrayList<LogOccurrenceModule> PerformServerConnection(String host, String port) {
         if (host == null || host.isEmpty() || Integer.parseInt(port) <= 0) {
             this.addToArray("Argumentos inválidos para estabelecer a conexão.", LogLevel.ERROR);
         }
@@ -44,11 +44,11 @@ public class SocketClient {
 
     private void addToArray(String input, LogLevel level) {
 
-        LogOccurrence log = new LogOccurrence(input, level);
+        LogOccurrenceModule log = new LogOccurrenceModule(input, level);
         this.LogArray.add(log);
     }
 
-    public ArrayList<LogOccurrence> getLogArray() {
+    public ArrayList<LogOccurrenceModule> getLogArray() {
         return LogArray;
     }
 

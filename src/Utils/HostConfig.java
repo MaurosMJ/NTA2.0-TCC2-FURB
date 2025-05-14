@@ -5,7 +5,7 @@
  */
 package Utils;
 
-import Entities.LogOccurrence;
+import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import UserConfig.UserProperties;
 import java.net.InetAddress;
@@ -74,7 +74,7 @@ public class HostConfig {
         }
     }
 
-    public static String getLogFormatFromLogOccurrence(LogOccurrence log) {
+    public static String getLogFormatFromLogOccurrence(LogOccurrenceModule log) {
 
         if (permitirLogGeracao(log.getSeverity())) {
             return String.format("[%s] [%s] [%s] [%s] [%s] %s",

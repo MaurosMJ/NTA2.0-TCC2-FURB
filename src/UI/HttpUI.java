@@ -5,7 +5,7 @@
  */
 package UI;
 
-import Entities.LogOccurrence;
+import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
@@ -50,7 +50,7 @@ import javax.swing.text.MaskFormatter;
  */
 public class HttpUI extends javax.swing.JFrame {
 
-    private ArrayList<LogOccurrence> LogArray = new ArrayList<>();
+    private ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private boolean barraPesquisaPrimeiroAcesso = true;
     Map<String, String> parametrosMap;
@@ -1449,13 +1449,13 @@ public Map<String, String> parseParametersString(String parameters) {
 
     private void addToArray(String input, LogLevel level) {
 
-        LogOccurrence log = new LogOccurrence(input, level);
+        LogOccurrenceModule log = new LogOccurrenceModule(input, level);
         this.LogArray.add(log);
     }
 
-    private void addToArray(List<LogOccurrence> list) {
+    private void addToArray(List<LogOccurrenceModule> list) {
 
-        for (LogOccurrence log : list) {
+        for (LogOccurrenceModule log : list) {
             this.LogArray.add(log);
         }
     }
@@ -1463,7 +1463,7 @@ public Map<String, String> parseParametersString(String parameters) {
     private void searchBarAction() {
         StringBuilder resultado = new StringBuilder("ConsoleLog");
 
-        for (LogOccurrence log : LogArray) {
+        for (LogOccurrenceModule log : LogArray) {
             if (log.getData().toLowerCase().contains(campoPesquisaTF.getText().trim().toLowerCase())) {
                 resultado.append("\n").append(HostConfig.getLogFormatFromLogOccurrence(log));
             }
@@ -1480,7 +1480,7 @@ public Map<String, String> parseParametersString(String parameters) {
                 Date dataInicial = sdf.parse(dataInicialFTF.getText());
                 Date dataFinal = sdf.parse(dataFinalFTF.getText());
 
-                for (LogOccurrence log : LogArray) {
+                for (LogOccurrenceModule log : LogArray) {
                     if (permitirLogGeracao(log.getSeverity())) {
                         Date dataLog = log.getOccurrence();
                         if (dataLog != null && !dataLog.before(dataInicial) && !dataLog.after(dataFinal)) {
@@ -1492,7 +1492,7 @@ public Map<String, String> parseParametersString(String parameters) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha corretamente as datas nos campos!", "Data inválida", JOptionPane.WARNING_MESSAGE);
             }
         } else {
-            for (LogOccurrence log : LogArray) {
+            for (LogOccurrenceModule log : LogArray) {
                 if (permitirLogGeracao(log.getSeverity())) {
                     logTA.setText(logTA.getText() + "\n" + HostConfig.getLogFormatFromLogOccurrence(log));
                 }

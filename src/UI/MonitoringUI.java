@@ -5,23 +5,34 @@
  */
 package UI;
 
+import Entities.*;
+import Enum.*;
+import Utils.*;
 import Persistence.JsonPersistence;
 import Persistence.Logs.LogPersistence;
-import Utils.RoundedBorder;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -30,7 +41,7 @@ import javax.swing.table.DefaultTableModel;
 public final class MonitoringUI extends javax.swing.JFrame {
 
     private boolean barraPesquisaPrimeiroAcesso = true;
-    DefaultTableModel model;
+    private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
 
     /**
      * Creates new form MonitoringUI
@@ -39,7 +50,9 @@ public final class MonitoringUI extends javax.swing.JFrame {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initImg();
-        SwingUtilities.invokeLater(() -> carregarInformacoes());
+        inicializaFTF();
+        SwingUtilities.invokeLater(() -> carregarInformacoesArquivo());
+        SwingUtilities.invokeLater(() -> exibirInformacoesArray());
     }
 
     private void initImg() {
@@ -150,7 +163,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         this.barraPesquisaPrimeiroAcesso = barraPesquisaPrimeiroAcesso;
     }
 
-    public void carregarInformacoes() {
+    public void carregarInformacoesArquivo() {
         String nomeArquivo = "LogNTA.json";
         List<LogPersistence> listaLogs = JsonPersistence.carregarJsonAppdataLog(nomeArquivo);
 
@@ -158,19 +171,101 @@ public final class MonitoringUI extends javax.swing.JFrame {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
             return;
         }
-
-        model = (DefaultTableModel) jTable1.getModel();
-
         for (LogPersistence config : listaLogs) {
             for (LogPersistence.SessionValues entry : config.session) {
-                model.addRow(new Object[]{
-                    entry.data,
-                    entry.maquina,
-                    entry.level,
-                    config.module,
-                    entry.log,
-                    entry.icmpRequest
-                });
+                this.addToArray(entry.maquina, entry.level, config.module, entry.log, entry.icmpRequest, entry.data);
+            }
+        }
+
+    }
+
+    //Metodo adiciona tudo oque recebe do arquivo de leitura ao ARRAY
+    private void addToArray(String host, LogLevel level, String modulo, String inputLog, double icmp, String occurrence) {
+
+        LogOcurrenceMonitoring log = new LogOcurrenceMonitoring(host, level, Module.valueOf(modulo), inputLog, icmp, occurrence);
+        this.LogArray.add(log);
+    }
+
+    private void exibirInformacoesArray() {
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //22/03/1999 01:00:00
+        if (dataCHB.isSelected()) {
+            try {
+                Date dataInicial = sdf.parse(dataInicialFTF.getText().trim());
+                Date dataFinal = sdf.parse(dataFinalFTF.getText().trim());
+                for (LogOcurrenceMonitoring log : LogArray) {
+                    if (permitirLogGeracao(log.getLevel())) {
+                        Date dataLog = sdf.parse(log.getOccurrence());
+                        if (dataLog != null && !dataLog.before(dataInicial) && !dataLog.after(dataFinal)) {
+                            model.addRow(new Object[]{
+                                log.getOccurrence(),
+                                log.getHost(),
+                                log.getLevel().toString(),
+                                log.getModulo().toString(),
+                                log.getLog(),
+                                log.getIcmp()
+                            });
+                        }
+                    }
+                }
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha corretamente as datas nos campos ou verifique se o arquivo está com datas válidas!", "Data inválida", JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            for (LogOcurrenceMonitoring log : LogArray) {
+                if (permitirLogGeracao(log.getLevel())) {
+                    model.addRow(new Object[]{
+                        log.getOccurrence(),
+                        log.getHost(),
+                        log.getLevel().toString(),
+                        log.getModulo().toString(),
+                        log.getLog(),
+                        log.getIcmp()
+                    });
+                }
+            }
+        }
+    }
+
+    public boolean permitirLogGeracao(LogLevel nivelGerado) {
+        return nivelGerado.getPrioridade() >= (levelSL.getValue() + 1);
+    }
+
+    private void inicializaFTF() {
+        // Máscara: dd/MM/yyyy HH:mm:ss
+        MaskFormatter dateMask = null;
+
+        try {
+            dateMask = new MaskFormatter("##/##/#### ##:##:##");
+        } catch (ParseException ex) {
+            Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        dateMask.setPlaceholderCharacter('_');
+
+        dataInicialFTF.setColumns(20);
+        dataInicialFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
+        dataFinalFTF.setColumns(20);
+        dataFinalFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
+    }
+
+    private void searchBarAction() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        for (LogOcurrenceMonitoring log : LogArray) {
+            if (permitirLogGeracao(log.getLevel())) {
+                if (log.getLog().toLowerCase().contains(campoPesquisaTF.getText().trim().toLowerCase())) {
+                    model.addRow(new Object[]{
+                        log.getOccurrence(),
+                        log.getHost(),
+                        log.getLevel().toString(),
+                        log.getModulo().toString(),
+                        log.getLog(),
+                        log.getIcmp()
+                    });
+                }
             }
         }
     }
@@ -263,7 +358,6 @@ public final class MonitoringUI extends javax.swing.JFrame {
 
         campoPesquisaTF.setFont(new java.awt.Font("SansSerif", 2, 16)); // NOI18N
         campoPesquisaTF.setText("   Pesquisar");
-        campoPesquisaTF.setRequestFocusEnabled(false);
         campoPesquisaTF.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 campoPesquisaTFMouseClicked(evt);
@@ -272,6 +366,11 @@ public final class MonitoringUI extends javax.swing.JFrame {
         campoPesquisaTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 campoPesquisaTFActionPerformed(evt);
+            }
+        });
+        campoPesquisaTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoPesquisaTFKeyReleased(evt);
             }
         });
 
@@ -719,7 +818,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
             default:
                 levelL.setText("Level: Debug");
         }
-        //      filterDisplayResults();
+        exibirInformacoesArray();
     }//GEN-LAST:event_levelSLStateChanged
 
     private void levelSLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_levelSLMouseEntered
@@ -784,9 +883,13 @@ public final class MonitoringUI extends javax.swing.JFrame {
     }//GEN-LAST:event_filtrarBMouseEntered
 
     private void filtrarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarBActionPerformed
-        // TODO add your handling code here:
-//        filterDisplayResults();
+
+        exibirInformacoesArray();
     }//GEN-LAST:event_filtrarBActionPerformed
+
+    private void campoPesquisaTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoPesquisaTFKeyReleased
+        searchBarAction();
+    }//GEN-LAST:event_campoPesquisaTFKeyReleased
 
     /**
      * @param args the command line arguments

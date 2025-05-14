@@ -5,7 +5,7 @@
  */
 package Service;
 
-import Entities.LogOccurrence;
+import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -29,7 +29,7 @@ public class HttpClient {
     private String protocolo;
     private String endpoint;
     private String parametros;
-    private final ArrayList<LogOccurrence> LogArray = new ArrayList<>();
+    private final ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
 
     // HttpClient http = new HttpClient(protocoloCHB.getSelectedItem().toString(), endPointTF.getText(), parametrosTF.getText());
     public HttpClient(String protocolo, String endpoint, String parametros) {
@@ -38,7 +38,7 @@ public class HttpClient {
         this.parametros = parametros;
     }
 
-    public List<LogOccurrence> sendGetRequest() {
+    public List<LogOccurrenceModule> sendGetRequest() {
         StringBuilder response = new StringBuilder();
 
         String endpointUrl = protocolo + "://" + endpoint;
@@ -80,7 +80,7 @@ public class HttpClient {
     }
 
     // Método PUT
-    public List<LogOccurrence> sendPutRequest(Map<String, String> parameters) {
+    public List<LogOccurrenceModule> sendPutRequest(Map<String, String> parameters) {
         StringBuilder response = new StringBuilder();
         String endpointUrl = protocolo + "://" + endpoint;
         try {
@@ -137,11 +137,11 @@ public class HttpClient {
 
     private void addToArray(String input, LogLevel level) {
 
-        LogOccurrence log = new LogOccurrence(input, level);
+        LogOccurrenceModule log = new LogOccurrenceModule(input, level);
         this.LogArray.add(log);
     }
 
-    public ArrayList<LogOccurrence> getLogArray() {
+    public ArrayList<LogOccurrenceModule> getLogArray() {
         return LogArray;
     }
 

@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @author 320167484
  */
-public class LogOccurrence {
+public class LogOccurrenceModule {
     
     private String data;
     private String host;
@@ -22,7 +22,7 @@ public class LogOccurrence {
     private LogLevel level;
     private Date Occurrence;
     
-    public LogOccurrence (String data, LogLevel level){
+    public LogOccurrenceModule (String data, LogLevel level){
         this.setData(data);
         this.setSeverity(level);
         this.setOccurrence(HostConfig.obterDataAtual());

@@ -5,7 +5,7 @@
  */
 package Service;
 
-import Entities.LogOccurrence;
+import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import jcifs.smb.*;
 import jcifs.smb.NtlmPasswordAuthentication;
@@ -28,7 +28,7 @@ public class SmbClient {
     private final String antigoValor;
     private final String shost;
     private NtlmPasswordAuthentication auth;
-    private final List<LogOccurrence> logArray = new ArrayList<>();
+    private final List<LogOccurrenceModule> logArray = new ArrayList<>();
 
     public SmbClient(String usr, String dmn, String shost, String spwd, String fileName, String fileContent, String dir, String antigoValor) {
         this.usr = usr;
@@ -50,7 +50,7 @@ public class SmbClient {
         return host + dir;
     }
 
-    public List<LogOccurrence> smbAuth() {
+    public List<LogOccurrenceModule> smbAuth() {
         System.out.println("Iniciando autenticação com o host destino.");
 
         try {
@@ -65,7 +65,7 @@ public class SmbClient {
         return logArray;
     }
 
-    public List<LogOccurrence> writeToFile() {
+    public List<LogOccurrenceModule> writeToFile() {
         if (!authenticate()) {
             return logArray;
         }
@@ -84,7 +84,7 @@ public class SmbClient {
         return logArray;
     }
 
-    public List<LogOccurrence> renameFileInDirectory() {
+    public List<LogOccurrenceModule> renameFileInDirectory() {
         System.out.println("Iniciando renomeação de arquivo no diretório.");
 
         this.smbAuth(); // Autenticação SMB
@@ -135,7 +135,7 @@ public class SmbClient {
         return getLogArray();
     }
 
-    public List<LogOccurrence> smbListDir() {
+    public List<LogOccurrenceModule> smbListDir() {
         if (!authenticate()) {
             return getLogArray();
         }
@@ -154,7 +154,7 @@ public class SmbClient {
         return getLogArray();
     }
 
-    public List<LogOccurrence> truncateDirectory() {
+    public List<LogOccurrenceModule> truncateDirectory() {
         System.out.println("Iniciando truncamento do diretório.");
 
         smbAuth();
@@ -193,7 +193,7 @@ public class SmbClient {
         return getLogArray();
     }
 
-    public List<LogOccurrence> readTextFileFromDirectory() {
+    public List<LogOccurrenceModule> readTextFileFromDirectory() {
         System.out.println("Iniciando leitura de arquivo de texto do diretório.");
 
         this.smbAuth(); // Autenticação SMB
@@ -312,10 +312,10 @@ public class SmbClient {
     }
 
     private void addLog(String message, LogLevel level) {
-        logArray.add(new LogOccurrence(message, level));
+        logArray.add(new LogOccurrenceModule(message, level));
     }
 
-    public List<LogOccurrence> getLogArray() {
+    public List<LogOccurrenceModule> getLogArray() {
         return logArray;
     }
 }

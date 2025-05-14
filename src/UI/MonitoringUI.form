@@ -198,11 +198,11 @@
               <Font name="SansSerif" size="16" style="2"/>
             </Property>
             <Property name="text" type="java.lang.String" value="   Pesquisar"/>
-            <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="campoPesquisaTFMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="campoPesquisaTFActionPerformed"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="campoPesquisaTFKeyReleased"/>
           </Events>
         </Component>
         <Component class="javax.swing.JSlider" name="levelSL">

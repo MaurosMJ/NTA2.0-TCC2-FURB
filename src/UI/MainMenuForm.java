@@ -5,11 +5,20 @@
  */
 package UI;
 
+import Entities.LogOcurrenceMonitoring;
+import Enum.LogLevel;
+import Enum.Module;
+import Persistence.JsonPersistence;
+import Persistence.Logs.LogPersistence;
 import Utils.RoundedBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
@@ -18,6 +27,8 @@ import javax.swing.UIManager;
  * @author Mauros
  */
 public class MainMenuForm extends javax.swing.JFrame {
+
+    private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
 
     /**
      * Creates new form MainApplication
@@ -34,6 +45,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         this.initImg();
         exibirLogoNTA();
         setTextInfoButton("Selecione uma das opções abaixo.");
+        carregarInformacoesArquivo();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -76,7 +88,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         separadorInferior2 = new javax.swing.JSeparator();
         txtErrorL = new javax.swing.JTextField();
         txtWarningL = new javax.swing.JTextField();
-        txtFineL1 = new javax.swing.JTextField();
+        txtHostsL = new javax.swing.JTextField();
         txtFineL = new javax.swing.JTextField();
         hostL = new javax.swing.JLabel();
         errorL1 = new javax.swing.JLabel();
@@ -308,18 +320,18 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
         getContentPane().add(txtWarningL, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 700, 70, 40));
 
-        txtFineL1.setEditable(false);
-        txtFineL1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        txtFineL1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtFineL1.setText("0");
-        txtFineL1.setFocusable(false);
-        txtFineL1.setRequestFocusEnabled(false);
-        txtFineL1.addActionListener(new java.awt.event.ActionListener() {
+        txtHostsL.setEditable(false);
+        txtHostsL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        txtHostsL.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtHostsL.setText("0");
+        txtHostsL.setFocusable(false);
+        txtHostsL.setRequestFocusEnabled(false);
+        txtHostsL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFineL1ActionPerformed(evt);
+                txtHostsLActionPerformed(evt);
             }
         });
-        getContentPane().add(txtFineL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 700, 70, 40));
+        getContentPane().add(txtHostsL, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 700, 70, 40));
 
         txtFineL.setEditable(false);
         txtFineL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -501,9 +513,9 @@ public class MainMenuForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFineLActionPerformed
 
-    private void txtFineL1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFineL1ActionPerformed
+    private void txtHostsLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHostsLActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtFineL1ActionPerformed
+    }//GEN-LAST:event_txtHostsLActionPerformed
 
     private void hostLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hostLMouseEntered
         // TODO add your handling code here:
@@ -685,6 +697,59 @@ public class MainMenuForm extends javax.swing.JFrame {
         new HttpUI().setVisible(true);
     }
 
+    public void carregarInformacoesArquivo() {
+        String nomeArquivo = "LogNTA.json";
+        List<LogPersistence> listaLogs = JsonPersistence.carregarJsonAppdataLog(nomeArquivo);
+
+        if (listaLogs == null || listaLogs.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+        for (LogPersistence config : listaLogs) {
+            for (LogPersistence.SessionValues entry : config.session) {
+                this.addToArray(entry.maquina, entry.level, config.module, entry.log, entry.icmpRequest, entry.data);
+            }
+        }
+        carregarBarraStatus();
+    }
+
+    //Metodo adiciona tudo oque recebe do arquivo de leitura ao ARRAY
+    private void addToArray(String host, LogLevel level, String modulo, String inputLog, double icmp, String occurrence) {
+
+        LogOcurrenceMonitoring log = new LogOcurrenceMonitoring(host, level, Module.valueOf(modulo), inputLog, icmp, occurrence);
+        this.LogArray.add(log);
+    }
+
+    private void carregarBarraStatus() {
+        int qtdFine = 0;
+        int qtdWarn = 0;
+        int qtdError = 0;
+
+        Set<String> hostsUnicos = new HashSet<>();
+
+        for (LogOcurrenceMonitoring log : LogArray) {
+
+            hostsUnicos.add(log.getHost());
+
+            if (log.getLevel() == LogLevel.DEBUG
+                    || log.getLevel() == LogLevel.FINE
+                    || log.getLevel() == LogLevel.INFO) {
+                qtdFine++;
+            }
+            if (log.getLevel() == LogLevel.WARNING) {
+                qtdWarn++;
+            }
+            if (log.getLevel() == LogLevel.ERROR || log.getLevel() == LogLevel.SEVERE) {
+                qtdError++;
+            }
+        }
+
+        txtErrorL.setText(String.valueOf(qtdError));
+        txtFineL.setText(String.valueOf(qtdFine));
+        txtWarningL.setText(String.valueOf(qtdWarn));
+        txtHostsL.setText(String.valueOf(hostsUnicos.size()));
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -847,7 +912,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel socketLogoL;
     private javax.swing.JTextField txtErrorL;
     private javax.swing.JTextField txtFineL;
-    private javax.swing.JTextField txtFineL1;
+    private javax.swing.JTextField txtHostsL;
     private javax.swing.JTextField txtWarningL;
     private javax.swing.JLabel userInfoL;
     private javax.swing.JLabel warningL;

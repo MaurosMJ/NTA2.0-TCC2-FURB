@@ -45,10 +45,6 @@ public final class MonitoringUI extends javax.swing.JFrame {
     private boolean barraPesquisaPrimeiroAcesso = true;
     private boolean worker1 = false;
     private boolean worker2 = false;
-
-    public void setWorker2(boolean worker2) {
-        this.worker2 = worker2;
-    }
     private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
 
     /**
@@ -334,6 +330,10 @@ public final class MonitoringUI extends javax.swing.JFrame {
 
     public void setWorker1(boolean worker1) {
         this.worker1 = worker1;
+    }
+
+    public void setWorker2(boolean worker2) {
+        this.worker2 = worker2;
     }
 
     public boolean isWorker2() {

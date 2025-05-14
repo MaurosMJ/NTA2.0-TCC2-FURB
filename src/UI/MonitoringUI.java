@@ -19,7 +19,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -41,6 +43,12 @@ import javax.swing.text.MaskFormatter;
 public final class MonitoringUI extends javax.swing.JFrame {
 
     private boolean barraPesquisaPrimeiroAcesso = true;
+    private boolean worker1 = false;
+    private boolean worker2 = false;
+
+    public void setWorker2(boolean worker2) {
+        this.worker2 = worker2;
+    }
     private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
 
     /**
@@ -176,7 +184,57 @@ public final class MonitoringUI extends javax.swing.JFrame {
                 this.addToArray(entry.maquina, entry.level, config.module, entry.log, entry.icmpRequest, entry.data);
             }
         }
+        carregarBarraStatus();
+    }
 
+    private void carregarBarraStatus() {
+        int qtdRegistros = 0;
+        int qtdFine = 0;
+        int qtdWarn = 0;
+        int qtdError = 0;
+
+        Set<String> hostsUnicos = new HashSet<>();
+
+        for (LogOcurrenceMonitoring log : LogArray) {
+            qtdRegistros++;
+
+            hostsUnicos.add(log.getHost());
+
+            if (log.getLevel() == LogLevel.DEBUG
+                    || log.getLevel() == LogLevel.FINE
+                    || log.getLevel() == LogLevel.INFO) {
+                qtdFine++;
+            }
+            if (log.getLevel() == LogLevel.WARNING) {
+                qtdWarn++;
+            }
+            if (log.getLevel() == LogLevel.ERROR || log.getLevel() == LogLevel.SEVERE) {
+                qtdError++;
+            }
+        }
+
+        registrosL.setText("Registros: " + qtdRegistros);
+        bemL.setText("Bem: " + qtdFine);
+        avisosL.setText("Avisos: " + qtdWarn);
+        errosL.setText("Erros: " + qtdError);
+
+        int qtdHostsDistintos = hostsUnicos.size();
+        maquinasL.setText("Máquinas: " + qtdHostsDistintos);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String dataAtual = sdf.format(new Date());
+        changeL.setText("Atualização: " + dataAtual);
+
+        if (isWorker1()) {
+            worker1LL.setText("Worker1: OK");
+        } else {
+            worker1LL.setText("Worker1: NOK");
+        }
+        if (isWorker2()) {
+            worker2LL.setText("Worker2: OK");
+        } else {
+            worker2LL.setText("Worker2: NOK");
+        }
     }
 
     //Metodo adiciona tudo oque recebe do arquivo de leitura ao ARRAY
@@ -268,6 +326,18 @@ public final class MonitoringUI extends javax.swing.JFrame {
                 }
             }
         }
+    }
+
+    public boolean isWorker1() {
+        return worker1;
+    }
+
+    public void setWorker1(boolean worker1) {
+        this.worker1 = worker1;
+    }
+
+    public boolean isWorker2() {
+        return worker2;
     }
 
     /**

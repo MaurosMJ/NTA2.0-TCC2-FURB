@@ -214,7 +214,7 @@ public class HttpUI extends javax.swing.JFrame {
                 addMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 460, 60, 50));
+        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(214, 464, 60, 50));
 
         RecycleBinL.setText("jLabel3");
         RecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {

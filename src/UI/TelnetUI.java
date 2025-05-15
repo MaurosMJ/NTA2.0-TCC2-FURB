@@ -274,7 +274,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 addMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 60, 50));
+        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(214, 394, 60, 50));
 
         RecycleBinL.setText("jLabel3");
         RecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {

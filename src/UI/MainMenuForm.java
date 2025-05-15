@@ -67,9 +67,10 @@ public class MainMenuForm extends javax.swing.JFrame {
     private void initComponents() {
 
         httpLogoL = new javax.swing.JLabel();
+        telnetLogoL = new javax.swing.JLabel();
         socketLogoL = new javax.swing.JLabel();
         fundoModulo3 = new javax.swing.JLabel();
-        fundoModulo2 = new javax.swing.JLabel();
+        fundoTelnet = new javax.swing.JLabel();
         fundoFtp = new javax.swing.JLabel();
         ftpLogoL = new javax.swing.JLabel();
         smbLogoL = new javax.swing.JLabel();
@@ -125,6 +126,17 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
         getContentPane().add(httpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 110, 150, 120));
 
+        telnetLogoL.setText(".");
+        telnetLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                telnetLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                telnetLogoLMouseEntered(evt);
+            }
+        });
+        getContentPane().add(telnetLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 310, 150, 120));
+
         socketLogoL.setText(".");
         socketLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -153,22 +165,22 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
         getContentPane().add(fundoModulo3, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 480, 300, 170));
 
-        fundoModulo2.setBackground(new java.awt.Color(204, 204, 204));
-        fundoModulo2.setForeground(new java.awt.Color(204, 204, 204));
-        fundoModulo2.setText(".");
-        fundoModulo2.setToolTipText("");
-        fundoModulo2.addMouseListener(new java.awt.event.MouseAdapter() {
+        fundoTelnet.setBackground(new java.awt.Color(204, 204, 204));
+        fundoTelnet.setForeground(new java.awt.Color(204, 204, 204));
+        fundoTelnet.setText(".");
+        fundoTelnet.setToolTipText("");
+        fundoTelnet.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fundoModulo2MouseClicked(evt);
+                fundoTelnetMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fundoModulo2MouseEntered(evt);
+                fundoTelnetMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                fundoModulo2MouseExited(evt);
+                fundoTelnetMouseExited(evt);
             }
         });
-        getContentPane().add(fundoModulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 280, 300, 170));
+        getContentPane().add(fundoTelnet, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 280, 300, 170));
 
         fundoFtp.setBackground(new java.awt.Color(204, 204, 204));
         fundoFtp.setForeground(new java.awt.Color(204, 204, 204));
@@ -749,17 +761,21 @@ public class MainMenuForm extends javax.swing.JFrame {
         exibirLogoNTA();
     }//GEN-LAST:event_fundoFtpMouseExited
 
-    private void fundoModulo2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo2MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo2MouseClicked
+    private void fundoTelnetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoTelnetMouseClicked
+        this.dispose();
+        new TelnetUI().setVisible(true);
+    }//GEN-LAST:event_fundoTelnetMouseClicked
 
-    private void fundoModulo2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo2MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo2MouseEntered
+    private void fundoTelnetMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoTelnetMouseEntered
+        fundoTelnet.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo Telnet.");
+        ajustarTamanhoLabel(userInfoL);
+    }//GEN-LAST:event_fundoTelnetMouseEntered
 
-    private void fundoModulo2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo2MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo2MouseExited
+    private void fundoTelnetMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoTelnetMouseExited
+        fundoTelnet.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
+    }//GEN-LAST:event_fundoTelnetMouseExited
 
     private void fundoModulo3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseClicked
         // TODO add your handling code here:
@@ -786,6 +802,17 @@ public class MainMenuForm extends javax.swing.JFrame {
     private void ftpLogoLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ftpLogoLMouseExited
 
     }//GEN-LAST:event_ftpLogoLMouseExited
+
+    private void telnetLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_telnetLogoLMouseClicked
+        this.dispose();
+        new TelnetUI().setVisible(true);
+    }//GEN-LAST:event_telnetLogoLMouseClicked
+
+    private void telnetLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_telnetLogoLMouseEntered
+        fundoTelnet.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo Telnet.");
+        ajustarTamanhoLabel(userInfoL);
+    }//GEN-LAST:event_telnetLogoLMouseEntered
 
     private void fundoMonitoramentoAction() {
 
@@ -921,6 +948,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image sysAdminLogo = this.getScaledImage("imgs/sysadmin_icon.png", admSistemaLogoL, true);
         Image monitoramentoLogo = this.getScaledImage("imgs/remote_monitoring.png", monitoramentoLogoL, true);
         Image ftpLogo = this.getScaledImage("imgs/ftp_Icon.png", ftpLogoL, true);
+        Image telnetLogo = this.getScaledImage("imgs/telnet_Icon.png", telnetLogoL, true);
 
         Image warningLogo = this.getScaledImage("imgs/warning_static.png", warningLogoL, true);
         Image errorLogo = this.getScaledImage("imgs/error_static.png", errorLogoL, true);
@@ -936,6 +964,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(admSistemaLogoL, sysAdminLogo);
         setScaledImage(monitoramentoLogoL, monitoramentoLogo);
         setScaledImage(ftpLogoL, ftpLogo);
+        setScaledImage(telnetLogoL, telnetLogo);
 
         setScaledImage(warningLogoL, warningLogo);
         setScaledImage(errorLogoL, errorLogo);
@@ -949,7 +978,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoAdmSistema.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20)); // 1px de espessura  
         fundoMonitoramento.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoFtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
-        fundoModulo2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoTelnet.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoModulo3.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         errorL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -1025,11 +1054,11 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel fundoFtp;
     private javax.swing.JLabel fundoHttp;
     private javax.swing.JLabel fundoMail;
-    private javax.swing.JLabel fundoModulo2;
     private javax.swing.JLabel fundoModulo3;
     private javax.swing.JLabel fundoMonitoramento;
     private javax.swing.JLabel fundoSmb;
     private javax.swing.JLabel fundoSocket;
+    private javax.swing.JLabel fundoTelnet;
     private javax.swing.JLabel hostL;
     private javax.swing.JLabel hostsLogoL;
     private javax.swing.JLabel httpLogoL;
@@ -1044,6 +1073,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JSeparator separadorInferior2;
     private javax.swing.JLabel smbLogoL;
     private javax.swing.JLabel socketLogoL;
+    private javax.swing.JLabel telnetLogoL;
     private javax.swing.JTextField txtErrorL;
     private javax.swing.JTextField txtFineL;
     private javax.swing.JTextField txtHostsL;

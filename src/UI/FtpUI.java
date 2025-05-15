@@ -746,6 +746,14 @@ public class FtpUI extends javax.swing.JFrame {
         getContentPane().add(protocoloL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, -1, 20));
 
         portaTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        portaTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                portaTFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                portaTFMouseExited(evt);
+            }
+        });
         getContentPane().add(portaTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, 120, -1));
 
         areaFocoRHost.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1453,7 +1461,7 @@ public class FtpUI extends javax.swing.JFrame {
 
     private void dirLocalTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dirLocalTFMouseEntered
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
-        setTextInfoButton("Informe o nome do arquivo anterior");
+        setTextInfoButton("Informe o diretório local do arquivo.");
     }//GEN-LAST:event_dirLocalTFMouseEntered
 
     private void dirLocalTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dirLocalTFMouseExited
@@ -1467,6 +1475,14 @@ public class FtpUI extends javax.swing.JFrame {
     private void dirLocalTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dirLocalTFKeyReleased
         persistirInformacoes();
     }//GEN-LAST:event_dirLocalTFKeyReleased
+
+    private void portaTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_portaTFMouseEntered
+        setTextInfoButton("Informe a porta do servidor destino.");
+    }//GEN-LAST:event_portaTFMouseEntered
+
+    private void portaTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_portaTFMouseExited
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_portaTFMouseExited
 
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");

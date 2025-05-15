@@ -68,6 +68,10 @@ public class MainMenuForm extends javax.swing.JFrame {
 
         httpLogoL = new javax.swing.JLabel();
         socketLogoL = new javax.swing.JLabel();
+        fundoModulo3 = new javax.swing.JLabel();
+        fundoModulo2 = new javax.swing.JLabel();
+        fundoFtp = new javax.swing.JLabel();
+        ftpLogoL = new javax.swing.JLabel();
         smbLogoL = new javax.swing.JLabel();
         mailLogoL = new javax.swing.JLabel();
         fundoSmb = new javax.swing.JLabel();
@@ -104,9 +108,9 @@ public class MainMenuForm extends javax.swing.JFrame {
         setTitle("NTA - Painel de controle");
         setBackground(new java.awt.Color(204, 204, 204));
         setForeground(java.awt.Color.gray);
-        setMaximumSize(new java.awt.Dimension(680, 820));
-        setMinimumSize(new java.awt.Dimension(680, 820));
-        setPreferredSize(new java.awt.Dimension(680, 820));
+        setMaximumSize(new java.awt.Dimension(1030, 820));
+        setMinimumSize(new java.awt.Dimension(1030, 820));
+        setPreferredSize(new java.awt.Dimension(1030, 820));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -131,6 +135,71 @@ public class MainMenuForm extends javax.swing.JFrame {
             }
         });
         getContentPane().add(socketLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, 150, 120));
+
+        fundoModulo3.setBackground(new java.awt.Color(204, 204, 204));
+        fundoModulo3.setForeground(new java.awt.Color(204, 204, 204));
+        fundoModulo3.setText(".");
+        fundoModulo3.setToolTipText("");
+        fundoModulo3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fundoModulo3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fundoModulo3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fundoModulo3MouseExited(evt);
+            }
+        });
+        getContentPane().add(fundoModulo3, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 480, 300, 170));
+
+        fundoModulo2.setBackground(new java.awt.Color(204, 204, 204));
+        fundoModulo2.setForeground(new java.awt.Color(204, 204, 204));
+        fundoModulo2.setText(".");
+        fundoModulo2.setToolTipText("");
+        fundoModulo2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fundoModulo2MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fundoModulo2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fundoModulo2MouseExited(evt);
+            }
+        });
+        getContentPane().add(fundoModulo2, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 280, 300, 170));
+
+        fundoFtp.setBackground(new java.awt.Color(204, 204, 204));
+        fundoFtp.setForeground(new java.awt.Color(204, 204, 204));
+        fundoFtp.setText(".");
+        fundoFtp.setToolTipText("");
+        fundoFtp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fundoFtpMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fundoFtpMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fundoFtpMouseExited(evt);
+            }
+        });
+        getContentPane().add(fundoFtp, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 80, 300, 170));
+
+        ftpLogoL.setText(".");
+        ftpLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ftpLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                ftpLogoLMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                ftpLogoLMouseExited(evt);
+            }
+        });
+        getContentPane().add(ftpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 110, 150, 120));
 
         smbLogoL.setText(".");
         smbLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -291,8 +360,8 @@ public class MainMenuForm extends javax.swing.JFrame {
 
         hostsLogoL.setText("jLabel1");
         getContentPane().add(hostsLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 690, 80, 60));
-        getContentPane().add(separadorInferior1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 670, 790, 10));
-        getContentPane().add(separadorInferior2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 660, 790, 10));
+        getContentPane().add(separadorInferior1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 670, 1200, 10));
+        getContentPane().add(separadorInferior2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 660, 1200, 10));
 
         txtErrorL.setEditable(false);
         txtErrorL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -662,6 +731,62 @@ public class MainMenuForm extends javax.swing.JFrame {
         new LoginForm().setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void fundoFtpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoFtpMouseClicked
+        this.dispose();
+        new FtpUI().setVisible(true);
+
+    }//GEN-LAST:event_fundoFtpMouseClicked
+
+    private void fundoFtpMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoFtpMouseEntered
+        fundoFtp.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo FTP.");
+        ajustarTamanhoLabel(userInfoL);
+    }//GEN-LAST:event_fundoFtpMouseEntered
+
+    private void fundoFtpMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoFtpMouseExited
+        // TODO add your handling code here:
+        fundoFtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
+    }//GEN-LAST:event_fundoFtpMouseExited
+
+    private void fundoModulo2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoModulo2MouseClicked
+
+    private void fundoModulo2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo2MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoModulo2MouseEntered
+
+    private void fundoModulo2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo2MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoModulo2MouseExited
+
+    private void fundoModulo3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoModulo3MouseClicked
+
+    private void fundoModulo3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoModulo3MouseEntered
+
+    private void fundoModulo3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoModulo3MouseExited
+
+    private void ftpLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ftpLogoLMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ftpLogoLMouseClicked
+
+    private void ftpLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ftpLogoLMouseEntered
+        fundoFtp.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo FTP.");
+        ajustarTamanhoLabel(userInfoL);
+    }//GEN-LAST:event_ftpLogoLMouseEntered
+
+    private void ftpLogoLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ftpLogoLMouseExited
+
+    }//GEN-LAST:event_ftpLogoLMouseExited
+
     private void fundoMonitoramentoAction() {
 
         this.dispose();
@@ -795,6 +920,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image mailLogo = this.getScaledImage("imgs/mail_icon.png", mailLogoL, true);
         Image sysAdminLogo = this.getScaledImage("imgs/sysadmin_icon.png", admSistemaLogoL, true);
         Image monitoramentoLogo = this.getScaledImage("imgs/remote_monitoring.png", monitoramentoLogoL, true);
+        Image ftpLogo = this.getScaledImage("imgs/ftp_Icon.png", ftpLogoL, true);
 
         Image warningLogo = this.getScaledImage("imgs/warning_static.png", warningLogoL, true);
         Image errorLogo = this.getScaledImage("imgs/error_static.png", errorLogoL, true);
@@ -809,6 +935,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(mailLogoL, mailLogo);
         setScaledImage(admSistemaLogoL, sysAdminLogo);
         setScaledImage(monitoramentoLogoL, monitoramentoLogo);
+        setScaledImage(ftpLogoL, ftpLogo);
 
         setScaledImage(warningLogoL, warningLogo);
         setScaledImage(errorLogoL, errorLogo);
@@ -821,6 +948,9 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoMail.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20)); // volta pra 1px
         fundoAdmSistema.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20)); // 1px de espessura  
         fundoMonitoramento.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoFtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoModulo2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoModulo3.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         errorL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         warningL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -890,9 +1020,13 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel errorLogoL;
     private javax.swing.JLabel fineL;
     private javax.swing.JLabel fineLogoL;
+    private javax.swing.JLabel ftpLogoL;
     private javax.swing.JLabel fundoAdmSistema;
+    private javax.swing.JLabel fundoFtp;
     private javax.swing.JLabel fundoHttp;
     private javax.swing.JLabel fundoMail;
+    private javax.swing.JLabel fundoModulo2;
+    private javax.swing.JLabel fundoModulo3;
     private javax.swing.JLabel fundoMonitoramento;
     private javax.swing.JLabel fundoSmb;
     private javax.swing.JLabel fundoSocket;

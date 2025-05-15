@@ -8,7 +8,6 @@ package Service;
 import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import jcifs.smb.*;
-import jcifs.smb.NtlmPasswordAuthentication;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;

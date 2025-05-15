@@ -95,6 +95,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
         configL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         statusL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         refreshL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        
 
         campoPesquisaTF.setBorder(new RoundedBorder(Color.GRAY, 2, 30)); // Arredondado
         campoPesquisaTF.setOpaque(false); //

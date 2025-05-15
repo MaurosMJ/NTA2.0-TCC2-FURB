@@ -7,11 +7,8 @@ package Service;
 
 import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
-import jcifs.smb.*;
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.*;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTP;
@@ -50,9 +47,12 @@ public class FtpClient {
     public List<LogOccurrenceModule> ftpAuth() {
         addLog("Iniciando autenticação com o host destino.", LogLevel.INFO);
 
-        if (protocolo.equals("FTPS")) {
+        if (protocolo.equals("FTPS (E)")) {
             ftpClient = new FTPSClient();
-            addLog("Usando protocolo FTPS.", LogLevel.INFO);
+            addLog("Usando protocolo FTPS (Explícito).", LogLevel.INFO);
+        } else if (protocolo.equals("FTPS (I)")) {
+            ftpClient = new FTPSClient(true);
+            addLog("Usando protocolo FTPS (Implícito).", LogLevel.INFO);
         } else {
             ftpClient = new FTPClient();
             addLog("Usando protocolo FTP.", LogLevel.INFO);

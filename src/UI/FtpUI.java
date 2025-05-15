@@ -594,7 +594,7 @@ public class FtpUI extends javax.swing.JFrame {
         getContentPane().add(protocoloL, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 220, -1, 20));
 
         protocoloCHB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
-        protocoloCHB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FTP", "FTPS" }));
+        protocoloCHB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "FTP", "FTPS (E)", "FTPS (I)" }));
         protocoloCHB.setToolTipText("");
         protocoloCHB.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1363,8 +1363,10 @@ public class FtpUI extends javax.swing.JFrame {
     private void protocoloCHBItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_protocoloCHBItemStateChanged
         if ("FTP".equals(protocoloCHB.getSelectedItem().toString())) {
             portaTF.setText("21");
+        } else if ("FTPS (E)".equals(protocoloCHB.getSelectedItem().toString())) {
+            portaTF.setText("21");
         } else {
-            portaTF.setText("22");
+            portaTF.setText("990");
         }
         persistirInformacoes();
     }//GEN-LAST:event_protocoloCHBItemStateChanged

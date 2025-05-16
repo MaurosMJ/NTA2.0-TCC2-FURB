@@ -14,7 +14,6 @@ import Utils.RoundedBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -89,7 +88,8 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoMonitoramento = new javax.swing.JLabel();
         fundoMail = new javax.swing.JLabel();
         sshLogoL = new javax.swing.JLabel();
-        fundoModulo1 = new javax.swing.JLabel();
+        fundoIcmpL = new javax.swing.JLabel();
+        icmpLogoL = new javax.swing.JLabel();
         infoButtonPanel = new javax.swing.JPanel();
         userInfoL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
@@ -381,22 +381,32 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
         menuPanel.add(sshLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 440, 150, 120));
 
-        fundoModulo1.setBackground(new java.awt.Color(204, 204, 204));
-        fundoModulo1.setForeground(new java.awt.Color(204, 204, 204));
-        fundoModulo1.setText(".");
-        fundoModulo1.setToolTipText("");
-        fundoModulo1.addMouseListener(new java.awt.event.MouseAdapter() {
+        fundoIcmpL.setBackground(new java.awt.Color(204, 204, 204));
+        fundoIcmpL.setForeground(new java.awt.Color(204, 204, 204));
+        fundoIcmpL.setToolTipText("");
+        fundoIcmpL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fundoModulo1MouseClicked(evt);
+                fundoIcmpLMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fundoModulo1MouseEntered(evt);
+                fundoIcmpLMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                fundoModulo1MouseExited(evt);
+                fundoIcmpLMouseExited(evt);
             }
         });
-        menuPanel.add(fundoModulo1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 620, 300, 170));
+        menuPanel.add(fundoIcmpL, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 620, 300, 170));
+
+        icmpLogoL.setText(".");
+        icmpLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                icmpLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                icmpLogoLMouseEntered(evt);
+            }
+        });
+        menuPanel.add(icmpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 640, 150, 120));
 
         jScrollPane1.setViewportView(menuPanel);
 
@@ -891,17 +901,29 @@ public class MainMenuForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_sshLogoLMouseEntered
 
-    private void fundoModulo1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo1MouseClicked
+    private void fundoIcmpLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoIcmpLMouseClicked
+        this.dispose();
+        new IcmpUI().setVisible(true);
+    }//GEN-LAST:event_fundoIcmpLMouseClicked
 
-    private void fundoModulo1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo1MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo1MouseEntered
+    private void fundoIcmpLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoIcmpLMouseEntered
+        fundoIcmpL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo ICMP.");
+    }//GEN-LAST:event_fundoIcmpLMouseEntered
 
-    private void fundoModulo1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo1MouseExited
+    private void fundoIcmpLMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoIcmpLMouseExited
+        fundoIcmpL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
+    }//GEN-LAST:event_fundoIcmpLMouseExited
+
+    private void icmpLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icmpLogoLMouseClicked
+        this.dispose();
+        new SshUI().setVisible(true);
+    }//GEN-LAST:event_icmpLogoLMouseClicked
+
+    private void icmpLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icmpLogoLMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo1MouseExited
+    }//GEN-LAST:event_icmpLogoLMouseEntered
 
     private void fundoMonitoramentoAction() {
 
@@ -1050,6 +1072,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image errorLogo = this.getScaledImage("imgs/error_static.png", errorLogoL, true);
         Image fineLogo = this.getScaledImage("imgs/fine_static.png", fineLogoL, true);
         Image hostLogo = this.getScaledImage("imgs/server_static.png", hostsLogoL, true);
+        Image icmpLogo = this.getScaledImage("imgs/ICMP_Icon.png", icmpLogoL, true);
 
         //Setter Images
         setScaledImage(InfoL, infoButtonLogo);
@@ -1062,6 +1085,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(ftpLogoL, ftpLogo);
         setScaledImage(telnetLogoL, telnetLogo);
         setScaledImage(sshLogoL, sshLogo);
+        setScaledImage(icmpLogoL, icmpLogo);
 
         setScaledImage(warningLogoL, warningLogo);
         setScaledImage(errorLogoL, errorLogo);
@@ -1077,7 +1101,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoFtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoTelnet.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoSSH.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
-        fundoModulo1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoIcmpL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         errorL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         warningL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -1103,19 +1127,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     }
 
     private void setTextInfoButton(String input) {
-
         userInfoL.setText(input);
-
-    //    userInfoL.setBounds(obterPosicaoCentralEixoX(), userInfoL.getY(), userInfoL.getPreferredSize().width, userInfoL.getPreferredSize().height);
-   //     InfoL.setBounds(obterPosicaoCentralEixoX() - 35, userInfoL.getY(), userInfoL.getPreferredSize().width, userInfoL.getPreferredSize().height);
-
-    }
-
-    private int obterPosicaoCentralEixoX() {
-        int frameWidth = getWidth();
-        int labelWidth = userInfoL.getPreferredSize().width;
-        int labelX = (frameWidth - labelWidth) / 2;
-        return labelX;
     }
 
     private void ocultarLogoNTA() {
@@ -1140,8 +1152,8 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel fundoAdmSistema;
     private javax.swing.JLabel fundoFtp;
     private javax.swing.JLabel fundoHttp;
+    private javax.swing.JLabel fundoIcmpL;
     private javax.swing.JLabel fundoMail;
-    private javax.swing.JLabel fundoModulo1;
     private javax.swing.JLabel fundoMonitoramento;
     private javax.swing.JLabel fundoSSH;
     private javax.swing.JLabel fundoSmb;
@@ -1150,6 +1162,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel hostL;
     private javax.swing.JLabel hostsLogoL;
     private javax.swing.JLabel httpLogoL;
+    private javax.swing.JLabel icmpLogoL;
     private javax.swing.JPanel infoButtonPanel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;

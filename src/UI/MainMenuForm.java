@@ -790,7 +790,8 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_fundoTelnetMouseExited
 
     private void fundoSSHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoSSHMouseClicked
-        // TODO add your handling code here:
+        this.dispose();
+        new SshUI().setVisible(true);
     }//GEN-LAST:event_fundoSSHMouseClicked
 
     private void fundoSSHMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoSSHMouseEntered
@@ -981,7 +982,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image errorLogo = this.getScaledImage("imgs/error_static.png", errorLogoL, true);
         Image fineLogo = this.getScaledImage("imgs/fine_static.png", fineLogoL, true);
         Image hostLogo = this.getScaledImage("imgs/server_static.png", hostsLogoL, true);
-        
+
         //Setter Images
         setScaledImage(InfoL, infoButtonLogo);
         setScaledImage(httpLogoL, httpLogo);

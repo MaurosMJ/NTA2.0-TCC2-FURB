@@ -9,9 +9,8 @@ import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.Modules.SocketPersistence.SocketConfig;
-import Persistence.Modules.TelnetPersistence.TelnetConfig;
-import Service.SocketClient;
+import Persistence.Modules.SshPersistence.SshConfig;
+import Service.SshClient;
 import Service.Telnet_Client;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -49,18 +48,18 @@ import javax.swing.text.MaskFormatter;
  *
  * @author Mauros
  */
-public class TelnetUI extends javax.swing.JFrame {
+public class SshUI extends javax.swing.JFrame {
 
     private ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final Map<Integer, String> portasPadrao = new HashMap<>();
     private boolean barraPesquisaPrimeiroAcesso = true;
-    private Telnet_Client telnet;
+    private SshClient ssh;
 
     /**
      * Creates new form SocketUI
      */
-    public TelnetUI() {
+    public SshUI() {
         long inicio = System.nanoTime(); // Marca o tempo no começo do construtor
 
         initComponents();
@@ -101,6 +100,7 @@ public class TelnetUI extends javax.swing.JFrame {
         systemL = new javax.swing.JLabel();
         remoteHostL = new javax.swing.JLabel();
         promptTF = new javax.swing.JTextField();
+        usuarioTF = new javax.swing.JTextField();
         rHostPortTF = new javax.swing.JTextField();
         rHostTF = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -141,17 +141,20 @@ public class TelnetUI extends javax.swing.JFrame {
         fundoUIL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
         userInfoL = new javax.swing.JLabel();
+        senhaPWF = new javax.swing.JPasswordField();
         ppadraoL = new javax.swing.JLabel();
         fundoPromptL = new javax.swing.JLabel();
         areaFocoRHost = new javax.swing.JLabel();
         fundoControleL = new javax.swing.JLabel();
         fundoPesquisaL = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("NTA - Configuração de monitoramento (Telnet)");
-        setMinimumSize(new java.awt.Dimension(650, 865));
-        setPreferredSize(new java.awt.Dimension(650, 865));
+        setTitle("NTA - Configuração de monitoramento (SSH)");
+        setMinimumSize(new java.awt.Dimension(650, 935));
+        setPreferredSize(new java.awt.Dimension(650, 935));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -192,7 +195,36 @@ public class TelnetUI extends javax.swing.JFrame {
                 promptTFKeyReleased(evt);
             }
         });
-        getContentPane().add(promptTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 320, 473, -1));
+        getContentPane().add(promptTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 390, 473, -1));
+
+        usuarioTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        usuarioTF.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                usuarioTFFocusGained(evt);
+            }
+        });
+        usuarioTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usuarioTFMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                usuarioTFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                usuarioTFMouseExited(evt);
+            }
+        });
+        usuarioTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usuarioTFActionPerformed(evt);
+            }
+        });
+        usuarioTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                usuarioTFKeyReleased(evt);
+            }
+        });
+        getContentPane().add(usuarioTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, 240, -1));
 
         rHostPortTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         rHostPortTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -221,7 +253,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 rHostPortTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 240, 150, -1));
+        getContentPane().add(rHostPortTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 240, 130, -1));
 
         rHostTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         rHostTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -250,11 +282,11 @@ public class TelnetUI extends javax.swing.JFrame {
                 rHostTFKeyReleased(evt);
             }
         });
-        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, 290, -1));
+        getContentPane().add(rHostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 240, 310, -1));
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
-        jLabel2.setText("Servidor Remoto");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 220, -1, -1));
+        jLabel2.setText("Usuário");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 280, -1, -1));
         getContentPane().add(remoteHostFundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 80, 220, 110));
 
         nomeRHost.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -273,7 +305,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 addMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(214, 394, 60, 50));
+        getContentPane().add(addMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 460, 60, 50));
 
         RecycleBinL.setText("jLabel3");
         RecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -287,7 +319,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 RecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 390, 60, 50));
+        getContentPane().add(RecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 460, 60, 50));
 
         playL.setText("jLabel3");
         playL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -298,7 +330,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 playLMouseEntered(evt);
             }
         });
-        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 400, 40, 40));
+        getContentPane().add(playL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 470, 40, 40));
 
         homeL.setText("jLabel3");
         homeL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -309,7 +341,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 homeLMouseEntered(evt);
             }
         });
-        getContentPane().add(homeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 400, 50, 40));
+        getContentPane().add(homeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 470, 50, 40));
 
         fundoHomeL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -322,7 +354,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 fundoHomeLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoHomeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 390, 90, 60));
+        getContentPane().add(fundoHomeL, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 460, 90, 60));
 
         fundoPlayL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -335,7 +367,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 fundoPlayLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 390, 90, 60));
+        getContentPane().add(fundoPlayL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 460, 90, 60));
 
         fundoAddMonitoringL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -348,7 +380,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 fundoAddMonitoringLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoAddMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 390, 90, 60));
+        getContentPane().add(fundoAddMonitoringL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 460, 90, 60));
 
         fundoRecycleBinL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -361,7 +393,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 fundoRecycleBinLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoRecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 390, 90, 60));
+        getContentPane().add(fundoRecycleBinL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 460, 90, 60));
         getContentPane().add(LoadingLineLeftL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 140, 300, 40));
 
         logTA.setEditable(false);
@@ -373,7 +405,7 @@ public class TelnetUI extends javax.swing.JFrame {
         logTA.setWrapStyleWord(true);
         jScrollPane1.setViewportView(logTA);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 600, 470, 190));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 670, 470, 190));
         getContentPane().add(LoadingLineRightL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 230, 40));
 
         copyB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
@@ -391,7 +423,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 copyBActionPerformed(evt);
             }
         });
-        getContentPane().add(copyB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 550, 50, 40));
+        getContentPane().add(copyB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 620, 50, 40));
 
         eraserB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         eraserB.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -407,7 +439,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 eraserBActionPerformed(evt);
             }
         });
-        getContentPane().add(eraserB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 600, 50, 40));
+        getContentPane().add(eraserB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 670, 50, 40));
 
         exportB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         exportB.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -423,7 +455,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 exportBActionPerformed(evt);
             }
         });
-        getContentPane().add(exportB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 640, 50, 40));
+        getContentPane().add(exportB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 710, 50, 40));
 
         editTB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         editTB.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -439,7 +471,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 editTBActionPerformed(evt);
             }
         });
-        getContentPane().add(editTB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 740, 50, 40));
+        getContentPane().add(editTB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 810, 50, 40));
 
         openDocumentB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         openDocumentB.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -455,7 +487,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 openDocumentBActionPerformed(evt);
             }
         });
-        getContentPane().add(openDocumentB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 690, 50, 40));
+        getContentPane().add(openDocumentB, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 760, 50, 40));
 
         levelSL.setMaximum(5);
         levelSL.setPaintLabels(true);
@@ -476,7 +508,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 levelSLMouseExited(evt);
             }
         });
-        getContentPane().add(levelSL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 510, 160, 20));
+        getContentPane().add(levelSL, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 580, 160, 20));
 
         dataCHB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         dataCHB.setText("Considerar datas");
@@ -498,7 +530,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 dataCHBActionPerformed(evt);
             }
         });
-        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 460, -1, -1));
+        getContentPane().add(dataCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 530, -1, -1));
 
         dataFinalFTF.setEnabled(false);
         dataFinalFTF.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -514,15 +546,15 @@ public class TelnetUI extends javax.swing.JFrame {
                 dataFinalFTFKeyReleased(evt);
             }
         });
-        getContentPane().add(dataFinalFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 500, 140, -1));
+        getContentPane().add(dataFinalFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 570, 140, -1));
 
         deL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         deL.setText("De");
-        getContentPane().add(deL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 470, -1, -1));
+        getContentPane().add(deL, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 540, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jLabel3.setText("Até");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 500, -1, -1));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 570, -1, -1));
 
         dataInicialFTF.setEnabled(false);
         dataInicialFTF.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -538,7 +570,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 dataInicialFTFKeyReleased(evt);
             }
         });
-        getContentPane().add(dataInicialFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 470, 140, -1));
+        getContentPane().add(dataInicialFTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 540, 140, -1));
 
         campoPesquisaTF.setFont(new java.awt.Font("SansSerif", 2, 16)); // NOI18N
         campoPesquisaTF.setText("   Pesquisar");
@@ -563,8 +595,8 @@ public class TelnetUI extends javax.swing.JFrame {
                 campoPesquisaTFKeyReleased(evt);
             }
         });
-        getContentPane().add(campoPesquisaTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 550, 410, 30));
-        getContentPane().add(searchL, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 550, 30, 30));
+        getContentPane().add(campoPesquisaTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 620, 410, 30));
+        getContentPane().add(searchL, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 620, 30, 30));
 
         filtrarB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         filtrarB.setText("Filtrar");
@@ -579,14 +611,14 @@ public class TelnetUI extends javax.swing.JFrame {
                 filtrarBActionPerformed(evt);
             }
         });
-        getContentPane().add(filtrarB, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 470, -1, 50));
+        getContentPane().add(filtrarB, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 540, -1, 50));
 
         levelL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         levelL.setText("Level: Debug");
-        getContentPane().add(levelL, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 490, 110, -1));
+        getContentPane().add(levelL, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 560, 110, -1));
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 470, 10, 50));
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 540, 10, 50));
 
         workspaceCBX.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         workspaceCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5" }));
@@ -609,13 +641,13 @@ public class TelnetUI extends javax.swing.JFrame {
         getContentPane().add(workspaceCBX, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 50, 30));
 
         fundoFiltroL.setText(".");
-        getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 460, 550, 70));
+        getContentPane().add(fundoFiltroL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 530, 550, 70));
 
         fundoToolbarL.setText(".");
-        getContentPane().add(fundoToolbarL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 540, 70, 250));
+        getContentPane().add(fundoToolbarL, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 610, 70, 250));
 
         fundoConsoleLogL.setText(".");
-        getContentPane().add(fundoConsoleLogL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 590, 440));
+        getContentPane().add(fundoConsoleLogL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, 590, 440));
         getContentPane().add(fundoUIL, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 450, 150));
         getContentPane().add(InfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 15, 30, 30));
 
@@ -627,8 +659,20 @@ public class TelnetUI extends javax.swing.JFrame {
         userInfoL.setOpaque(true);
         getContentPane().add(userInfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 15, 360, -1));
 
+        senhaPWF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        senhaPWF.setText("jPasswordField1");
+        senhaPWF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                senhaPWFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                senhaPWFMouseExited(evt);
+            }
+        });
+        getContentPane().add(senhaPWF, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, 210, -1));
+
         ppadraoL.setText("Porta");
-        getContentPane().add(ppadraoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, -1, -1));
+        getContentPane().add(ppadraoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 220, -1, -1));
 
         fundoPromptL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -638,7 +682,7 @@ public class TelnetUI extends javax.swing.JFrame {
                 fundoPromptLMouseExited(evt);
             }
         });
-        getContentPane().add(fundoPromptL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 590, 70));
+        getContentPane().add(fundoPromptL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 590, 70));
 
         areaFocoRHost.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -648,15 +692,23 @@ public class TelnetUI extends javax.swing.JFrame {
                 areaFocoRHostMouseExited(evt);
             }
         });
-        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 610, 70));
+        getContentPane().add(areaFocoRHost, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 610, 130));
 
         fundoControleL.setText(".");
-        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 590, 70));
-        getContentPane().add(fundoPesquisaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, 470, 50));
+        getContentPane().add(fundoControleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 590, 140));
+        getContentPane().add(fundoPesquisaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 610, 470, 50));
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         jLabel1.setText("Instrução");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 300, -1, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 370, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        jLabel5.setText("Servidor Remoto");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 220, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        jLabel6.setText("Senha");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -834,8 +886,8 @@ public class TelnetUI extends javax.swing.JFrame {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
-        telnet = new Telnet_Client(rHostTF.getText(), rHostPortTF.getText(), promptTF.getText());
-        addToArray(telnet.PerformServerConnection());
+        ssh = new SshClient(rHostTF.getText(), rHostPortTF.getText(), promptTF.getText(), usuarioTF.getText(), new String(senhaPWF.getPassword()));
+        addToArray(ssh.PerformServerConnection());
         filterDisplayResults();
         persistirInformacoes();
     }
@@ -1224,6 +1276,40 @@ public class TelnetUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_promptTFKeyReleased
 
+    private void usuarioTFFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usuarioTFFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usuarioTFFocusGained
+
+    private void usuarioTFMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usuarioTFMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usuarioTFMouseClicked
+
+    private void usuarioTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usuarioTFMouseEntered
+        setTextInfoButton("Informe o usuário que irá se autenticar no servidor.");
+    }//GEN-LAST:event_usuarioTFMouseEntered
+
+    private void usuarioTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usuarioTFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_usuarioTFMouseExited
+
+    private void usuarioTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usuarioTFActionPerformed
+
+    private void usuarioTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usuarioTFKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usuarioTFKeyReleased
+
+    private void senhaPWFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_senhaPWFMouseEntered
+        setTextInfoButton("Informe a senha deste usuário para se autenticar no servidor.");
+    }//GEN-LAST:event_senhaPWFMouseEntered
+
+    private void senhaPWFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_senhaPWFMouseExited
+        // TODO add your handling code here:
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_senhaPWFMouseExited
+
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");
     }
@@ -1240,12 +1326,12 @@ public class TelnetUI extends javax.swing.JFrame {
                 }
             }
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(TelnetUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SshUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         // Inicia a UI na thread de eventos do Swing
         java.awt.EventQueue.invokeLater(() -> {
-            new TelnetUI().setVisible(true);
+            new SshUI().setVisible(true);
         });
     }
 
@@ -1485,9 +1571,9 @@ public class TelnetUI extends javax.swing.JFrame {
     }
 
     public void persistirInformacoes() {
-        TelnetConfig config = new TelnetConfig();
+        SshConfig config = new SshConfig();
         config.workspace = String.valueOf(workspaceCBX.getSelectedItem());
-        config.session = new TelnetConfig.SessionValues();
+        config.session = new SshConfig.SessionValues();
         config.session.considerarData = dataCHB.isSelected();
         config.session.dataFinal = dataFinalFTF.getText();
         config.session.dataInicial = dataInicialFTF.getText();
@@ -1499,16 +1585,19 @@ public class TelnetUI extends javax.swing.JFrame {
         config.session.monitorar = addMonitoringL.isEnabled();
         config.session.porta = rHostPortTF.getText();
         config.session.servidor = rHostTF.getText();
+        config.session.usuario = usuarioTF.getText();
+        config.session.senha = new String(senhaPWF.getPassword());
+
         config.session.instrucao = promptTF.getText();
         config.session.toggleEditor = editTB.isSelected();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("telnetConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
     }
 
     public void carregarInformacoes() {
-        String nomeArquivo = "telnetConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        TelnetConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, TelnetConfig.class, "/Persistence");
+        String nomeArquivo = "sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
+        SshConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SshConfig.class, "/Persistence");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
@@ -1527,6 +1616,10 @@ public class TelnetUI extends javax.swing.JFrame {
             rHostTF.setText(config.session.servidor);
             promptTF.setText(config.session.instrucao);
             editTB.setSelected(config.session.toggleEditor);
+
+            senhaPWF.setText(new String(config.session.senha));
+            usuarioTF.setText(config.session.usuario);
+
         } catch (Exception e) {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
@@ -1604,6 +1697,8 @@ public class TelnetUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel levelL;
@@ -1619,8 +1714,10 @@ public class TelnetUI extends javax.swing.JFrame {
     private javax.swing.JLabel remoteHostFundo;
     private javax.swing.JLabel remoteHostL;
     private javax.swing.JLabel searchL;
+    private javax.swing.JPasswordField senhaPWF;
     private javax.swing.JLabel systemL;
     private javax.swing.JLabel userInfoL;
+    private javax.swing.JTextField usuarioTF;
     private javax.swing.JComboBox workspaceCBX;
     // End of variables declaration//GEN-END:variables
 

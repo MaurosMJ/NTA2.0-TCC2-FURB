@@ -69,7 +69,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         httpLogoL = new javax.swing.JLabel();
         telnetLogoL = new javax.swing.JLabel();
         socketLogoL = new javax.swing.JLabel();
-        fundoModulo3 = new javax.swing.JLabel();
+        fundoSSH = new javax.swing.JLabel();
         fundoTelnet = new javax.swing.JLabel();
         fundoFtp = new javax.swing.JLabel();
         ftpLogoL = new javax.swing.JLabel();
@@ -99,6 +99,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         errorL1 = new javax.swing.JLabel();
         warningL = new javax.swing.JLabel();
         fineL = new javax.swing.JLabel();
+        sshLogoL = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -148,22 +149,22 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
         getContentPane().add(socketLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, 150, 120));
 
-        fundoModulo3.setBackground(new java.awt.Color(204, 204, 204));
-        fundoModulo3.setForeground(new java.awt.Color(204, 204, 204));
-        fundoModulo3.setText(".");
-        fundoModulo3.setToolTipText("");
-        fundoModulo3.addMouseListener(new java.awt.event.MouseAdapter() {
+        fundoSSH.setBackground(new java.awt.Color(204, 204, 204));
+        fundoSSH.setForeground(new java.awt.Color(204, 204, 204));
+        fundoSSH.setText(".");
+        fundoSSH.setToolTipText("");
+        fundoSSH.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                fundoModulo3MouseClicked(evt);
+                fundoSSHMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                fundoModulo3MouseEntered(evt);
+                fundoSSHMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                fundoModulo3MouseExited(evt);
+                fundoSSHMouseExited(evt);
             }
         });
-        getContentPane().add(fundoModulo3, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 480, 300, 170));
+        getContentPane().add(fundoSSH, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 480, 300, 170));
 
         fundoTelnet.setBackground(new java.awt.Color(204, 204, 204));
         fundoTelnet.setForeground(new java.awt.Color(204, 204, 204));
@@ -471,6 +472,17 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
         getContentPane().add(fineL, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 690, 150, 70));
 
+        sshLogoL.setText(".");
+        sshLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sshLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sshLogoLMouseEntered(evt);
+            }
+        });
+        getContentPane().add(sshLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 500, 150, 120));
+
         jMenu1.setText("Sobre");
         jMenuBar1.add(jMenu1);
 
@@ -777,17 +789,23 @@ public class MainMenuForm extends javax.swing.JFrame {
         exibirLogoNTA();
     }//GEN-LAST:event_fundoTelnetMouseExited
 
-    private void fundoModulo3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseClicked
+    private void fundoSSHMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoSSHMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo3MouseClicked
+    }//GEN-LAST:event_fundoSSHMouseClicked
 
-    private void fundoModulo3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseEntered
+    private void fundoSSHMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoSSHMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo3MouseEntered
 
-    private void fundoModulo3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoModulo3MouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fundoModulo3MouseExited
+        fundoSSH.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo SSH.");
+        ajustarTamanhoLabel(userInfoL);
+
+    }//GEN-LAST:event_fundoSSHMouseEntered
+
+    private void fundoSSHMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoSSHMouseExited
+        fundoSSH.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
+    }//GEN-LAST:event_fundoSSHMouseExited
 
     private void ftpLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ftpLogoLMouseClicked
         // TODO add your handling code here:
@@ -813,6 +831,14 @@ public class MainMenuForm extends javax.swing.JFrame {
         setTextInfoButton("Configurar monitoramento utilizando protocolo Telnet.");
         ajustarTamanhoLabel(userInfoL);
     }//GEN-LAST:event_telnetLogoLMouseEntered
+
+    private void sshLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sshLogoLMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sshLogoLMouseClicked
+
+    private void sshLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sshLogoLMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sshLogoLMouseEntered
 
     private void fundoMonitoramentoAction() {
 
@@ -949,12 +975,13 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image monitoramentoLogo = this.getScaledImage("imgs/remote_monitoring.png", monitoramentoLogoL, true);
         Image ftpLogo = this.getScaledImage("imgs/ftp_Icon.png", ftpLogoL, true);
         Image telnetLogo = this.getScaledImage("imgs/telnet_Icon.png", telnetLogoL, true);
+        Image sshLogo = this.getScaledImage("imgs/ssh_Icon.png", sshLogoL, true);
 
         Image warningLogo = this.getScaledImage("imgs/warning_static.png", warningLogoL, true);
         Image errorLogo = this.getScaledImage("imgs/error_static.png", errorLogoL, true);
         Image fineLogo = this.getScaledImage("imgs/fine_static.png", fineLogoL, true);
         Image hostLogo = this.getScaledImage("imgs/server_static.png", hostsLogoL, true);
-
+        
         //Setter Images
         setScaledImage(InfoL, infoButtonLogo);
         setScaledImage(httpLogoL, httpLogo);
@@ -965,6 +992,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(monitoramentoLogoL, monitoramentoLogo);
         setScaledImage(ftpLogoL, ftpLogo);
         setScaledImage(telnetLogoL, telnetLogo);
+        setScaledImage(sshLogoL, sshLogo);
 
         setScaledImage(warningLogoL, warningLogo);
         setScaledImage(errorLogoL, errorLogo);
@@ -979,7 +1007,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoMonitoramento.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoFtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoTelnet.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
-        fundoModulo3.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoSSH.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         errorL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         warningL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -1054,8 +1082,8 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel fundoFtp;
     private javax.swing.JLabel fundoHttp;
     private javax.swing.JLabel fundoMail;
-    private javax.swing.JLabel fundoModulo3;
     private javax.swing.JLabel fundoMonitoramento;
+    private javax.swing.JLabel fundoSSH;
     private javax.swing.JLabel fundoSmb;
     private javax.swing.JLabel fundoSocket;
     private javax.swing.JLabel fundoTelnet;
@@ -1073,6 +1101,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JSeparator separadorInferior2;
     private javax.swing.JLabel smbLogoL;
     private javax.swing.JLabel socketLogoL;
+    private javax.swing.JLabel sshLogoL;
     private javax.swing.JLabel telnetLogoL;
     private javax.swing.JTextField txtErrorL;
     private javax.swing.JTextField txtFineL;

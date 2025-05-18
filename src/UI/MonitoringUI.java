@@ -33,6 +33,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
@@ -95,7 +96,6 @@ public final class MonitoringUI extends javax.swing.JFrame {
         configL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         statusL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         refreshL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
-        
 
         campoPesquisaTF.setBorder(new RoundedBorder(Color.GRAY, 2, 30)); // Arredondado
         campoPesquisaTF.setOpaque(false); //
@@ -265,7 +265,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
                                 log.getLevel().toString(),
                                 log.getModulo().toString(),
                                 log.getLog(),
-                                log.getIcmp()
+                                log.getIcmp() + " ms"
                             });
                         }
                     }
@@ -282,7 +282,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
                         log.getLevel().toString(),
                         log.getModulo().toString(),
                         log.getLog(),
-                        log.getIcmp()
+                        log.getIcmp() + " ms"
                     });
                 }
             }

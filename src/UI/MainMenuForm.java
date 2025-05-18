@@ -90,6 +90,9 @@ public class MainMenuForm extends javax.swing.JFrame {
         sshLogoL = new javax.swing.JLabel();
         fundoIcmpL = new javax.swing.JLabel();
         icmpLogoL = new javax.swing.JLabel();
+        fundoNtp = new javax.swing.JLabel();
+        admSistemaLogoL1 = new javax.swing.JLabel();
+        ntpLogoL = new javax.swing.JLabel();
         infoButtonPanel = new javax.swing.JPanel();
         userInfoL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
@@ -407,6 +410,44 @@ public class MainMenuForm extends javax.swing.JFrame {
             }
         });
         menuPanel.add(icmpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 640, 150, 120));
+
+        fundoNtp.setBackground(new java.awt.Color(204, 204, 204));
+        fundoNtp.setForeground(new java.awt.Color(204, 204, 204));
+        fundoNtp.setToolTipText("");
+        fundoNtp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fundoNtpMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fundoNtpMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fundoNtpMouseExited(evt);
+            }
+        });
+        menuPanel.add(fundoNtp, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 620, 300, 170));
+
+        admSistemaLogoL1.setText(".");
+        admSistemaLogoL1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                admSistemaLogoL1MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                admSistemaLogoL1MouseEntered(evt);
+            }
+        });
+        menuPanel.add(admSistemaLogoL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 450, 130, 100));
+
+        ntpLogoL.setText(".");
+        ntpLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ntpLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                ntpLogoLMouseEntered(evt);
+            }
+        });
+        menuPanel.add(ntpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 650, 150, 120));
 
         jScrollPane1.setViewportView(menuPanel);
 
@@ -925,6 +966,37 @@ public class MainMenuForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_icmpLogoLMouseEntered
 
+    private void fundoNtpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoNtpMouseClicked
+        this.dispose();
+        new NtpUI().setVisible(true);
+    }//GEN-LAST:event_fundoNtpMouseClicked
+
+    private void fundoNtpMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoNtpMouseEntered
+        fundoNtp.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo NTP.");
+    }//GEN-LAST:event_fundoNtpMouseEntered
+
+    private void fundoNtpMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoNtpMouseExited
+        fundoNtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
+    }//GEN-LAST:event_fundoNtpMouseExited
+
+    private void admSistemaLogoL1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_admSistemaLogoL1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_admSistemaLogoL1MouseClicked
+
+    private void admSistemaLogoL1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_admSistemaLogoL1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_admSistemaLogoL1MouseEntered
+
+    private void ntpLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ntpLogoLMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ntpLogoLMouseClicked
+
+    private void ntpLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ntpLogoLMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ntpLogoLMouseEntered
+
     private void fundoMonitoramentoAction() {
 
         this.dispose();
@@ -1073,6 +1145,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image fineLogo = this.getScaledImage("imgs/fine_static.png", fineLogoL, true);
         Image hostLogo = this.getScaledImage("imgs/server_static.png", hostsLogoL, true);
         Image icmpLogo = this.getScaledImage("imgs/ICMP_Icon.png", icmpLogoL, true);
+        Image ntpLogo = this.getScaledImage("imgs/ntp_Icon.png", ntpLogoL, true);
 
         //Setter Images
         setScaledImage(InfoL, infoButtonLogo);
@@ -1086,6 +1159,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(telnetLogoL, telnetLogo);
         setScaledImage(sshLogoL, sshLogo);
         setScaledImage(icmpLogoL, icmpLogo);
+        setScaledImage(ntpLogoL, ntpLogo);
 
         setScaledImage(warningLogoL, warningLogo);
         setScaledImage(errorLogoL, errorLogo);
@@ -1102,6 +1176,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoTelnet.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoSSH.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoIcmpL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoNtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         errorL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         warningL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -1144,6 +1219,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel InfoL;
     private javax.swing.JLabel admSistemaLogoL;
+    private javax.swing.JLabel admSistemaLogoL1;
     private javax.swing.JLabel errorL1;
     private javax.swing.JLabel errorLogoL;
     private javax.swing.JLabel fineL;
@@ -1155,6 +1231,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel fundoIcmpL;
     private javax.swing.JLabel fundoMail;
     private javax.swing.JLabel fundoMonitoramento;
+    private javax.swing.JLabel fundoNtp;
     private javax.swing.JLabel fundoSSH;
     private javax.swing.JLabel fundoSmb;
     private javax.swing.JLabel fundoSocket;
@@ -1173,6 +1250,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel mailLogoL;
     private javax.swing.JPanel menuPanel;
     private javax.swing.JLabel monitoramentoLogoL;
+    private javax.swing.JLabel ntpLogoL;
     private javax.swing.JLabel smbLogoL;
     private javax.swing.JLabel socketLogoL;
     private javax.swing.JLabel sshLogoL;

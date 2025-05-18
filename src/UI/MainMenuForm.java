@@ -93,6 +93,8 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoNtp = new javax.swing.JLabel();
         admSistemaLogoL1 = new javax.swing.JLabel();
         ntpLogoL = new javax.swing.JLabel();
+        fundoDns = new javax.swing.JLabel();
+        dnsLogoL = new javax.swing.JLabel();
         infoButtonPanel = new javax.swing.JPanel();
         userInfoL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
@@ -448,6 +450,34 @@ public class MainMenuForm extends javax.swing.JFrame {
             }
         });
         menuPanel.add(ntpLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 650, 150, 120));
+
+        fundoDns.setBackground(new java.awt.Color(204, 204, 204));
+        fundoDns.setForeground(new java.awt.Color(204, 204, 204));
+        fundoDns.setText(".");
+        fundoDns.setToolTipText("");
+        fundoDns.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fundoDnsMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fundoDnsMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fundoDnsMouseExited(evt);
+            }
+        });
+        menuPanel.add(fundoDns, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 620, 300, 170));
+
+        dnsLogoL.setText(".");
+        dnsLogoL.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                dnsLogoLMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dnsLogoLMouseEntered(evt);
+            }
+        });
+        menuPanel.add(dnsLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 640, 150, 120));
 
         jScrollPane1.setViewportView(menuPanel);
 
@@ -990,12 +1020,34 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_admSistemaLogoL1MouseEntered
 
     private void ntpLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ntpLogoLMouseClicked
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_ntpLogoLMouseClicked
 
     private void ntpLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ntpLogoLMouseEntered
         // TODO add your handling code here:
     }//GEN-LAST:event_ntpLogoLMouseEntered
+
+    private void fundoDnsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoDnsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fundoDnsMouseClicked
+
+    private void fundoDnsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoDnsMouseEntered
+        fundoDns.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Configurar monitoramento utilizando protocolo DNS.");
+    }//GEN-LAST:event_fundoDnsMouseEntered
+
+    private void fundoDnsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoDnsMouseExited
+        fundoDns.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
+    }//GEN-LAST:event_fundoDnsMouseExited
+
+    private void dnsLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dnsLogoLMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dnsLogoLMouseClicked
+
+    private void dnsLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dnsLogoLMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dnsLogoLMouseEntered
 
     private void fundoMonitoramentoAction() {
 
@@ -1146,6 +1198,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image hostLogo = this.getScaledImage("imgs/server_static.png", hostsLogoL, true);
         Image icmpLogo = this.getScaledImage("imgs/ICMP_Icon.png", icmpLogoL, true);
         Image ntpLogo = this.getScaledImage("imgs/ntp_Icon.png", ntpLogoL, true);
+        Image dnsLogo = this.getScaledImage("imgs/dns_Icon.png", dnsLogoL, true);
 
         //Setter Images
         setScaledImage(InfoL, infoButtonLogo);
@@ -1160,6 +1213,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(sshLogoL, sshLogo);
         setScaledImage(icmpLogoL, icmpLogo);
         setScaledImage(ntpLogoL, ntpLogo);
+        setScaledImage(dnsLogoL, dnsLogo);
 
         setScaledImage(warningLogoL, warningLogo);
         setScaledImage(errorLogoL, errorLogo);
@@ -1177,6 +1231,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         fundoSSH.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoIcmpL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoNtp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoDns.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         errorL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         warningL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -1220,12 +1275,14 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel InfoL;
     private javax.swing.JLabel admSistemaLogoL;
     private javax.swing.JLabel admSistemaLogoL1;
+    private javax.swing.JLabel dnsLogoL;
     private javax.swing.JLabel errorL1;
     private javax.swing.JLabel errorLogoL;
     private javax.swing.JLabel fineL;
     private javax.swing.JLabel fineLogoL;
     private javax.swing.JLabel ftpLogoL;
     private javax.swing.JLabel fundoAdmSistema;
+    private javax.swing.JLabel fundoDns;
     private javax.swing.JLabel fundoFtp;
     private javax.swing.JLabel fundoHttp;
     private javax.swing.JLabel fundoIcmpL;

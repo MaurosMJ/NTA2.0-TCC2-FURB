@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -132,6 +133,13 @@ public final class MonitoringUI extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(4).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));     // Log
         jTable1.getColumnModel().getColumn(5).setCellRenderer(criarRendererComZebra(SwingConstants.RIGHT));    // ICMP Echo Request
 
+        //"#EAF1F8"
+            Color cor1 = Color.decode("#F2F2F2");
+            Color cor = Color.decode("#E8E8E8");
+            jPanel3.setBackground(cor1);
+            jPanel1.setBackground(cor);
+            jPanel4.setBackground(cor1);
+            jPanel5.setBackground(cor);
     }
 
     private DefaultTableCellRenderer criarRendererComZebra(int alinhamento) {
@@ -394,6 +402,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NTA - Painel de monitoramento");
+        setBackground(new java.awt.Color(242, 242, 242));
 
         jTextPane1.setEditable(false);
         jScrollPane1.setViewportView(jTextPane1);

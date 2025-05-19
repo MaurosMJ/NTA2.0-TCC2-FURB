@@ -99,6 +99,12 @@ public class MainMenuForm extends javax.swing.JFrame {
         userInfoL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
         statusPanel = new javax.swing.JPanel();
+        workerTF2 = new javax.swing.JTextField();
+        workerLogoL2 = new javax.swing.JLabel();
+        workerL2 = new javax.swing.JLabel();
+        workerLogoL1 = new javax.swing.JLabel();
+        workerL1 = new javax.swing.JLabel();
+        workerTF1 = new javax.swing.JTextField();
         fineLogoL = new javax.swing.JLabel();
         errorLogoL = new javax.swing.JLabel();
         warningLogoL = new javax.swing.JLabel();
@@ -119,7 +125,7 @@ public class MainMenuForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("NTA - Painel de controle");
-        setBackground(new java.awt.Color(204, 204, 204));
+        setBackground(new java.awt.Color(242, 242, 242));
         setForeground(java.awt.Color.gray);
         setMaximumSize(new java.awt.Dimension(1100, 821));
         setMinimumSize(new java.awt.Dimension(1000, 821));
@@ -127,10 +133,12 @@ public class MainMenuForm extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jScrollPane1.setBackground(new java.awt.Color(242, 242, 242));
         jScrollPane1.setMaximumSize(new java.awt.Dimension(1045, 1030));
         jScrollPane1.setMinimumSize(new java.awt.Dimension(1045, 1030));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(1030, 1030));
 
+        menuPanel.setBackground(new java.awt.Color(242, 242, 242));
         menuPanel.setMaximumSize(new java.awt.Dimension(1000, 821));
         menuPanel.setMinimumSize(new java.awt.Dimension(1200, 821));
         menuPanel.setName(""); // NOI18N
@@ -500,17 +508,71 @@ public class MainMenuForm extends javax.swing.JFrame {
         statusPanel.setPreferredSize(new java.awt.Dimension(100, 90));
         statusPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        workerTF2.setEditable(false);
+        workerTF2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        workerTF2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        workerTF2.setText("NOK");
+        workerTF2.setFocusable(false);
+        workerTF2.setRequestFocusEnabled(false);
+        workerTF2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                workerTF2ActionPerformed(evt);
+            }
+        });
+        statusPanel.add(workerTF2, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 30, 70, 40));
+
+        workerLogoL2.setText("jLabel1");
+        statusPanel.add(workerLogoL2, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 30, 40, 40));
+
+        workerL2.setText(".");
+        workerL2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                workerL2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                workerL2MouseExited(evt);
+            }
+        });
+        statusPanel.add(workerL2, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 20, 150, 70));
+
+        workerLogoL1.setText("jLabel1");
+        statusPanel.add(workerLogoL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 30, 40, 40));
+
+        workerL1.setText(".");
+        workerL1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                workerL1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                workerL1MouseExited(evt);
+            }
+        });
+        statusPanel.add(workerL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 20, 150, 70));
+
+        workerTF1.setEditable(false);
+        workerTF1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        workerTF1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        workerTF1.setText("NOK");
+        workerTF1.setFocusable(false);
+        workerTF1.setRequestFocusEnabled(false);
+        workerTF1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                workerTF1ActionPerformed(evt);
+            }
+        });
+        statusPanel.add(workerTF1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 30, 70, 40));
+
         fineLogoL.setText("jLabel1");
-        statusPanel.add(fineLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, 70, 60));
+        statusPanel.add(fineLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 20, 70, 60));
 
         errorLogoL.setText("jLabel1");
-        statusPanel.add(errorLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 50, 40));
+        statusPanel.add(errorLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, 50, 40));
 
         warningLogoL.setText("jLabel1");
-        statusPanel.add(warningLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 50, 40));
+        statusPanel.add(warningLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 50, 40));
 
         hostsLogoL.setText("jLabel1");
-        statusPanel.add(hostsLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 80, 60));
+        statusPanel.add(hostsLogoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, 80, 60));
 
         txtErrorL.setEditable(false);
         txtErrorL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -523,7 +585,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 txtErrorLActionPerformed(evt);
             }
         });
-        statusPanel.add(txtErrorL, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 70, 40));
+        statusPanel.add(txtErrorL, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, 70, 40));
 
         txtWarningL.setEditable(false);
         txtWarningL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -536,7 +598,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 txtWarningLActionPerformed(evt);
             }
         });
-        statusPanel.add(txtWarningL, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 30, 70, 40));
+        statusPanel.add(txtWarningL, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 70, 40));
 
         txtHostsL.setEditable(false);
         txtHostsL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -549,7 +611,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 txtHostsLActionPerformed(evt);
             }
         });
-        statusPanel.add(txtHostsL, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 30, 70, 40));
+        statusPanel.add(txtHostsL, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 30, 70, 40));
 
         txtFineL.setEditable(false);
         txtFineL.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -562,7 +624,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 txtFineLActionPerformed(evt);
             }
         });
-        statusPanel.add(txtFineL, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 30, 70, 40));
+        statusPanel.add(txtFineL, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 30, 70, 40));
 
         hostL.setText(".");
         hostL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -573,7 +635,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 hostLMouseExited(evt);
             }
         });
-        statusPanel.add(hostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 20, 150, 70));
+        statusPanel.add(hostL, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, 150, 70));
 
         errorL1.setText(".");
         errorL1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -584,7 +646,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 errorL1MouseExited(evt);
             }
         });
-        statusPanel.add(errorL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 150, 70));
+        statusPanel.add(errorL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 150, 70));
 
         warningL.setText(".");
         warningL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -595,7 +657,7 @@ public class MainMenuForm extends javax.swing.JFrame {
                 warningLMouseExited(evt);
             }
         });
-        statusPanel.add(warningL, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 20, 150, 70));
+        statusPanel.add(warningL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 150, 70));
 
         fineL.setText(".");
         fineL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -606,9 +668,9 @@ public class MainMenuForm extends javax.swing.JFrame {
                 fineLMouseExited(evt);
             }
         });
-        statusPanel.add(fineL, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 20, 150, 70));
+        statusPanel.add(fineL, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 20, 150, 70));
 
-        getContentPane().add(statusPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 690, 1040, 110));
+        getContentPane().add(statusPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 690, 1040, 130));
 
         jMenu1.setText("Sobre");
         jMenuBar1.add(jMenu1);
@@ -1028,7 +1090,8 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_ntpLogoLMouseEntered
 
     private void fundoDnsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoDnsMouseClicked
-        // TODO add your handling code here:
+        this.dispose();
+        new DnsUI().setVisible(true);
     }//GEN-LAST:event_fundoDnsMouseClicked
 
     private void fundoDnsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoDnsMouseEntered
@@ -1048,6 +1111,30 @@ public class MainMenuForm extends javax.swing.JFrame {
     private void dnsLogoLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dnsLogoLMouseEntered
         // TODO add your handling code here:
     }//GEN-LAST:event_dnsLogoLMouseEntered
+
+    private void workerL1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workerL1MouseEntered
+
+    private void workerL1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL1MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workerL1MouseExited
+
+    private void workerTF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workerTF1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workerTF1ActionPerformed
+
+    private void workerL2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL2MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workerL2MouseEntered
+
+    private void workerL2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL2MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workerL2MouseExited
+
+    private void workerTF2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workerTF2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_workerTF2ActionPerformed
 
     private void fundoMonitoramentoAction() {
 
@@ -1199,6 +1286,8 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image icmpLogo = this.getScaledImage("imgs/ICMP_Icon.png", icmpLogoL, true);
         Image ntpLogo = this.getScaledImage("imgs/ntp_Icon.png", ntpLogoL, true);
         Image dnsLogo = this.getScaledImage("imgs/dns_Icon.png", dnsLogoL, true);
+        Image worker1Logo = this.getScaledImage("imgs/Worker.png", workerLogoL1, true);
+        Image worker2Logo = this.getScaledImage("imgs/notificationWorker.png", workerLogoL2, true);
 
         //Setter Images
         setScaledImage(InfoL, infoButtonLogo);
@@ -1219,6 +1308,8 @@ public class MainMenuForm extends javax.swing.JFrame {
         setScaledImage(errorLogoL, errorLogo);
         setScaledImage(fineLogoL, fineLogo);
         setScaledImage(hostsLogoL, hostLogo);
+        setScaledImage(workerLogoL1, worker1Logo);
+        setScaledImage(workerLogoL2, worker2Logo);
 
         fundoHttp.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20)); // volta pra 1px
         fundoSmb.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20)); // volta pra 1px
@@ -1237,7 +1328,14 @@ public class MainMenuForm extends javax.swing.JFrame {
         warningL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fineL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         hostL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        workerL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        workerL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
+        Color cor = Color.decode("#E8E8E8");
+        statusPanel.setBackground(cor);
+        infoButtonPanel.setBackground(cor);
+        workerLogoL1.setEnabled(false);
+        workerLogoL2.setEnabled(false);
     }
 
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
@@ -1320,5 +1418,11 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel userInfoL;
     private javax.swing.JLabel warningL;
     private javax.swing.JLabel warningLogoL;
+    private javax.swing.JLabel workerL1;
+    private javax.swing.JLabel workerL2;
+    private javax.swing.JLabel workerLogoL1;
+    private javax.swing.JLabel workerLogoL2;
+    private javax.swing.JTextField workerTF1;
+    private javax.swing.JTextField workerTF2;
     // End of variables declaration//GEN-END:variables
 }

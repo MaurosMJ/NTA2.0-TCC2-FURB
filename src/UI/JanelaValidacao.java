@@ -6,6 +6,7 @@
 package UI;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import java.awt.Color;
 import javax.swing.UIManager;
 
 /**
@@ -53,9 +54,14 @@ public class JanelaValidacao extends javax.swing.JFrame {
     public static void main(String args[]) {
         // Define diretamente o FlatLaf como Look and Feel
         try {
+            //"#EAF1F8"
+            Color cor = Color.decode("#F2F2F2");
+            UIManager.put("Panel.background", cor);
+
+            // Define o look and feel do FlatLaf
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception ex) {
-            System.err.println("Failed to initialize LaF");
+            ex.printStackTrace();
         }
 
         // Inicializa a janela (apenas a LoginForm, sem exibir a JanelaValidacao)

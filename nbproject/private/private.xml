@@ -6,6 +6,7 @@
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Enum/Module.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/TelnetPersistence.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/IcmpClient.java</file>
+            <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/DnsUI.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/httpPersistence.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/SmbClient.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/IcmpPersistence.java</file>
@@ -22,17 +23,19 @@
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/SmtpPersistence.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/Telnet_Client.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Entities/LogOcurrenceMonitoring.java</file>
-            <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/NewMain.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/LoginForm.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UserConfig/UserProperties.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/SmbPersistence.java</file>
+            <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/DnsPersistence.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Utils/HostConfig.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/HttpClient.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/FtpUI.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/NtpClient.java</file>
+            <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/imgs/addMonitoring.png</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Modules/FtpPersistence.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/TelnetUI.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/Logs/LogPersistence.java</file>
+            <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/ConfigUI.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/SmbUI.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Entities/LogOccurrenceModule.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/SocketUI.java</file>
@@ -40,6 +43,7 @@
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Utils/RoundedBorder.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/HttpUI.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Persistence/JsonPersistence.java</file>
+            <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/DnsClient.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/Service/SocketClient.java</file>
             <file>file:/C:/Users/Mauros/Documents/NetBeansProjects/NTA/NTA2.0-TCC2-FURB/src/UI/MonitoringUI.java</file>
         </group>

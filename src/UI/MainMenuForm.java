@@ -889,7 +889,8 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_admSistemaLogoLMouseClicked
 
     private void fundoAdmSistemaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoAdmSistemaMouseClicked
-        fundoAdmSistemaAction();
+        this.dispose();
+        new ConfigUI().setVisible(true);
     }//GEN-LAST:event_fundoAdmSistemaMouseClicked
 
     private void monitoramentoLogoLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_monitoramentoLogoLMouseClicked
@@ -1146,7 +1147,6 @@ public class MainMenuForm extends javax.swing.JFrame {
     private void fundoAdmSistemaAction() {
         fundoAdmSistema.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 3px de espessura  
         setTextInfoButton("Configurar parametrizações do sistema.");
-        //       ajustarTamanhoLabel(userInfoL);
         ocultarLogoNTA();
     }
 

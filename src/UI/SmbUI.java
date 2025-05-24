@@ -42,7 +42,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
-
 /**
  *
  * @author Mauros
@@ -95,6 +94,8 @@ public class SmbUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel4 = new javax.swing.JLabel();
+        usuarioL = new javax.swing.JLabel();
+        dominioTF = new javax.swing.JTextField();
         systemL = new javax.swing.JLabel();
         remoteHostL = new javax.swing.JLabel();
         hostTF = new javax.swing.JTextField();
@@ -166,6 +167,21 @@ public class SmbUI extends javax.swing.JFrame {
         jLabel4.setText("Workspace");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 75, -1, -1));
 
+        usuarioL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        usuarioL.setText("Usuário");
+        getContentPane().add(usuarioL, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 270, -1, -1));
+
+        dominioTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
+        dominioTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                dominioTFMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                dominioTFMouseExited(evt);
+            }
+        });
+        getContentPane().add(dominioTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 140, -1));
+
         systemL.setText("jLabel1");
         getContentPane().add(systemL, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 80, 80));
 
@@ -199,7 +215,7 @@ public class SmbUI extends javax.swing.JFrame {
                 hostTFKeyReleased(evt);
             }
         });
-        getContentPane().add(hostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 240, -1));
+        getContentPane().add(hostTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 240, 25));
 
         hostL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         hostL.setText("Servidor Remoto");
@@ -576,6 +592,7 @@ public class SmbUI extends javax.swing.JFrame {
         userInfoL.setOpaque(true);
         getContentPane().add(userInfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 15, 360, -1));
 
+        senhaPF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         senhaPF.setText("jPasswordField1");
         senhaPF.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -590,12 +607,13 @@ public class SmbUI extends javax.swing.JFrame {
                 senhaPFKeyReleased(evt);
             }
         });
-        getContentPane().add(senhaPF, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 290, 240, -1));
+        getContentPane().add(senhaPF, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 290, 180, -1));
 
         protocoloL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         protocoloL.setText("Protocolo");
         getContentPane().add(protocoloL, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 220, -1, 20));
 
+        protocoloCHB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         protocoloCHB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SMB2.0", "SMB3.0" }));
         protocoloCHB.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -615,11 +633,11 @@ public class SmbUI extends javax.swing.JFrame {
                 protocoloCHBKeyReleased(evt);
             }
         });
-        getContentPane().add(protocoloCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 100, 20));
+        getContentPane().add(protocoloCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 240, 100, 25));
 
         senhaL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         senhaL.setText("Senha");
-        getContentPane().add(senhaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 270, -1, -1));
+        getContentPane().add(senhaL, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 270, -1, -1));
 
         usuarioTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         usuarioTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -648,7 +666,7 @@ public class SmbUI extends javax.swing.JFrame {
                 usuarioTFKeyReleased(evt);
             }
         });
-        getContentPane().add(usuarioTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 290, 240, -1));
+        getContentPane().add(usuarioTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 180, -1));
 
         diretorioTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         diretorioTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -684,9 +702,10 @@ public class SmbUI extends javax.swing.JFrame {
         getContentPane().add(corpoEmailL, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, -1, -1));
 
         remetenteL.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
-        remetenteL.setText("Usuário");
+        remetenteL.setText("Dominio");
         getContentPane().add(remetenteL, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 270, -1, -1));
 
+        operacaoCHB.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         operacaoCHB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Autenticação", "Escrita", "Leitura", "Escrita/Leitura", "Renomear arquivo", "Listar arquivos", "Truncar diretório" }));
         operacaoCHB.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -706,7 +725,7 @@ public class SmbUI extends javax.swing.JFrame {
                 operacaoCHBKeyReleased(evt);
             }
         });
-        getContentPane().add(operacaoCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 240, 120, 20));
+        getContentPane().add(operacaoCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 240, 140, 25));
 
         valorAnteriorTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         valorAnteriorTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -743,7 +762,7 @@ public class SmbUI extends javax.swing.JFrame {
 
         protocoloL1.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         protocoloL1.setText("Operação");
-        getContentPane().add(protocoloL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 220, -1, 20));
+        getContentPane().add(protocoloL1, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 220, -1, 20));
 
         novoValorTF.setFont(new java.awt.Font("SansSerif", 0, 13)); // NOI18N
         novoValorTF.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -974,13 +993,8 @@ public class SmbUI extends javax.swing.JFrame {
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
 
-//        smb = new SmbClient(usuarioTF.getText(), "\\\\whebdc", hostTF.getText(), new String(senhaPF.getPassword()));
-//        smb = new SmbClient("java.osweb", "", "\\\\192.168.252.100\\Temp\\Mauros\\Temp", "@Philips2013");
-        //public SmbClient(String usr, String dmn, String shost, String spwd) {
-//                smb = new SmbClient("mmjunior", "whebdc", hostTF.getText(), "m4UR0$M1L4C49");
-        smb = new SmbClient(usuarioTF.getText(), "whebdc", hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText(), diretorioTF.getText(), valorAnteriorTF.getText());
+        smb = new SmbClient(usuarioTF.getText(), dominioTF.getText(), hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText(), diretorioTF.getText(), valorAnteriorTF.getText());
 
-//        addToArray(smtp.PerformServerConnection());
         switch (operacaoCHB.getSelectedIndex()) {
             case 0:
                 //Autenticação
@@ -1603,6 +1617,15 @@ public class SmbUI extends javax.swing.JFrame {
         persistirInformacoes();
     }//GEN-LAST:event_conteudoTFKeyReleased
 
+    private void dominioTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dominioTFMouseEntered
+        remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+        setTextInfoButton("Informe o dominio desta conta.");
+    }//GEN-LAST:event_dominioTFMouseEntered
+
+    private void dominioTFMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dominioTFMouseExited
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_dominioTFMouseExited
+
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");
     }
@@ -1916,7 +1939,6 @@ public class SmbUI extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
 
     public boolean isBarraPesquisaPrimeiroAcesso() {
         return barraPesquisaPrimeiroAcesso;
@@ -1945,6 +1967,7 @@ public class SmbUI extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField dataInicialFTF;
     private javax.swing.JLabel deL;
     private javax.swing.JTextField diretorioTF;
+    private javax.swing.JTextField dominioTF;
     private javax.swing.JToggleButton editTB;
     private javax.swing.JButton eraserB;
     private javax.swing.JButton exportB;
@@ -1985,6 +2008,7 @@ public class SmbUI extends javax.swing.JFrame {
     private javax.swing.JPasswordField senhaPF;
     private javax.swing.JLabel systemL;
     private javax.swing.JLabel userInfoL;
+    private javax.swing.JLabel usuarioL;
     private javax.swing.JTextField usuarioTF;
     private javax.swing.JLabel valorAnteriorL;
     private javax.swing.JTextField valorAnteriorTF;

@@ -28,8 +28,9 @@ public class SmbClient {
     private final String shost;
     private NtlmPasswordAuthentication auth;
     private final List<LogOccurrenceModule> logArray = new ArrayList<>();
+    private final String protocolo;
 
-    public SmbClient(String usr, String dmn, String shost, String spwd, String fileName, String fileContent, String dir, String antigoValor) {
+    public SmbClient(String usr, String dmn, String shost, String spwd, String fileName, String fileContent, String dir, String antigoValor, String protocolo) {
         this.usr = usr;
         this.dmn = dmn;
         this.spwd = spwd;
@@ -37,6 +38,7 @@ public class SmbClient {
         this.antigoValor = antigoValor;
         this.fileContent = fileContent.isEmpty() ? "Arquivo encaminhado ao servidor!" : fileContent;
         this.shost = formatHost(shost, dir);
+        this.protocolo = protocolo;
     }
 
     private String formatHost(String host, String dir) {
@@ -49,9 +51,26 @@ public class SmbClient {
         return host + dir;
     }
 
+    private void configurarProtocoloSMB() {
+        switch (protocolo.toUpperCase()) {
+            case "SMB2.0":
+                System.setProperty("jcifs.smb.client.minVersion", "SMB2");
+                System.setProperty("jcifs.smb.client.maxVersion", "SMB2");
+                break;
+            case "SMB3.0":
+                System.setProperty("jcifs.smb.client.minVersion", "SMB3");
+                System.setProperty("jcifs.smb.client.maxVersion", "SMB3");
+                break;
+            default:
+                System.setProperty("jcifs.smb.client.minVersion", "SMB1");
+                System.setProperty("jcifs.smb.client.maxVersion", "SMB1");
+                break;
+        }
+    }
+
     public List<LogOccurrenceModule> smbAuth() {
         System.out.println("Iniciando autenticação com o host destino.");
-
+        configurarProtocoloSMB();
         try {
             this.auth = new NtlmPasswordAuthentication(dmn, usr, spwd);
             SmbFile file = new SmbFile(getSmbUrl(), auth);

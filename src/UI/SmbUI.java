@@ -993,7 +993,7 @@ public class SmbUI extends javax.swing.JFrame {
         LoadingLineLeftL.setVisible(true);
         LoadingLineRightL.setVisible(true);
 
-        smb = new SmbClient(usuarioTF.getText(), dominioTF.getText(), hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText(), diretorioTF.getText(), valorAnteriorTF.getText());
+        smb = new SmbClient(usuarioTF.getText(), dominioTF.getText(), hostTF.getText(), new String(senhaPF.getPassword()), novoValorTF.getText(), conteudoTF.getText(), diretorioTF.getText(), valorAnteriorTF.getText(), protocoloCHB.getSelectedItem().toString());
 
         switch (operacaoCHB.getSelectedIndex()) {
             case 0:

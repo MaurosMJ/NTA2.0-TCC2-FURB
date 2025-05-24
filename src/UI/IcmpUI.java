@@ -606,6 +606,14 @@ public class IcmpUI extends javax.swing.JFrame {
                 qtdCHBItemStateChanged(evt);
             }
         });
+        qtdCHB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                qtdCHBMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                qtdCHBMouseExited(evt);
+            }
+        });
         getContentPane().add(qtdCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 240, 70, 24));
 
         ppadraoL.setText("Quantidade");
@@ -761,6 +769,9 @@ public class IcmpUI extends javax.swing.JFrame {
         rHostTF.setText("");
         valorTF.setText("");
         nomeRHost.setText("");
+        qtdCHB.setSelectedIndex(0);
+        valorTF.setText("");
+        
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);
@@ -1157,7 +1168,7 @@ public class IcmpUI extends javax.swing.JFrame {
     private void valorTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_valorTFMouseEntered
         // TODO add your handling code here:
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20)); // 20 = quão arredondado fica
-        setTextInfoButton("Informe a porta da máquina destino.");
+        setTextInfoButton("Especifique a quantidade de requisições.");
     }//GEN-LAST:event_valorTFMouseEntered
 
     private void valorTFMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_valorTFMouseClicked
@@ -1169,6 +1180,14 @@ public class IcmpUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         remoteHostFundo.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
     }//GEN-LAST:event_valorTFFocusGained
+
+    private void qtdCHBMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_qtdCHBMouseEntered
+        setTextInfoButton("Informe a quantidade de requisições.");
+    }//GEN-LAST:event_qtdCHBMouseEntered
+
+    private void qtdCHBMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_qtdCHBMouseExited
+        defaultInfoButtonTxt();
+    }//GEN-LAST:event_qtdCHBMouseExited
 
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");

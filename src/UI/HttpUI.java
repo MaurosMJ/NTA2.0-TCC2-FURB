@@ -839,6 +839,10 @@ public class HttpUI extends javax.swing.JFrame {
     private void fundoRecycleBinAction() {
         endPointTF.setText("");
         nomeRHost.setText("");
+        protocoloCHB.setSelectedIndex(0);
+        operacaoCHB.setSelectedIndex(0);
+        parametrosTF.setText("");
+        urlTF.setText("");
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);

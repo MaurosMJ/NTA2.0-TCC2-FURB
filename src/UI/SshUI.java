@@ -49,7 +49,7 @@ import javax.swing.text.MaskFormatter;
  * @author Mauros
  */
 public class SshUI extends javax.swing.JFrame {
-
+    
     private ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final Map<Integer, String> portasPadrao = new HashMap<>();
@@ -75,7 +75,7 @@ public class SshUI extends javax.swing.JFrame {
                 new LoginForm().setVisible(true);
             }
         });
-
+        
         setLocationRelativeTo(null);
         defaultInfoButtonTxt();
         carregarInformacoes();
@@ -782,7 +782,7 @@ public class SshUI extends javax.swing.JFrame {
         setTextInfoButton("Utilize essa opção para adicionar essa funcionalidade ao monitoramento.");
         if (!addMonitoringL.isEnabled()) {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 3, 20));
-
+            
         } else {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
         }
@@ -809,12 +809,12 @@ public class SshUI extends javax.swing.JFrame {
     private void fundoAddMonitoringLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoAddMonitoringLMouseEntered
         fundoAddMonitoringLMouseAction();
     }//GEN-LAST:event_fundoAddMonitoringLMouseEntered
-
+    
     private void fundoAddMonitoringLMouseAction() {
         setTextInfoButton("Utilize essa opção para adicionar essa funcionalidade ao monitoramento.");
         if (!addMonitoringL.isEnabled()) {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 3, 20));
-
+            
         } else {
             fundoAddMonitoringL.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
         }
@@ -853,11 +853,11 @@ public class SshUI extends javax.swing.JFrame {
     private void fundoHomeLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoHomeLMouseClicked
         fundoHomeAction();
     }//GEN-LAST:event_fundoHomeLMouseClicked
-
+    
     private void fundoAddMonitoringAction() {
         persistirInformacoes();
     }
-
+    
     private void fundoHomeAction() {
         persistirInformacoes();
         this.dispose();
@@ -867,11 +867,14 @@ public class SshUI extends javax.swing.JFrame {
     private void fundoRecycleBinLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoRecycleBinLMouseClicked
         fundoRecycleBinAction();
     }//GEN-LAST:event_fundoRecycleBinLMouseClicked
-
+    
     private void fundoRecycleBinAction() {
         rHostTF.setText("");
         rHostPortTF.setText("");
         nomeRHost.setText("");
+        usuarioTF.setText("");
+        senhaPWF.setText("");
+        promptTF.setText("");
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);
@@ -881,7 +884,7 @@ public class SshUI extends javax.swing.JFrame {
     private void fundoPlayLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fundoPlayLMouseClicked
         fundoPlayAction();
     }//GEN-LAST:event_fundoPlayLMouseClicked
-
+    
     private void fundoPlayAction() {
         addMonitoringL.setEnabled(true);
         LoadingLineLeftL.setVisible(true);
@@ -898,12 +901,12 @@ public class SshUI extends javax.swing.JFrame {
 
     private void copyBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyBActionPerformed
         String texto = logTA.getText();
-
+        
         if (texto != null && !texto.isEmpty()) {
             StringSelection selecao = new StringSelection(texto);
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(selecao, null);
-
+            
             addLog(LogLevel.INFO, "Log copiado para a área de transferência.");
         } else {
             addLog(LogLevel.WARNING, "Nada para copiar. O log está vazio.");
@@ -919,24 +922,24 @@ public class SshUI extends javax.swing.JFrame {
     private void exportBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportBActionPerformed
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Salvar log como...");
-
+        
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo de Log (*.log)", "log");
         fileChooser.setFileFilter(filter);
-
+        
         String dataHora = HostConfig.getDataHoraAtual().replace(":", "-").replace(" ", "_");
         String nomePadrao = "NTALog_" + dataHora + ".log";
-
+        
         fileChooser.setSelectedFile(new File(nomePadrao));
-
+        
         int userSelection = fileChooser.showSaveDialog(this);
-
+        
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File fileToSave = fileChooser.getSelectedFile();
-
+            
             if (!fileToSave.getName().toLowerCase().endsWith(".log")) {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".log");
             }
-
+            
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
                 writer.write(logTA.getText());
                 addLog(LogLevel.INFO, "Log exportado para: " + fileToSave.getAbsolutePath());
@@ -966,7 +969,7 @@ public class SshUI extends javax.swing.JFrame {
     private void openDocumentBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDocumentBActionPerformed
         // TODO add your handling code here:
         String conteudoLog = logTA.getText();
-
+        
         try {
             // Cria arquivo temporário
             File tempFile = File.createTempFile("log_temp_", ".txt");
@@ -976,7 +979,7 @@ public class SshUI extends javax.swing.JFrame {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
                 writer.write(conteudoLog);
             }
-
+            
             String os = HostConfig.obterSistemaOperacional();
 
             // Comando para abrir o arquivo dependendo do SO
@@ -992,7 +995,7 @@ public class SshUI extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Sistema operacional não suportado para abrir o editor de texto.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
-
+            
         } catch (IOException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao abrir o editor de texto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -1309,7 +1312,7 @@ public class SshUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         defaultInfoButtonTxt();
     }//GEN-LAST:event_senhaPWFMouseExited
-
+    
     private void defaultInfoButtonTxt() {
         setTextInfoButton("Selecione uma das opções abaixo.");
     }
@@ -1334,7 +1337,7 @@ public class SshUI extends javax.swing.JFrame {
             new SshUI().setVisible(true);
         });
     }
-
+    
     private void initImg() {
         //ScaledImages
         LoadingLineLeftL.setVisible(false);
@@ -1352,7 +1355,7 @@ public class SshUI extends javax.swing.JFrame {
         fundoPromptL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
         fundoUIL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
         fundoPesquisaL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
-
+        
         campoPesquisaTF.setBorder(new RoundedBorder(Color.GRAY, 2, 30)); // Arredondado
         campoPesquisaTF.setOpaque(false); //
         campoPesquisaTF.setPreferredSize(new Dimension(300, 35)); // Tamanho desejado
@@ -1362,81 +1365,81 @@ public class SshUI extends javax.swing.JFrame {
             case "Windows":
                 systemLogo = this.getScaledImage("imgs/hostWindows.png", systemL, true);
                 break;
-
+            
             case "Linux":
                 systemLogo = this.getScaledImage("imgs/hostLinux.png", systemL, true);
                 break;
-
+            
             case "Mac":
                 systemLogo = this.getScaledImage("imgs/hostMac.png", systemL, true);
                 break;
-
+            
             default:
                 systemLogo = this.getScaledImage("imgs/host.png", systemL, true);
                 break;
         }
-
+        
         Image serverLogo = this.getScaledImage("imgs/server_static.png", remoteHostL, true);
         Image playLogo = this.getScaledImage("imgs/play_Icon.png", playL, true);
         Image addMonitoringLogo = this.getScaledImage("imgs/addMonitoring.png", addMonitoringL, true);
         Image homeLogo = this.getScaledImage("imgs/home_Icon.png", homeL, true);
         Image recycleBinIcon = this.getScaledImage("imgs/recicleByn_Icon.png", RecycleBinL, true);
         Image searchIcon = this.getScaledImage("imgs/search_Icon.png", searchL, true);
-
+        
         Image LoadingLineRightIcon = this.getScaledImage("imgs/line.gif", LoadingLineLeftL, false);
         Image LoadingLineLeftIcon = this.getScaledImage("imgs/lineR.gif", LoadingLineRightL, false);
-
+        
         Image exportFileIcon = this.getScaledImage("imgs/export_Icon.png", exportB, true);
         Image eraserIcon = this.getScaledImage("imgs/eraser.png", eraserB, true);
         Image copyIcon = this.getScaledImage("imgs/copy.png", copyB, true);
         Image editorIcon = this.getScaledImage("imgs/edit_Icon.png", editTB, true);
         Image openDocumentIcon = this.getScaledImage("imgs/notepad_Icon.png", openDocumentB, true);
-
+        
         Image infoButtonIcon = this.getScaledImage("imgs/info_Button.png", InfoL, true);
-
+        
         setScaledImage(remoteHostL, serverLogo);
         setScaledImage(systemL, systemLogo);
         setScaledImage(searchL, homeLogo);
-
+        
         setScaledImage(playL, playLogo);
         setScaledImage(addMonitoringL, addMonitoringLogo);
         setScaledImage(homeL, homeLogo);
         setScaledImage(RecycleBinL, recycleBinIcon);
         setScaledImage(searchL, searchIcon);
-
+        
         setScaledImage(LoadingLineLeftL, LoadingLineRightIcon);
         setScaledImage(LoadingLineRightL, LoadingLineLeftIcon);
-
+        
         setScaledImage(exportB, exportFileIcon);
         setScaledImage(eraserB, eraserIcon);
         setScaledImage(copyB, copyIcon);
         setScaledImage(editTB, editorIcon);
         setScaledImage(openDocumentB, openDocumentIcon);
-
+        
         setScaledImage(InfoL, infoButtonIcon);
     }
-
+    
     private void addLog(LogLevel level, String input) {
         logTA.setText(logTA.getText() + "\n" + getLogFormat(level, input));
         addToArray(input, level);
     }
-
+    
     private void addToArray(String input, LogLevel level) {
-
+        
         LogOccurrenceModule log = new LogOccurrenceModule(input, level);
         this.LogArray.add(log);
     }
-
+    
     private void addToArray(ArrayList<LogOccurrenceModule> logArray) {
-
+        
         for (LogOccurrenceModule log : logArray) {
             this.LogArray.add(log);
         }
     }
-
+    
     private void searchBarAction() {
         StringBuilder resultado = new StringBuilder("ConsoleLog");
-
+        
         for (LogOccurrenceModule log : LogArray) {
             if (log.getData().toLowerCase().contains(campoPesquisaTF.getText().trim().toLowerCase())) {
                 resultado.append("\n").append(HostConfig.getLogFormatFromLogOccurrence(log));
@@ -1444,16 +1447,16 @@ public class SshUI extends javax.swing.JFrame {
         }
         logTA.setText(resultado.toString());
     }
-
+    
     private void filterDisplayResults() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); // <-- Aqui está o ajuste
         logTA.setText("ConsoleLog:");
-
+        
         if (dataCHB.isSelected()) {
             try {
                 Date dataInicial = sdf.parse(dataInicialFTF.getText());
                 Date dataFinal = sdf.parse(dataFinalFTF.getText());
-
+                
                 for (LogOccurrenceModule log : LogArray) {
                     if (permitirLogGeracao(log.getSeverity())) {
                         Date dataLog = log.getOccurrence();
@@ -1473,21 +1476,21 @@ public class SshUI extends javax.swing.JFrame {
             }
         }
     }
-
+    
     private void setTextInfoButton(String input) {
         userInfoL.setText(input);
         ajustarTamanhoLabel(userInfoL);
         userInfoL.setBounds(obterPosicaoCentralEixoX(), userInfoL.getY(), userInfoL.getPreferredSize().width, userInfoL.getPreferredSize().height);
         InfoL.setBounds(obterPosicaoCentralEixoX() - 35, userInfoL.getY(), userInfoL.getPreferredSize().width, userInfoL.getPreferredSize().height);
     }
-
+    
     private int obterPosicaoCentralEixoX() {
         int frameWidth = getWidth(); // largura da janela
         int labelWidth = userInfoL.getPreferredSize().width;
         int labelX = (frameWidth - labelWidth) / 2;
         return labelX;
     }
-
+    
     private void ajustarTamanhoLabel(javax.swing.JLabel lbl) {
         FontMetrics metrics = lbl.getFontMetrics(lbl.getFont());
         int larguraTexto = metrics.stringWidth(lbl.getText());
@@ -1496,18 +1499,18 @@ public class SshUI extends javax.swing.JFrame {
         // Margens para não ficar muito justo
         int margemHorizontal = 20;
         int margemVertical = 10;
-
+        
         lbl.setSize(larguraTexto + margemHorizontal, alturaTexto + margemVertical);
     }
-
+    
     public boolean permitirLogGeracao(LogLevel nivelGerado) {
         return nivelGerado.getPrioridade() >= (levelSL.getValue() + 1);
     }
-
+    
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(directory));
         Image image = icon.getImage();
-
+        
         if (scaled) {
             Image ScaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
             return ScaledImage;
@@ -1515,11 +1518,11 @@ public class SshUI extends javax.swing.JFrame {
             return image;
         }
     }
-
+    
     private Image getScaledImage(String directory, javax.swing.JButton label, boolean scaled) {
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(directory));
         Image image = icon.getImage();
-
+        
         if (scaled) {
             Image ScaledImage = image.getScaledInstance(label.getWidth() - 10, label.getHeight() - 10, Image.SCALE_SMOOTH);
             return ScaledImage;
@@ -1527,11 +1530,11 @@ public class SshUI extends javax.swing.JFrame {
             return image;
         }
     }
-
+    
     private Image getScaledImage(String directory, javax.swing.JToggleButton label, boolean scaled) {
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(directory));
         Image image = icon.getImage();
-
+        
         if (scaled) {
             Image ScaledImage = image.getScaledInstance(label.getWidth() - 10, label.getHeight() - 10, Image.SCALE_SMOOTH);
             return ScaledImage;
@@ -1539,37 +1542,37 @@ public class SshUI extends javax.swing.JFrame {
             return image;
         }
     }
-
+    
     private void setScaledImage(javax.swing.JLabel label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
-
+    
     private void setScaledImage(javax.swing.JToggleButton label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
-
+    
     private void setScaledImage(javax.swing.JButton label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
-
+    
     private void inicializaFTF() {
         // Máscara: dd/MM/yyyy HH:mm:ss
         MaskFormatter dateMask = null;
-
+        
         try {
             dateMask = new MaskFormatter("##/##/#### ##:##:##");
         } catch (ParseException ex) {
             Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         dateMask.setPlaceholderCharacter('_');
-
+        
         dataInicialFTF.setColumns(20);
         dataInicialFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
         dataFinalFTF.setColumns(20);
         dataFinalFTF.setFormatterFactory(new DefaultFormatterFactory(dateMask));
     }
-
+    
     public void persistirInformacoes() {
         SshConfig config = new SshConfig();
         config.workspace = String.valueOf(workspaceCBX.getSelectedItem());
@@ -1587,23 +1590,23 @@ public class SshUI extends javax.swing.JFrame {
         config.session.servidor = rHostTF.getText();
         config.session.usuario = usuarioTF.getText();
         config.session.senha = new String(senhaPWF.getPassword());
-
+        
         config.session.instrucao = promptTF.getText();
         config.session.toggleEditor = editTB.isSelected();
-
+        
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         salvarJsonEmAppData("sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
     }
-
+    
     public void carregarInformacoes() {
         String nomeArquivo = "sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
         SshConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SshConfig.class, "/Persistence");
-
+        
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
             return;
         }
-
+        
         try {
             dataCHB.setSelected(config.session.considerarData);
             fundoPlayL.setEnabled(config.session.executar);
@@ -1616,24 +1619,24 @@ public class SshUI extends javax.swing.JFrame {
             rHostTF.setText(config.session.servidor);
             promptTF.setText(config.session.instrucao);
             editTB.setSelected(config.session.toggleEditor);
-
+            
             senhaPWF.setText(new String(config.session.senha));
             usuarioTF.setText(config.session.usuario);
-
+            
         } catch (Exception e) {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
         }
     }
-
+    
     public boolean isBarraPesquisaPrimeiroAcesso() {
         return barraPesquisaPrimeiroAcesso;
     }
-
+    
     public void setBarraPesquisaPrimeiroAcesso(boolean barraPesquisaPrimeiroAcesso) {
         this.barraPesquisaPrimeiroAcesso = barraPesquisaPrimeiroAcesso;
     }
-
+    
     private void inicializarPortasPadrao() {
         portasPadrao.put(0, "20");    // FTP
         portasPadrao.put(1, "22");    // SSH

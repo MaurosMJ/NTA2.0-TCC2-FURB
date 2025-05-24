@@ -978,6 +978,16 @@ public class SmbUI extends javax.swing.JFrame {
     private void fundoRecycleBinAction() {
         hostTF.setText("");
         nomeRHost.setText("");
+        operacaoCHB.setSelectedIndex(0);
+        protocoloCHB.setSelectedIndex(0);
+        dominioTF.setText("");
+        usuarioTF.setText("");
+        senhaPF.setText("");
+        diretorioTF.setText("");
+        valorAnteriorTF.setText("");
+        novoValorTF.setText("");
+        conteudoTF.setText("");
+        
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);

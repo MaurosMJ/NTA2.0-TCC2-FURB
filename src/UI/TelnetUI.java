@@ -819,6 +819,7 @@ public class TelnetUI extends javax.swing.JFrame {
     private void fundoRecycleBinAction() {
         rHostTF.setText("");
         rHostPortTF.setText("");
+        promptTF.setText("");
         nomeRHost.setText("");
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);

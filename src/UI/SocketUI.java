@@ -789,6 +789,7 @@ public class SocketUI extends javax.swing.JFrame {
         rHostTF.setText("");
         rHostPortTF.setText("");
         nomeRHost.setText("");
+        ppadraoCHB.setSelectedIndex(0);
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);

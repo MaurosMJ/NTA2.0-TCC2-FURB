@@ -774,6 +774,11 @@ public class DnsUI extends javax.swing.JFrame {
     private void fundoRecycleBinAction() {
         rHostTF.setText("");
         nomeRHost.setText("");
+        
+        dominioTF.setText("");
+        tipoCBX.setSelectedIndex(0);
+        classeCBX.setSelectedIndex(0);
+        
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);

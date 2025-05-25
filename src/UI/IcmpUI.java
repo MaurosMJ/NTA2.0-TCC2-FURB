@@ -1470,12 +1470,12 @@ public class IcmpUI extends javax.swing.JFrame {
         }
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("icmpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("icmpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "icmpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        IcmpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, IcmpConfig.class, "/Persistence");
+        IcmpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, IcmpConfig.class, "/Persistence/Modules");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

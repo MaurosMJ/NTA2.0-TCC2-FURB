@@ -1444,12 +1444,12 @@ public class SocketUI extends javax.swing.JFrame {
         config.session.portaPadrao = ppadraoCHB.getSelectedIndex();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "socketConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        SocketConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SocketConfig.class, "/Persistence");
+        SocketConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SocketConfig.class, "/Persistence/Modules");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

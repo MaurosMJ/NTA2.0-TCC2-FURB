@@ -1595,12 +1595,12 @@ public class SshUI extends javax.swing.JFrame {
         config.session.toggleEditor = editTB.isSelected();
         
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
     
     public void carregarInformacoes() {
         String nomeArquivo = "sshConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        SshConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SshConfig.class, "/Persistence");
+        SshConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SshConfig.class, "/Persistence/Modules");
         
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

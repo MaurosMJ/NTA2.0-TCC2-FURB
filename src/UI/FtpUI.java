@@ -1778,12 +1778,12 @@ public class FtpUI extends javax.swing.JFrame {
         config.session.valorAnterior = dirLocalTF.getText();
         
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("ftpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("ftpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
     
     public void carregarInformacoes() {
         String nomeArquivo = "ftpConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        FtpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, FtpConfig.class, "/Persistence");
+        FtpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, FtpConfig.class, "/Persistence/Modules");
         
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

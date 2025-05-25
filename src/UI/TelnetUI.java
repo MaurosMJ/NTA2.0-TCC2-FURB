@@ -1504,12 +1504,12 @@ public class TelnetUI extends javax.swing.JFrame {
         config.session.toggleEditor = editTB.isSelected();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("telnetConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("telnetConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "telnetConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        TelnetConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, TelnetConfig.class, "/Persistence");
+        TelnetConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, TelnetConfig.class, "/Persistence/Modules");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

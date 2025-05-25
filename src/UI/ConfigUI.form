@@ -1474,8 +1474,8 @@
                                   <EmptySpace pref="56" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="jTextField10" max="32767" attributes="0"/>
-                                          <Component id="jPasswordField3" alignment="0" pref="361" max="32767" attributes="0"/>
+                                          <Component id="jTextField10" pref="361" max="32767" attributes="0"/>
+                                          <Component id="jPasswordField3" alignment="0" max="32767" attributes="0"/>
                                           <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jTextField4" alignment="0" max="32767" attributes="0"/>
                                           <Component id="jLabel20" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -1557,9 +1557,6 @@
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextField4">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jTextField4"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel19">
                           <Properties>
@@ -1567,9 +1564,6 @@
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextField7">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jTextField4"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel20">
                           <Properties>
@@ -1577,14 +1571,8 @@
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JPasswordField" name="jPasswordField3">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jPasswordField3"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextField8">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jTextField4"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel21">
                           <Properties>
@@ -1597,14 +1585,8 @@
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextField9">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jTextField4"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextField10">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jTextField4"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel23">
                           <Properties>
@@ -1612,9 +1594,6 @@
                           </Properties>
                         </Component>
                         <Component class="javax.swing.JTextField" name="jTextField11">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" value="jTextField4"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel24">
                           <Properties>

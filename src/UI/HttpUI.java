@@ -1623,12 +1623,12 @@ public Map<String, String> parseParametersString(String parameters) {
         config.session.parametros = parametrosTF.getText();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("httpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("httpConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "httpConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        HttpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, HttpConfig.class, "/Persistence");
+        HttpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, HttpConfig.class, "/Persistence/Modules");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

@@ -977,29 +977,15 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel9.setText("Servidor Remoto");
 
-        jTextField4.setText("jTextField4");
-
         jLabel19.setText("Porta");
 
-        jTextField7.setText("jTextField4");
-
         jLabel20.setText("Senha");
-
-        jPasswordField3.setText("jPasswordField3");
-
-        jTextField8.setText("jTextField4");
 
         jLabel21.setText("Remetente");
 
         jLabel22.setText("Destinatário");
 
-        jTextField9.setText("jTextField4");
-
-        jTextField10.setText("jTextField4");
-
         jLabel23.setText("Título");
-
-        jTextField11.setText("jTextField4");
 
         jLabel24.setText("Corpo do E-mail");
 
@@ -1013,8 +999,8 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addContainerGap(56, Short.MAX_VALUE)
                 .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField10)
-                        .addComponent(jPasswordField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                        .addComponent(jTextField10, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                        .addComponent(jPasswordField3, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)

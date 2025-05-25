@@ -1922,12 +1922,12 @@ public class SmbUI extends javax.swing.JFrame {
         config.session.conteudo = conteudoTF.getText();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("smbConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("smbConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
 
     public void carregarInformacoes() {
         String nomeArquivo = "smbConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        SmbConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmbConfig.class, "/Persistence");
+        SmbConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmbConfig.class, "/Persistence/Modules");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

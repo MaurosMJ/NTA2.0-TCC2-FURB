@@ -1879,12 +1879,12 @@ public class SmtpUI extends javax.swing.JFrame {
         config.session.isAutenticacao = autenticacaoCHB.isSelected();
         
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        salvarJsonEmAppData("emailConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence");
+        salvarJsonEmAppData("emailConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json", gson.toJson(config), "/Persistence/Modules");
     }
     
     public void carregarInformacoes() {
         String nomeArquivo = "emailConfig_wk" + workspaceCBX.getSelectedItem() + ".json";
-        SmtpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmtpConfig.class, "/Persistence");
+        SmtpConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, SmtpConfig.class, "/Persistence/Modules");
         
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

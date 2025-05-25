@@ -1470,7 +1470,7 @@ public class DnsUI extends javax.swing.JFrame {
 
     public void carregarInformacoes() {
         String nomeArquivo = "dnsConfig_wk" + String.valueOf(workspaceCBX.getSelectedItem()) + ".json";
-        DnsConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, DnsConfig.class, "/Persistence");
+        DnsConfig config = JsonPersistence.carregarJsonAppdata(nomeArquivo, DnsConfig.class, "/Persistence/Modules");
 
         if (config == null || config.session == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);

@@ -15,6 +15,7 @@ public class Worker2Persistence {
     public static class Worker2Config {
 
         public SessionValues session;
+        public String workspace;
 
         public static class SessionValues {
 
@@ -22,7 +23,8 @@ public class Worker2Persistence {
             public String servidor;
             public String porta;
             public String senha;
-            public String tls;
+            public boolean tls;
+            public int protocolo;
             public String remetente;
             public String destinatario;
             public String tituloMail;

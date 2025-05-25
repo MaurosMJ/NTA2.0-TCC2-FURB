@@ -5,17 +5,44 @@
  */
 package UI;
 
+import Entities.LogOcurrenceMonitoring;
+import Entities.Usuario;
+import Enum.LogLevel;
+import Enum.Module;
+import Enum.Role;
+import Persistence.Configs.*;
+import Persistence.Configs.Worker2Persistence.Worker2Config;
+import Persistence.JsonPersistence;
+import static Persistence.JsonPersistence.salvarJsonEmAppData;
+import Persistence.Logs.LogPersistence;
 import Utils.RoundedBorder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Mauros
  */
 public class ConfigUI extends javax.swing.JFrame {
+
+    private ArrayList<Usuario> UserArray = new ArrayList<>();
 
     /**
      * Creates new form ConfigUI
@@ -25,6 +52,54 @@ public class ConfigUI extends javax.swing.JFrame {
         initImg();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
+        carregarInformacoes();
+        carregarInformacoesArquivo();
+        exibirInformacoesArray();
+    }
+
+    public void persistirInformacoes() {
+        Worker2Config config = new Worker2Config();
+        config.workspace = "1";
+        config.session = new Worker2Config.SessionValues();
+        config.session.servidor = hostTF.getText();
+        config.session.porta = portaTF.getText();
+        config.session.senha = new String(senhaPWF.getPassword());
+        config.session.protocolo = protocoloTF.getSelectedIndex();
+        config.session.remetente = remetenteTF.getText();
+        config.session.destinatario = destinatarioTF.getText();
+        config.session.tituloMail = tituloTF.getText();
+        config.session.corpoMail = corpoTF.getText();
+        config.session.tls = tlsCBX.isSelected();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        salvarJsonEmAppData("Worker2Config" + ".json", gson.toJson(config), "/Persistence/Worker2");
+    }
+
+    public void carregarInformacoes() {
+        String nomeArquivo = "Worker2Config" + ".json";
+        Worker2Persistence.Worker2Config config = JsonPersistence.carregarJsonAppdata(nomeArquivo, Worker2Persistence.Worker2Config.class, "/Persistence/Worker2");
+
+        if (config == null || config.session == null) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+
+        try {
+            portaTF.setText(config.session.porta);
+            hostTF.setText(config.session.servidor);
+
+            senhaPWF.setText(new String(config.session.senha));
+            protocoloTF.setSelectedIndex(config.session.protocolo);
+            remetenteTF.setText(config.session.remetente);
+            destinatarioTF.setText(config.session.destinatario);
+            tituloTF.setText(config.session.tituloMail);
+            corpoTF.setText(config.session.corpoMail);
+            tlsCBX.setSelected(config.session.tls);
+
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -129,25 +204,26 @@ public class ConfigUI extends javax.swing.JFrame {
         configEmailL = new javax.swing.JLabel();
         jPanel24 = new javax.swing.JPanel();
         jPanel25 = new javax.swing.JPanel();
-        jButton7 = new javax.swing.JButton();
+        salvarB = new javax.swing.JButton();
         homeL2 = new javax.swing.JLabel();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        editarTGB = new javax.swing.JToggleButton();
         painelCentral = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        hostTF = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        portaTF = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
-        jPasswordField3 = new javax.swing.JPasswordField();
-        jTextField8 = new javax.swing.JTextField();
+        senhaPWF = new javax.swing.JPasswordField();
+        destinatarioTF = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField10 = new javax.swing.JTextField();
+        remetenteTF = new javax.swing.JTextField();
+        tituloTF = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
+        corpoTF = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        tlsCBX = new javax.swing.JCheckBox();
+        protocoloTF = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ajustes");
@@ -930,7 +1006,8 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jPanel25.setPreferredSize(new java.awt.Dimension(1038, 116));
 
-        jButton7.setText("Salvar");
+        salvarB.setText("Salvar");
+        salvarB.setEnabled(false);
 
         homeL2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         homeL2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -945,7 +1022,12 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
 
-        jToggleButton1.setText("Editar");
+        editarTGB.setText("Editar");
+        editarTGB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                editarTGBStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
@@ -955,9 +1037,9 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addContainerGap(324, Short.MAX_VALUE)
                 .addComponent(homeL2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(salvarB, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editarTGB, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(317, Short.MAX_VALUE))
         );
         jPanel25Layout.setVerticalGroup(
@@ -965,11 +1047,11 @@ public class ConfigUI extends javax.swing.JFrame {
             .addGroup(jPanel25Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(salvarB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(homeL2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel25Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(editarTGB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -977,19 +1059,83 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel9.setText("Servidor Remoto");
 
+        hostTF.setText(".");
+        hostTF.setEnabled(false);
+        hostTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                hostTFKeyReleased(evt);
+            }
+        });
+
         jLabel19.setText("Porta");
 
+        portaTF.setEnabled(false);
+        portaTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                portaTFKeyReleased(evt);
+            }
+        });
+
         jLabel20.setText("Senha");
+
+        senhaPWF.setEnabled(false);
+        senhaPWF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                senhaPWFKeyReleased(evt);
+            }
+        });
+
+        destinatarioTF.setEnabled(false);
+        destinatarioTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                destinatarioTFKeyReleased(evt);
+            }
+        });
 
         jLabel21.setText("Remetente");
 
         jLabel22.setText("Destinatário");
 
+        remetenteTF.setEnabled(false);
+        remetenteTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                remetenteTFKeyReleased(evt);
+            }
+        });
+
+        tituloTF.setEnabled(false);
+        tituloTF.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tituloTFMouseEntered(evt);
+            }
+        });
+
         jLabel23.setText("Título");
+
+        corpoTF.setEnabled(false);
+        corpoTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                corpoTFKeyReleased(evt);
+            }
+        });
 
         jLabel24.setText("Corpo do E-mail");
 
-        jCheckBox1.setText("STARTTLS");
+        tlsCBX.setText("STARTTLS");
+        tlsCBX.setEnabled(false);
+        tlsCBX.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tlsCBXStateChanged(evt);
+            }
+        });
+
+        protocoloTF.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TLSv1.2", "SSLv3.0" }));
+        protocoloTF.setEnabled(false);
+        protocoloTF.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                protocoloTFItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout painelCentralLayout = new javax.swing.GroupLayout(painelCentral);
         painelCentral.setLayout(painelCentralLayout);
@@ -999,24 +1145,27 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addContainerGap(56, Short.MAX_VALUE)
                 .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField10, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-                        .addComponent(jPasswordField3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tituloTF)
+                        .addComponent(senhaPWF, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(hostTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                         .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addComponent(remetenteTF, javax.swing.GroupLayout.Alignment.LEADING))
                     .addComponent(jLabel23))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel24)
-                    .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-                        .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(jCheckBox1))
+                    .addComponent(corpoTF)
+                    .addComponent(jLabel19)
+                    .addComponent(portaTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22)
+                    .addComponent(destinatarioTF)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelCentralLayout.createSequentialGroup()
+                        .addComponent(protocoloTF, 0, 251, Short.MAX_VALUE)
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(tlsCBX)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)))
                 .addContainerGap(122, Short.MAX_VALUE))
         );
         painelCentralLayout.setVerticalGroup(
@@ -1028,35 +1177,36 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(hostTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(portaTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(painelCentralLayout.createSequentialGroup()
                         .addComponent(jLabel20)
-                        .addGap(11, 11, 11)
-                        .addComponent(jPasswordField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(senhaPWF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tlsCBX)
+                            .addComponent(protocoloTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel21)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(remetenteTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelCentralLayout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
-                        .addGap(18, 18, 18)
                         .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(destinatarioTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelCentralLayout.createSequentialGroup()
                         .addComponent(jLabel23)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tituloTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelCentralLayout.createSequentialGroup()
                         .addComponent(jLabel24)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(320, Short.MAX_VALUE))
+                        .addComponent(corpoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(318, Short.MAX_VALUE))
         );
 
         Listar1.add(painelCentral, java.awt.BorderLayout.CENTER);
@@ -1146,6 +1296,68 @@ public class ConfigUI extends javax.swing.JFrame {
         new MainMenuForm().setVisible(true);
     }//GEN-LAST:event_homeL4MouseClicked
 
+    private void hostTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_hostTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_hostTFKeyReleased
+
+    private void portaTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portaTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_portaTFKeyReleased
+
+    private void senhaPWFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaPWFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_senhaPWFKeyReleased
+
+    private void protocoloTFItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_protocoloTFItemStateChanged
+        persistirInformacoes();
+    }//GEN-LAST:event_protocoloTFItemStateChanged
+
+    private void tlsCBXStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tlsCBXStateChanged
+        persistirInformacoes();
+    }//GEN-LAST:event_tlsCBXStateChanged
+
+    private void remetenteTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_remetenteTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_remetenteTFKeyReleased
+
+    private void destinatarioTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_destinatarioTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_destinatarioTFKeyReleased
+
+    private void tituloTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tituloTFMouseEntered
+        persistirInformacoes();
+    }//GEN-LAST:event_tituloTFMouseEntered
+
+    private void corpoTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_corpoTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_corpoTFKeyReleased
+
+    private void editarTGBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_editarTGBStateChanged
+        if (editarTGB.isSelected()) {
+            hostTF.setEnabled(true);
+            portaTF.setEnabled(true);
+            senhaPWF.setEnabled(true);
+            protocoloTF.setEnabled(true);
+            tlsCBX.setEnabled(true);
+            remetenteTF.setEnabled(true);
+            destinatarioTF.setEnabled(true);
+            tituloTF.setEnabled(true);
+            corpoTF.setEnabled(true);
+            salvarB.setEnabled(true);
+            return;
+        }
+        hostTF.setEnabled(false);
+        portaTF.setEnabled(false);
+        senhaPWF.setEnabled(false);
+        protocoloTF.setEnabled(false);
+        tlsCBX.setEnabled(false);
+        remetenteTF.setEnabled(false);
+        destinatarioTF.setEnabled(false);
+        tituloTF.setEnabled(false);
+        corpoTF.setEnabled(false);
+        salvarB.setEnabled(false);
+    }//GEN-LAST:event_editarTGBStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -1222,6 +1434,26 @@ public class ConfigUI extends javax.swing.JFrame {
         homeL3.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL4.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+
+        Font fonteTabela = new Font("Segoe UI", Font.PLAIN, 13);
+        jTable1.setFont(fonteTabela);
+
+        jTable1.setShowGrid(true);
+        jTable1.setGridColor(Color.LIGHT_GRAY);
+        jTable1.setRowHeight(25);  // altura confortável para leitura
+        jTable1.setIntercellSpacing(new Dimension(1, 1));  // define espaçamento entre células
+
+        DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
+        esquerda.setHorizontalAlignment(SwingConstants.LEFT);
+
+        DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
+        centro.setHorizontalAlignment(SwingConstants.CENTER);
+
+        jTable1.getColumnModel().getColumn(0).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
+        jTable1.getColumnModel().getColumn(1).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
+        jTable1.getColumnModel().getColumn(2).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
+        jTable1.getColumnModel().getColumn(3).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
+        jTable1.getColumnModel().getColumn(4).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
     }
 
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
@@ -1240,6 +1472,59 @@ public class ConfigUI extends javax.swing.JFrame {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
 
+    private DefaultTableCellRenderer criarRendererComZebra(int alinhamento) {
+        return new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                setHorizontalAlignment(alinhamento);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(240, 240, 240));
+                }
+                return c;
+            }
+        };
+    }
+
+    public void carregarInformacoesArquivo() {
+        String nomeArquivo = "Users.json";
+        List<UsuarioPersistence> listaUsuarios = JsonPersistence.carregarJsonAppdataUsuario(nomeArquivo);
+        if (listaUsuarios == null || listaUsuarios.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+        for (UsuarioPersistence config : listaUsuarios) {
+            for (UsuarioPersistence.SessionValues entry : config.session) {
+                this.addToArray(entry.imageDir, entry.usuario, entry.nomeCompleto, entry.senha, entry.email, entry.role, entry.acesso);
+            }
+        }
+
+    }
+
+    private void addToArray(String imageDir, String user, String nomeCompleto, String senha, String email, Role role, String acesso) {
+        Usuario usuario = new Usuario(imageDir, user, nomeCompleto, senha, email, role, acesso);
+        this.UserArray.add(usuario);
+    }
+
+    private void exibirInformacoesArray() {
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //22/03/1999 01:00:00
+
+        for (Usuario user : UserArray) {
+            model.addRow(new Object[]{
+                user.getUsuario(),
+                user.getNomeCompleto(),
+                user.getEmail(),
+                user.getRole(),
+                user.getAcesso()
+            });
+        }
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Adicionar;
     private javax.swing.JPanel Alterar;
@@ -1251,12 +1536,16 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel Remover;
     private javax.swing.JLabel alterarUsuarioL;
     private javax.swing.JLabel configEmailL;
+    private javax.swing.JTextField corpoTF;
     private javax.swing.JLabel criarUsuarioL;
+    private javax.swing.JTextField destinatarioTF;
+    private javax.swing.JToggleButton editarTGB;
     private javax.swing.JLabel homeL;
     private javax.swing.JLabel homeL1;
     private javax.swing.JLabel homeL2;
     private javax.swing.JLabel homeL3;
     private javax.swing.JLabel homeL4;
+    private javax.swing.JTextField hostTF;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -1266,9 +1555,7 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton9;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
@@ -1327,7 +1614,6 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JPasswordField jPasswordField3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1336,20 +1622,20 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel listarUsuarioL;
     private javax.swing.JPanel painelCentral;
+    private javax.swing.JTextField portaTF;
+    private javax.swing.JComboBox protocoloTF;
+    private javax.swing.JTextField remetenteTF;
     private javax.swing.JLabel removerUsuarioL;
+    private javax.swing.JButton salvarB;
+    private javax.swing.JPasswordField senhaPWF;
+    private javax.swing.JTextField tituloTF;
+    private javax.swing.JCheckBox tlsCBX;
     private javax.swing.JLabel userL;
     private javax.swing.JLabel userL1;
     private javax.swing.JLabel userL3;

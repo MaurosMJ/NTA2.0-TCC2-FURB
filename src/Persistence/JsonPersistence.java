@@ -5,6 +5,9 @@
  */
 package Persistence;
 
+import Entities.Usuario;
+import Persistence.Configs.UsuarioPersistence;
+import Persistence.Configs.Worker2Persistence;
 import Persistence.Logs.LogPersistence;
 import Utils.HostConfig;
 import com.google.gson.Gson;
@@ -106,6 +109,26 @@ public class JsonPersistence {
         Gson gson = new Gson();
         try {
             Type listType = new TypeToken<List<LogPersistence>>() {
+            }.getType();
+            return gson.fromJson(conteudoJson, listType);
+        } catch (Exception e) {
+            System.err.println("Erro ao desserializar JSON para LogPersistence: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static List<UsuarioPersistence> carregarJsonAppdataUsuario(String nomeArquivo) {
+        String conteudoJson = lerJsonDeAppData(nomeArquivo, "/Configs");
+
+        if (conteudoJson == null || conteudoJson.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado: " + nomeArquivo);
+            return null;
+        }
+
+        Gson gson = new Gson();
+        try {
+            Type listType = new TypeToken<List<UsuarioPersistence>>() {
             }.getType();
             return gson.fromJson(conteudoJson, listType);
         } catch (Exception e) {

@@ -6,10 +6,14 @@
 package UI;
 
 import Entities.LogOcurrenceMonitoring;
+import Entities.Usuario;
 import Enum.LogLevel;
 import Enum.Module;
+import Enum.Role;
+import Persistence.Configs.UsuarioPersistence;
 import Persistence.JsonPersistence;
 import Persistence.Logs.LogPersistence;
+import UserConfig.UserProperties;
 import Utils.RoundedBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
@@ -29,11 +33,13 @@ import javax.swing.UIManager;
 public class MainMenuForm extends javax.swing.JFrame {
 
     private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
+    private ArrayList<Usuario> UserArray = new ArrayList<>();
 
     /**
      * Creates new form MainApplication
      */
     public MainMenuForm() {
+
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception ex) {
@@ -44,15 +50,14 @@ public class MainMenuForm extends javax.swing.JFrame {
         setLayout(null);
         this.initImg();
         exibirLogoNTA();
-        setTextInfoButton("Selecione uma das opções abaixo.");
-        carregarInformacoesArquivo();
+        carregarInformacoesArquivoLog();
+        carregarInformacoesArquivoUsers();
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(20, Integer.MAX_VALUE));
         jScrollPane1.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, 20));
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
-                // Ao fechar a janela principal, abre novamente o LoginForm
                 new LoginForm().setVisible(true);
             }
         });
@@ -98,6 +103,10 @@ public class MainMenuForm extends javax.swing.JFrame {
         infoButtonPanel = new javax.swing.JPanel();
         userInfoL = new javax.swing.JLabel();
         InfoL = new javax.swing.JLabel();
+        userImgL = new javax.swing.JLabel();
+        userL = new javax.swing.JLabel();
+        roleL = new javax.swing.JLabel();
+        fundoLogin = new javax.swing.JLabel();
         statusPanel = new javax.swing.JPanel();
         workerTF2 = new javax.swing.JTextField();
         workerLogoL2 = new javax.swing.JLabel();
@@ -489,8 +498,10 @@ public class MainMenuForm extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(menuPanel);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 1040, 630));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 1040, 610));
 
+        infoButtonPanel.setMinimumSize(new java.awt.Dimension(680, 65));
+        infoButtonPanel.setPreferredSize(new java.awt.Dimension(680, 80));
         infoButtonPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         userInfoL.setBackground(new java.awt.Color(255, 255, 255));
@@ -502,7 +513,20 @@ public class MainMenuForm extends javax.swing.JFrame {
         infoButtonPanel.add(userInfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 20, 360, -1));
         infoButtonPanel.add(InfoL, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 15, 30, 30));
 
-        getContentPane().add(infoButtonPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1040, 60));
+        userImgL.setText(".");
+        infoButtonPanel.add(userImgL, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 20, 40, 40));
+
+        userL.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        userL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        userL.setText(".");
+        infoButtonPanel.add(userL, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 20, 140, -1));
+
+        roleL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        roleL.setText(".");
+        infoButtonPanel.add(roleL, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 40, 140, -1));
+        infoButtonPanel.add(fundoLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 10, 240, 60));
+
+        getContentPane().add(infoButtonPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1040, 75));
 
         statusPanel.setMinimumSize(new java.awt.Dimension(640, 80));
         statusPanel.setPreferredSize(new java.awt.Dimension(100, 90));
@@ -1171,7 +1195,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         new HttpUI().setVisible(true);
     }
 
-    public void carregarInformacoesArquivo() {
+    public void carregarInformacoesArquivoLog() {
         String nomeArquivo = "LogNTA.json";
         List<LogPersistence> listaLogs = JsonPersistence.carregarJsonAppdataLog(nomeArquivo);
 
@@ -1330,12 +1354,52 @@ public class MainMenuForm extends javax.swing.JFrame {
         hostL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         workerL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         workerL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        fundoLogin.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
+        
 
         Color cor = Color.decode("#E8E8E8");
         statusPanel.setBackground(cor);
         infoButtonPanel.setBackground(cor);
         workerLogoL1.setEnabled(false);
         workerLogoL2.setEnabled(false);
+        Image userLogo;
+        if ("Sem imagem".equals(UserProperties.getUsuarioLogado().getImageDir())) {
+            userLogo = this.getScaledImage("imgs/userIcon.png", userImgL, true);
+        } else {
+            userLogo = this.getScaledImage(UserProperties.getUsuarioLogado().getImageDir(), userImgL);
+        }
+        setScaledImage(userImgL, userLogo);
+        userL.setText(UserProperties.getUsuarioLogado().getNomeCompleto());
+        roleL.setText(UserProperties.getUsuarioLogado().getRole().toString());
+    }
+
+    public void carregarInformacoesArquivoUsers() {
+        String nomeArquivo = "Users.json";
+        List<UsuarioPersistence> listaUsuarios = JsonPersistence.carregarJsonAppdataUsuario(nomeArquivo);
+        if (listaUsuarios == null || listaUsuarios.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+        for (UsuarioPersistence config : listaUsuarios) {
+            for (UsuarioPersistence.SessionValues entry : config.session) {
+                this.addToArray(entry.imageDir, entry.usuario, entry.nomeCompleto, entry.senha, entry.email, entry.role, entry.acesso);
+            }
+        }
+
+    }
+
+    private void addToArray(String imageDir, String user, String nomeCompleto, String senha, String email, Role role, String acesso) {
+        Usuario usuario = new Usuario(imageDir, user, nomeCompleto, senha, email, role, acesso);
+        this.UserArray.add(usuario);
+    }
+
+    private Usuario pesquisarUsuarioPorNome(String input) {
+        for (Usuario user : UserArray) {
+            if (user.getUsuario().toLowerCase().equals(input.toLowerCase())) {
+                return user;
+            }
+        }
+        return null;
     }
 
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
@@ -1348,6 +1412,14 @@ public class MainMenuForm extends javax.swing.JFrame {
         } else {
             return image;
         }
+    }
+
+    private Image getScaledImage(String directory, javax.swing.JLabel label) {
+        ImageIcon icon = new ImageIcon(directory);
+        Image image = icon.getImage();
+
+        Image ScaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
+        return ScaledImage;
     }
 
     private void setScaledImage(javax.swing.JLabel label, Image image) {
@@ -1384,6 +1456,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JLabel fundoFtp;
     private javax.swing.JLabel fundoHttp;
     private javax.swing.JLabel fundoIcmpL;
+    private javax.swing.JLabel fundoLogin;
     private javax.swing.JLabel fundoMail;
     private javax.swing.JLabel fundoMonitoramento;
     private javax.swing.JLabel fundoNtp;
@@ -1406,6 +1479,7 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JPanel menuPanel;
     private javax.swing.JLabel monitoramentoLogoL;
     private javax.swing.JLabel ntpLogoL;
+    private javax.swing.JLabel roleL;
     private javax.swing.JLabel smbLogoL;
     private javax.swing.JLabel socketLogoL;
     private javax.swing.JLabel sshLogoL;
@@ -1415,7 +1489,9 @@ public class MainMenuForm extends javax.swing.JFrame {
     private javax.swing.JTextField txtFineL;
     private javax.swing.JTextField txtHostsL;
     private javax.swing.JTextField txtWarningL;
+    private javax.swing.JLabel userImgL;
     private javax.swing.JLabel userInfoL;
+    private javax.swing.JLabel userL;
     private javax.swing.JLabel warningL;
     private javax.swing.JLabel warningLogoL;
     private javax.swing.JLabel workerL1;

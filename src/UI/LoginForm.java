@@ -11,12 +11,16 @@ import Persistence.Configs.LoginPersistence;
 import Persistence.Configs.UsuarioPersistence;
 import Persistence.Configs.Worker2Persistence;
 import Persistence.JsonPersistence;
+import static Persistence.JsonPersistence.alterarUsuarioNoJson;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.Modules.DnsPersistence;
+import UserConfig.UserProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.awt.Image;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -153,7 +157,9 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
         if (user.getSenha().equals(new String(jPasswordField1.getPassword())) && user.getUsuario().equals(loginTF.getText())) {
+            alterUser();
             this.dispose();
+            UserProperties.setUsuarioLogado(user);
             new MainMenuForm().setVisible(true);
             return;
         }
@@ -182,6 +188,21 @@ public class LoginForm extends javax.swing.JFrame {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         salvarJsonEmAppData("userLoginConfig" + ".json", gson.toJson(config), "/Configs");
+    }
+
+    private void alterUser() {
+        Usuario user = pesquisarUsuarioPorNome(loginTF.getText());
+        UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
+        novoUsuario.usuario = user.getUsuario();
+        novoUsuario.nomeCompleto = user.getNomeCompleto();
+        novoUsuario.senha = user.getSenha();
+        novoUsuario.email = user.getEmail();
+        novoUsuario.role = user.getRole();
+        novoUsuario.imageDir = user.getImageDir();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        novoUsuario.acesso = LocalDateTime.now().format(formatter);
+
+        alterarUsuarioNoJson("Users.json", user.getUsuario(), novoUsuario);
     }
 
     public void carregarInformacoes() {

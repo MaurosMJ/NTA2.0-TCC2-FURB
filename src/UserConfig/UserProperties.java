@@ -5,6 +5,7 @@
  */
 package UserConfig;
 
+import Entities.Usuario;
 import Enum.LogLevel;
 
 /**
@@ -14,9 +15,18 @@ import Enum.LogLevel;
 public class UserProperties {
 
     private static LogLevel logLevel = LogLevel.DEBUG;
+    private static Usuario usuarioLogado;
 
     public static LogLevel getLogLevel() {
         return logLevel;
+    }
+
+    public static Usuario getUsuarioLogado() {
+        return usuarioLogado;
+    }
+
+    public static void setUsuarioLogado(Usuario user) {
+        UserProperties.usuarioLogado = user;
     }
 
 }

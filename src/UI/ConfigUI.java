@@ -10,7 +10,10 @@ import Enum.Role;
 import Persistence.Configs.*;
 import Persistence.Configs.Worker2Persistence.Worker2Config;
 import Persistence.JsonPersistence;
+import static Persistence.JsonPersistence.alterarUsuarioNoJson;
+import static Persistence.JsonPersistence.removerUsuarioDoJson;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
+import Utils.ManipularImagem;
 import Utils.RoundedBorder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +35,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -42,6 +46,7 @@ import javax.swing.table.DefaultTableModel;
 public class ConfigUI extends javax.swing.JFrame {
 
     private ArrayList<Usuario> UserArray = new ArrayList<>();
+    private String ntaImgDir;
 
     /**
      * Creates new form ConfigUI
@@ -85,12 +90,18 @@ public class ConfigUI extends javax.swing.JFrame {
         String workspace = "UserConfig";
 
         UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
-        novoUsuario.imageDir = "C:\\Imagens\\usuario.jpg";
         novoUsuario.usuario = usuarioAddTF.getText();
         novoUsuario.nomeCompleto = nomeAddTF.getText();
         novoUsuario.senha = new String(senhaPWF.getPassword());
         novoUsuario.email = mailAddTF.getText();
         novoUsuario.role = Role.valueOf(roleAddCBX.getSelectedItem().toString());
+
+        if (ntaImgDir != null) {
+            novoUsuario.imageDir = ntaImgDir;
+        } else {
+            novoUsuario.imageDir = "Sem imagem";
+        }
+        ntaImgDir = null;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         novoUsuario.acesso = LocalDateTime.now().format(formatter);
@@ -197,8 +208,8 @@ public class ConfigUI extends javax.swing.JFrame {
         criarUsuarioL = new javax.swing.JLabel();
         jPanel16 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         homeL = new javax.swing.JLabel();
+        editarAddTB = new javax.swing.JToggleButton();
         jPanel17 = new javax.swing.JPanel();
         jPanel18 = new javax.swing.JPanel();
         LayoutCentral = new javax.swing.JPanel();
@@ -213,8 +224,8 @@ public class ConfigUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         roleAddCBX = new javax.swing.JComboBox();
         userL = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        localImgL = new javax.swing.JLabel();
+        alterarB = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         Remover = new javax.swing.JPanel();
         jPanel15 = new javax.swing.JPanel();
@@ -222,8 +233,8 @@ public class ConfigUI extends javax.swing.JFrame {
         removerUsuarioL = new javax.swing.JLabel();
         jPanel19 = new javax.swing.JPanel();
         jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
         homeL1 = new javax.swing.JLabel();
+        editarRemTB = new javax.swing.JToggleButton();
         jPanel20 = new javax.swing.JPanel();
         jPanel21 = new javax.swing.JPanel();
         LayoutCentral1 = new javax.swing.JPanel();
@@ -238,8 +249,8 @@ public class ConfigUI extends javax.swing.JFrame {
         alterarUsuarioL = new javax.swing.JLabel();
         jPanel27 = new javax.swing.JPanel();
         jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
         homeL3 = new javax.swing.JLabel();
+        editarAltTB = new javax.swing.JToggleButton();
         jPanel28 = new javax.swing.JPanel();
         jPanel29 = new javax.swing.JPanel();
         LayoutCentral3 = new javax.swing.JPanel();
@@ -256,6 +267,7 @@ public class ConfigUI extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
         usuarioAltCBX = new javax.swing.JComboBox();
+        localImgAltL = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         Listar1 = new javax.swing.JPanel();
@@ -497,13 +509,12 @@ public class ConfigUI extends javax.swing.JFrame {
         jPanel12.add(jPanel14, java.awt.BorderLayout.PAGE_START);
 
         jButton3.setText("Salvar");
+        jButton3.setEnabled(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-
-        jButton4.setText("Cancelar");
 
         homeL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         homeL.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -518,6 +529,18 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
 
+        editarAddTB.setText("Editar");
+        editarAddTB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                editarAddTBStateChanged(evt);
+            }
+        });
+        editarAddTB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarAddTBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
@@ -527,19 +550,18 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addComponent(homeL, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(318, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editarAddTB, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(324, Short.MAX_VALUE))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(homeL, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(homeL, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editarAddTB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -573,28 +595,45 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel2.setText("Usuário");
 
+        usuarioAddTF.setEnabled(false);
+
+        nomeAddTF.setEnabled(false);
+
         jLabel3.setText("Nome completo");
 
         jLabel4.setText("Senha (Inicial)");
 
+        senhaAddPWF.setEnabled(false);
+
         jLabel5.setText("Endereço de Email");
+
+        mailAddTF.setEnabled(false);
 
         jLabel6.setText("Role");
 
-        roleAddCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Administrador", "SUPER" }));
+        roleAddCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Administrador", "Super" }));
+        roleAddCBX.setEnabled(false);
 
         userL.setText(".");
 
-        jLabel7.setText("Usuário");
+        localImgL.setText("Sem imagem");
+        localImgL.setToolTipText("");
 
-        jButton1.setText("Alterar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        alterarB.setText("Alterar");
+        alterarB.setEnabled(false);
+        alterarB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                alterarBActionPerformed(evt);
             }
         });
 
         jButton2.setText("Remover");
+        jButton2.setEnabled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout LayoutCentralLayout = new javax.swing.GroupLayout(LayoutCentral);
         LayoutCentral.setLayout(LayoutCentralLayout);
@@ -604,34 +643,33 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(LayoutCentralLayout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(alterarB)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2))
                     .addComponent(userL, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(LayoutCentralLayout.createSequentialGroup()
+                .addContainerGap(66, Short.MAX_VALUE)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
                     .addGroup(LayoutCentralLayout.createSequentialGroup()
-                        .addContainerGap(74, Short.MAX_VALUE)
                         .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addGroup(LayoutCentralLayout.createSequentialGroup()
-                                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(senhaAddPWF, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(usuarioAddTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addComponent(jLabel4))
-                                .addGap(18, 18, 18)
-                                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel3)
-                                    .addComponent(nomeAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(mailAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(roleAddCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(LayoutCentralLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7)))
+                            .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(senhaAddPWF, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(usuarioAddTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel3)
+                            .addComponent(nomeAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(mailAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(roleAddCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(66, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentralLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(localImgL)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LayoutCentralLayout.setVerticalGroup(
@@ -639,11 +677,11 @@ public class ConfigUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentralLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(userL, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(localImgL)
+                .addGap(13, 13, 13)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(alterarB)
                     .addComponent(jButton2))
                 .addGap(54, 54, 54)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -707,8 +745,12 @@ public class ConfigUI extends javax.swing.JFrame {
         Remover.add(jPanel15, java.awt.BorderLayout.PAGE_START);
 
         jButton5.setText("Remover");
-
-        jButton6.setText("Cancelar");
+        jButton5.setEnabled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         homeL1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         homeL1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -723,6 +765,18 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
 
+        editarRemTB.setText("Editar");
+        editarRemTB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                editarRemTBStateChanged(evt);
+            }
+        });
+        editarRemTB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarRemTBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel19Layout = new javax.swing.GroupLayout(jPanel19);
         jPanel19.setLayout(jPanel19Layout);
         jPanel19Layout.setHorizontalGroup(
@@ -733,18 +787,17 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(319, Short.MAX_VALUE))
+                .addComponent(editarRemTB, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(317, Short.MAX_VALUE))
         );
         jPanel19Layout.setVerticalGroup(
             jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel19Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(homeL1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(homeL1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editarRemTB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -781,6 +834,12 @@ public class ConfigUI extends javax.swing.JFrame {
         jLabel14.setText("Usuário");
 
         usuarioRemCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
+        usuarioRemCBX.setEnabled(false);
+        usuarioRemCBX.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                usuarioRemCBXItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout LayoutCentral1Layout = new javax.swing.GroupLayout(LayoutCentral1);
         LayoutCentral1.setLayout(LayoutCentral1Layout);
@@ -789,10 +848,13 @@ public class ConfigUI extends javax.swing.JFrame {
             .addGroup(LayoutCentral1Layout.createSequentialGroup()
                 .addContainerGap(236, Short.MAX_VALUE)
                 .addGroup(LayoutCentral1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userL1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14)
                     .addComponent(usuarioRemCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 226, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentral1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(userL1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LayoutCentral1Layout.setVerticalGroup(
             LayoutCentral1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -803,7 +865,7 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(usuarioRemCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(376, 376, 376))
+                .addGap(409, 409, 409))
         );
 
         Remover.add(LayoutCentral1, java.awt.BorderLayout.CENTER);
@@ -844,8 +906,12 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jButton9.setText("Salvar");
         jButton9.setToolTipText("");
-
-        jButton10.setText("Cancelar");
+        jButton9.setEnabled(false);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         homeL3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         homeL3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -860,6 +926,18 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
 
+        editarAltTB.setText("Editar");
+        editarAltTB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                editarAltTBStateChanged(evt);
+            }
+        });
+        editarAltTB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarAltTBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel27Layout = new javax.swing.GroupLayout(jPanel27);
         jPanel27.setLayout(jPanel27Layout);
         jPanel27Layout.setHorizontalGroup(
@@ -869,19 +947,18 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addComponent(homeL3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(318, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editarAltTB, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(324, Short.MAX_VALUE))
         );
         jPanel27Layout.setVerticalGroup(
             jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel27Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(homeL3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel27Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(homeL3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editarAltTB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -915,19 +992,27 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel11.setText("Usuário");
 
+        nomeTF.setEnabled(false);
+
         jLabel12.setText("Nome completo");
 
         jLabel13.setText("Senha (Inicial)");
 
+        senhaAltPWF.setEnabled(false);
+
         jLabel16.setText("Endereço de Email");
+
+        mailAltTF.setEnabled(false);
 
         jLabel17.setText("Role");
 
         RoleAltCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Adminstrador", "SUPER" }));
+        RoleAltCBX.setEnabled(false);
 
         userL3.setText(".");
 
         jButton11.setText("Alterar");
+        jButton11.setEnabled(false);
         jButton11.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton11MouseClicked(evt);
@@ -940,13 +1025,17 @@ public class ConfigUI extends javax.swing.JFrame {
         });
 
         jButton12.setText("Remover");
+        jButton12.setEnabled(false);
 
         usuarioAltCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
+        usuarioAltCBX.setEnabled(false);
         usuarioAltCBX.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 usuarioAltCBXItemStateChanged(evt);
             }
         });
+
+        localImgAltL.setText("Sem imagem");
 
         javax.swing.GroupLayout LayoutCentral3Layout = new javax.swing.GroupLayout(LayoutCentral3);
         LayoutCentral3.setLayout(LayoutCentral3Layout);
@@ -979,13 +1068,19 @@ public class ConfigUI extends javax.swing.JFrame {
                             .addComponent(mailAltTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(RoleAltCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentral3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(localImgAltL)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LayoutCentral3Layout.setVerticalGroup(
             LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentral3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(userL3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
+                .addGap(18, 18, 18)
+                .addComponent(localImgAltL)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton11)
                     .addComponent(jButton12))
@@ -1445,21 +1540,49 @@ public class ConfigUI extends javax.swing.JFrame {
 
     private void usuarioAltCBXItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_usuarioAltCBXItemStateChanged
         carregarInfoUsuarioAlt();
+        Usuario user = this.pesquisarUsuarioPorNome(usuarioAltCBX.getSelectedItem().toString());
+        alterarIconAddUser(user.getImageDir(), userL3);
+        localImgAltL.setText(user.getImageDir());
     }//GEN-LAST:event_usuarioAltCBXItemStateChanged
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        this.addUser();
-        this.UserArray.clear();
-        this.carregarInformacoesArquivo();
-        this.carregarInformacoes();
-        this.exibirInformacoesArray();
+        if (!"Sem imagem".equals(localImgL.getText())) {
+            ntaImgDir = ManipularImagem.copiarImagemParaAppData(localImgL.getText());
+        }
+
+        if (usuarioAddTF.getText().length() > 0 && nomeAddTF.getText().length() > 0 && senhaAddPWF.getPassword().length > 0 && new String(senhaAddPWF.getPassword()).length() > 0) {
+            this.addUser();
+            this.UserArray.clear();
+            this.carregarInformacoesArquivo();
+            this.carregarInformacoes();
+            this.exibirInformacoesArray();
+            carregarComponentesCBX();
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Campos obrigatórios não preenchidos!", "Aviso", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecionar arquivo");
+        JFileChooser fileChooser;
 
+        String userHome = System.getProperty("user.home");
+        String imagensPath = userHome + File.separator + "Pictures";
+        File imagensDir = new File(imagensPath);
+
+        if (imagensDir.exists() && imagensDir.isDirectory()) {
+            fileChooser = new JFileChooser(imagensDir);
+        } else {
+            fileChooser = new JFileChooser();
+        }
+
+        fileChooser.setDialogTitle("Selecionar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Adiciona filtro para aceitar somente arquivos de imagem
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter(
+                "Imagens (*.jpg, *.jpeg, *.png, *.bmp, *.gif)", "jpg", "jpeg", "png", "bmp", "gif"
+        );
+        fileChooser.setFileFilter(imageFilter);
 
         int resultado = fileChooser.showOpenDialog(null);
 
@@ -1467,10 +1590,11 @@ public class ConfigUI extends javax.swing.JFrame {
             File arquivoSelecionado = fileChooser.getSelectedFile();
             String caminhoCompleto = arquivoSelecionado.getAbsolutePath();
 
-            // Exemplo: mostrar em um JTextField ou imprimir
-            System.out.println("Arquivo selecionado: " + caminhoCompleto);
+            System.out.println("Imagem selecionada: " + caminhoCompleto);
+            localImgAltL.setText(caminhoCompleto);
+            alterarIconAddUser(caminhoCompleto, userL3);
         } else {
-            System.out.println("Nenhum arquivo selecionado.");
+            System.out.println("Nenhuma imagem selecionada.");
         }
     }//GEN-LAST:event_jButton11ActionPerformed
 
@@ -1478,29 +1602,199 @@ public class ConfigUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton11MouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Selecionar arquivo");
+    private void alterarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarBActionPerformed
+        JFileChooser fileChooser;
 
-        // Permitir apenas seleção de arquivos
+        String userHome = System.getProperty("user.home");
+        String imagensPath = userHome + File.separator + "Pictures";
+        File imagensDir = new File(imagensPath);
+
+        if (imagensDir.exists() && imagensDir.isDirectory()) {
+            fileChooser = new JFileChooser(imagensDir);
+        } else {
+            fileChooser = new JFileChooser();
+        }
+
+        fileChooser.setDialogTitle("Selecionar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        // Abrir a janela
+        // Adiciona filtro para aceitar somente arquivos de imagem
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter(
+                "Imagens (*.jpg, *.jpeg, *.png, *.bmp, *.gif)", "jpg", "jpeg", "png", "bmp", "gif"
+        );
+        fileChooser.setFileFilter(imageFilter);
+
         int resultado = fileChooser.showOpenDialog(null);
 
-        // Se o usuário clicou em "Abrir"
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File arquivoSelecionado = fileChooser.getSelectedFile();
             String caminhoCompleto = arquivoSelecionado.getAbsolutePath();
 
-            // Exemplo: mostrar em um JTextField ou imprimir
-            System.out.println("Arquivo selecionado: " + caminhoCompleto);
-            // Exemplo de atribuição a uma variável global:
-            // caminhoArquivoSelecionado = caminhoCompleto;
+            System.out.println("Imagem selecionada: " + caminhoCompleto);
+            localImgL.setText(caminhoCompleto);
+            alterarIconAddUser(caminhoCompleto, userL);
         } else {
-            System.out.println("Nenhum arquivo selecionado.");
+            System.out.println("Nenhuma imagem selecionada.");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_alterarBActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        localImgL.setText("Sem imagem");
+        alterarIconAddUser(getClass().getClassLoader().getResource("imgs/userIcon.png").getPath(), userL);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void editarAddTBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_editarAddTBStateChanged
+
+    }//GEN-LAST:event_editarAddTBStateChanged
+
+    private void editarAddTBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarAddTBActionPerformed
+
+        if (editarAddTB.isSelected()) {
+            alterarB.setEnabled(true);
+            jButton2.setEnabled(true);
+            usuarioAddTF.setEnabled(true);
+            nomeAddTF.setEnabled(true);
+            senhaAddPWF.setEnabled(true);
+            mailAddTF.setEnabled(true);
+            roleAddCBX.setEnabled(true);
+            jButton3.setEnabled(true);
+        } else {
+            alterarB.setEnabled(false);
+            jButton2.setEnabled(false);
+            usuarioAddTF.setEnabled(false);
+            nomeAddTF.setEnabled(false);
+            senhaAddPWF.setEnabled(false);
+            mailAddTF.setEnabled(false);
+            roleAddCBX.setEnabled(false);
+            jButton3.setEnabled(false);
+        }
+    }//GEN-LAST:event_editarAddTBActionPerformed
+
+    private void editarRemTBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_editarRemTBStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editarRemTBStateChanged
+
+    private void editarRemTBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarRemTBActionPerformed
+        // TODO add your handling code here:
+        if (editarRemTB.isSelected()) {
+            usuarioRemCBX.setEnabled(true);
+            jButton5.setEnabled(true);
+            alterarIconAddUser(this.pesquisarUsuarioPorNome(usuarioRemCBX.getSelectedItem().toString()).getImageDir(), userL1);
+
+        } else {
+            usuarioRemCBX.setEnabled(false);
+            jButton5.setEnabled(false);
+        }
+    }//GEN-LAST:event_editarRemTBActionPerformed
+
+    private void editarAltTBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_editarAltTBStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editarAltTBStateChanged
+
+    private void editarAltTBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarAltTBActionPerformed
+        alterarIconAddUser(this.pesquisarUsuarioPorNome(usuarioAltCBX.getSelectedItem().toString()).getImageDir(), userL3);
+        if (editarAltTB.isSelected()) {
+            usuarioAltCBX.setEnabled(true);
+            nomeTF.setEnabled(true);
+            senhaAltPWF.setEnabled(true);
+            mailAltTF.setEnabled(true);
+            RoleAltCBX.setEnabled(true);
+            jButton11.setEnabled(true);
+            jButton12.setEnabled(true);
+            jButton9.setEnabled(true);
+            Usuario user = this.pesquisarUsuarioPorNome(usuarioAltCBX.getSelectedItem().toString());
+            alterarIconAddUser(user.getImageDir(), userL3);
+        } else {
+            usuarioAltCBX.setEnabled(false);
+            nomeTF.setEnabled(false);
+            senhaAltPWF.setEnabled(false);
+            mailAltTF.setEnabled(false);
+            RoleAltCBX.setEnabled(false);
+            jButton11.setEnabled(false);
+            jButton12.setEnabled(false);
+            jButton9.setEnabled(false);
+
+        }
+    }//GEN-LAST:event_editarAltTBActionPerformed
+
+    private void usuarioRemCBXItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_usuarioRemCBXItemStateChanged
+        alterarIconAddUser(this.pesquisarUsuarioPorNome(usuarioRemCBX.getSelectedItem().toString()).getImageDir(), userL1);
+    }//GEN-LAST:event_usuarioRemCBXItemStateChanged
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        removerUsuarioDoJson("Users.json", usuarioRemCBX.getSelectedItem().toString());
+        this.UserArray.clear();
+        this.carregarInformacoesArquivo();
+        this.carregarInformacoes();
+        this.exibirInformacoesArray();
+        carregarComponentesCBX();
+        alterarIconAddUser(this.pesquisarUsuarioPorNome(usuarioRemCBX.getSelectedItem().toString()).getImageDir(), userL1);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+
+        if (!"Sem imagem".equals(localImgAltL.getText())) {
+            ntaImgDir = ManipularImagem.copiarImagemParaAppData(localImgAltL.getText());
+        }
+
+        if (usuarioAltCBX.getSelectedItem().toString().length() > 0 && nomeTF.getText().length() > 0 && senhaAltPWF.getPassword().length > 0 && mailAltTF.getText().length() > 0) {
+            this.alterUser();
+            this.UserArray.clear();
+            this.carregarInformacoesArquivo();
+            this.carregarInformacoes();
+            this.exibirInformacoesArray();
+            carregarComponentesCBX();
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Campos obrigatórios não preenchidos!", "Aviso", JOptionPane.WARNING_MESSAGE);
+
+        this.UserArray.clear();
+        this.carregarInformacoesArquivo();
+        this.carregarInformacoes();
+        this.exibirInformacoesArray();
+        carregarComponentesCBX();
+
+        Usuario user = this.pesquisarUsuarioPorNome(usuarioAltCBX.getSelectedItem().toString());
+        alterarIconAddUser(user.getImageDir(), userL3);
+        localImgAltL.setText(user.getImageDir());
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void alterUser() {
+        UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
+        novoUsuario.usuario = usuarioAltCBX.getSelectedItem().toString();
+        novoUsuario.nomeCompleto = nomeTF.getText();
+        novoUsuario.senha = new String(senhaAltPWF.getPassword());
+        novoUsuario.email = mailAltTF.getText();
+        novoUsuario.role = Role.valueOf(RoleAltCBX.getSelectedItem().toString());
+
+        if (ntaImgDir != null) {
+            novoUsuario.imageDir = ntaImgDir;
+        } else {
+            novoUsuario.imageDir = "Sem imagem";
+        }
+        ntaImgDir = null;
+
+        alterarUsuarioNoJson("Users.json", usuarioAltCBX.getSelectedItem().toString(), novoUsuario);
+    }
+
+    private void alterarIconAddUser(String local, javax.swing.JLabel lbl) {
+
+        if ("Sem imagem".equals(local)) {
+            local = getClass().getClassLoader().getResource("imgs/userIcon.png").getPath();
+        }
+
+        Image alterarUsuarioLogo = this.getScaledImage(local, lbl);
+        setScaledImage(lbl, alterarUsuarioLogo);
+    }
+
+    private Usuario pesquisarUsuarioPorNome(String input) {
+        for (Usuario user : UserArray) {
+            if (user.getUsuario().toLowerCase().equals(input.toLowerCase())) {
+                return user;
+            }
+        }
+        return null;
+    }
 
     /**
      * @param args the command line arguments
@@ -1617,6 +1911,14 @@ public class ConfigUI extends javax.swing.JFrame {
         }
     }
 
+    private Image getScaledImage(String directory, javax.swing.JLabel label) {
+        ImageIcon icon = new ImageIcon(directory);
+        Image image = icon.getImage();
+
+        Image ScaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
+        return ScaledImage;
+    }
+
     private void setScaledImage(javax.swing.JLabel label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
@@ -1684,11 +1986,15 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel Listar1;
     private javax.swing.JPanel Remover;
     private javax.swing.JComboBox RoleAltCBX;
+    private javax.swing.JButton alterarB;
     private javax.swing.JLabel alterarUsuarioL;
     private javax.swing.JLabel configEmailL;
     private javax.swing.JTextField corpoTF;
     private javax.swing.JLabel criarUsuarioL;
     private javax.swing.JTextField destinatarioTF;
+    private javax.swing.JToggleButton editarAddTB;
+    private javax.swing.JToggleButton editarAltTB;
+    private javax.swing.JToggleButton editarRemTB;
     private javax.swing.JToggleButton editarTGB;
     private javax.swing.JLabel homeL;
     private javax.swing.JLabel homeL1;
@@ -1696,15 +2002,11 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JLabel homeL3;
     private javax.swing.JLabel homeL4;
     private javax.swing.JTextField hostTF;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1727,7 +2029,6 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -1766,6 +2067,8 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel listarUsuarioL;
+    private javax.swing.JLabel localImgAltL;
+    private javax.swing.JLabel localImgL;
     private javax.swing.JTextField mailAddTF;
     private javax.swing.JTextField mailAltTF;
     private javax.swing.JTextField nomeAddTF;

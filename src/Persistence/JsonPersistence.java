@@ -5,9 +5,8 @@
  */
 package Persistence;
 
-import Entities.Usuario;
+import Enum.Role;
 import Persistence.Configs.UsuarioPersistence;
-import Persistence.Configs.Worker2Persistence;
 import Persistence.Logs.LogPersistence;
 import Utils.HostConfig;
 import com.google.gson.Gson;
@@ -22,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  *
@@ -166,6 +168,92 @@ public class JsonPersistence {
         workspaceExistente.session.add(novoUsuario);
 
         // Salva no disco
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonAtualizado = gson.toJson(todosUsuarios);
+        salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Configs");
+    }
+
+    public static void alterarUsuarioNoJson(
+            String nomeArquivo,
+            String nomeUsuarioAntigo,
+            UsuarioPersistence.SessionValues novoUsuario) {
+
+        // Carrega os dados existentes
+        List<UsuarioPersistence> todosUsuarios = carregarJsonAppdataUsuario(nomeArquivo);
+        if (todosUsuarios == null) {
+            System.out.println("Nenhum dado encontrado no JSON.");
+            return;
+        }
+
+        boolean usuarioEncontrado = false;
+
+        for (UsuarioPersistence workspace : todosUsuarios) {
+            if (workspace.session != null) {
+                for (UsuarioPersistence.SessionValues usuarioSession : workspace.session) {
+                    if (usuarioSession.usuario.equalsIgnoreCase(nomeUsuarioAntigo)) {
+                        usuarioSession.imageDir = novoUsuario.imageDir;
+                        usuarioSession.usuario = novoUsuario.usuario;
+                        usuarioSession.nomeCompleto = novoUsuario.nomeCompleto;
+                        usuarioSession.senha = novoUsuario.senha;
+                        usuarioSession.email = novoUsuario.email;
+                        usuarioSession.role = novoUsuario.role;
+                        usuarioSession.acesso = novoUsuario.acesso;
+
+                        usuarioEncontrado = true;
+                        System.out.println("Usuário '" + nomeUsuarioAntigo + "' alterado com sucesso.");
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!usuarioEncontrado) {
+            System.out.println("Usuário '" + nomeUsuarioAntigo + "' não encontrado.");
+            return;
+        }
+
+        // Salva o JSON atualizado
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonAtualizado = gson.toJson(todosUsuarios);
+        salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Configs");
+    }
+
+    public static void removerUsuarioDoJson(String nomeArquivo, String nomeUsuario) {
+        // Carrega todos os usuários
+        List<UsuarioPersistence> todosUsuarios = carregarJsonAppdataUsuario(nomeArquivo);
+        if (todosUsuarios == null) {
+            System.out.println("Nenhum dado encontrado no JSON.");
+            return;
+        }
+
+        boolean usuarioRemovido = false;
+
+        // Percorre todos os workspaces
+        for (UsuarioPersistence workspace : todosUsuarios) {
+            if (workspace.session != null) {
+                // Remove se o nome de usuário bater
+                Iterator<UsuarioPersistence.SessionValues> iterator = workspace.session.iterator();
+                while (iterator.hasNext()) {
+                    UsuarioPersistence.SessionValues usuario = iterator.next();
+                    if (usuario.usuario.equalsIgnoreCase(nomeUsuario)) {
+                        iterator.remove();
+                        usuarioRemovido = true;
+                        System.out.println("Usuário '" + nomeUsuario + "' removido com sucesso.");
+                        break; // Remove apenas o primeiro encontrado. Remova esse break se quiser excluir todos com esse nome.
+                    }
+                }
+            }
+        }
+
+        if (!usuarioRemovido) {
+            System.out.println("Usuário '" + nomeUsuario + "' não encontrado.");
+            return;
+        }
+
+        // Remove workspaces vazios (sem sessões)
+        todosUsuarios.removeIf(w -> w.session == null || w.session.isEmpty());
+
+        // Atualiza e salva o JSON
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonAtualizado = gson.toJson(todosUsuarios);
         salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Configs");

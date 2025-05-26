@@ -48,7 +48,7 @@ public class JsonPersistence {
                 return;
         }
 
-        File pastaLog = new File(pastaBase, "NTA"+opc);
+        File pastaLog = new File(pastaBase, "NTA" + opc);
         if (!pastaLog.exists()) {
             boolean criada = pastaLog.mkdirs();
             if (!criada) {
@@ -86,7 +86,7 @@ public class JsonPersistence {
     private static String lerJsonDeAppData(String nomeArquivo, String opc) {
         try {
             String appDataPath = System.getenv("APPDATA");
-            Path path = Paths.get(appDataPath, "NTA"+opc, nomeArquivo);
+            Path path = Paths.get(appDataPath, "NTA" + opc, nomeArquivo);
             if (Files.exists(path)) {
                 return new String(Files.readAllBytes(path));
             } else {
@@ -117,7 +117,7 @@ public class JsonPersistence {
             return null;
         }
     }
-    
+
     public static List<UsuarioPersistence> carregarJsonAppdataUsuario(String nomeArquivo) {
         String conteudoJson = lerJsonDeAppData(nomeArquivo, "/Configs");
 
@@ -136,6 +136,39 @@ public class JsonPersistence {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void adicionarUsuarioAoJson(String nomeArquivo, String workspace, UsuarioPersistence.SessionValues novoUsuario) {
+        // Carrega todos os usuários
+        List<UsuarioPersistence> todosUsuarios = carregarJsonAppdataUsuario(nomeArquivo);
+        if (todosUsuarios == null) {
+            todosUsuarios = new ArrayList<>();
+        }
+
+        // Procura o workspace existente
+        UsuarioPersistence workspaceExistente = null;
+        for (UsuarioPersistence up : todosUsuarios) {
+            if (up.workspace.equalsIgnoreCase(workspace)) {
+                workspaceExistente = up;
+                break;
+            }
+        }
+
+        // Se não existir, cria novo
+        if (workspaceExistente == null) {
+            workspaceExistente = new UsuarioPersistence();
+            workspaceExistente.workspace = workspace;
+            workspaceExistente.session = new ArrayList<>();
+            todosUsuarios.add(workspaceExistente);
+        }
+
+        // Adiciona o novo usuário
+        workspaceExistente.session.add(novoUsuario);
+
+        // Salva no disco
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonAtualizado = gson.toJson(todosUsuarios);
+        salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Configs");
     }
 
     public static void adicionarEntradaAoLog(String nomeArquivo, String modulo, LogPersistence.SessionValues novaEntrada) {

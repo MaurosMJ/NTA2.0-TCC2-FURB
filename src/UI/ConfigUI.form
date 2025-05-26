@@ -476,6 +476,9 @@
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Salvar"/>
                                   </Properties>
+                                  <Events>
+                                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+                                  </Events>
                                 </Component>
                                 <Component class="javax.swing.JButton" name="jButton4">
                                   <Properties>
@@ -557,33 +560,36 @@
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
-                                          <EmptySpace pref="74" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                              <Group type="102" alignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace pref="74" max="32767" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                                          <Component id="jPasswordField1" alignment="0" max="32767" attributes="0"/>
-                                                          <Component id="jTextField1" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
-                                                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                                                  <Component id="senhaAddPWF" alignment="0" max="32767" attributes="0"/>
+                                                                  <Component id="usuarioAddTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="nomeAddTF" min="-2" pref="344" max="-2" attributes="0"/>
+                                                              <Component id="mailAddTF" min="-2" pref="344" max="-2" attributes="0"/>
+                                                          </Group>
                                                       </Group>
-                                                      <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jTextField2" min="-2" pref="344" max="-2" attributes="0"/>
-                                                      <Component id="jTextField3" min="-2" pref="344" max="-2" attributes="0"/>
+                                                      <Component id="roleAddCBX" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
-                                              <Component id="jComboBox1" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <EmptySpace max="32767" attributes="0"/>
+                                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
-                                          <EmptySpace pref="58" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -607,8 +613,8 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="usuarioAddTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="nomeAddTF" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
@@ -617,13 +623,13 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jPasswordField1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="senhaAddPWF" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="mailAddTF" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="jComboBox1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="roleAddCBX" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -635,9 +641,9 @@
                                     <Property name="text" type="java.lang.String" value="Usu&#xe1;rio"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JTextField" name="jTextField1">
+                                <Component class="javax.swing.JTextField" name="usuarioAddTF">
                                 </Component>
-                                <Component class="javax.swing.JTextField" name="jTextField2">
+                                <Component class="javax.swing.JTextField" name="nomeAddTF">
                                 </Component>
                                 <Component class="javax.swing.JLabel" name="jLabel3">
                                   <Properties>
@@ -649,26 +655,26 @@
                                     <Property name="text" type="java.lang.String" value="Senha (Inicial)"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JPasswordField" name="jPasswordField1">
+                                <Component class="javax.swing.JPasswordField" name="senhaAddPWF">
                                 </Component>
                                 <Component class="javax.swing.JLabel" name="jLabel5">
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Endere&#xe7;o de Email"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JTextField" name="jTextField3">
+                                <Component class="javax.swing.JTextField" name="mailAddTF">
                                 </Component>
                                 <Component class="javax.swing.JLabel" name="jLabel6">
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Role"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JComboBox" name="jComboBox1">
+                                <Component class="javax.swing.JComboBox" name="roleAddCBX">
                                   <Properties>
                                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                                       <StringArray count="3">
                                         <StringItem index="0" value="Convidado"/>
-                                        <StringItem index="1" value="Adminstrador"/>
+                                        <StringItem index="1" value="Administrador"/>
                                         <StringItem index="2" value="SUPER"/>
                                       </StringArray>
                                     </Property>
@@ -688,6 +694,9 @@
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Alterar"/>
                                   </Properties>
+                                  <Events>
+                                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                                  </Events>
                                 </Component>
                                 <Component class="javax.swing.JButton" name="jButton2">
                                   <Properties>
@@ -871,18 +880,14 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace pref="347" max="32767" attributes="0"/>
-                                  <Component id="userL1" min="-2" pref="150" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="338" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace pref="236" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="userL1" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
                                       <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox3" min="-2" pref="373" max="-2" attributes="0"/>
+                                      <Component id="usuarioRemCBX" min="-2" pref="373" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="226" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -894,7 +899,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jComboBox3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="usuarioRemCBX" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="376" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -911,7 +916,7 @@
                             <Property name="text" type="java.lang.String" value="Usu&#xe1;rio"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JComboBox" name="jComboBox3">
+                        <Component class="javax.swing.JComboBox" name="usuarioRemCBX">
                           <Properties>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="1">
@@ -1125,20 +1130,20 @@
                                               <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
                                               <Group type="102" alignment="0" attributes="0">
                                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                      <Component id="jPasswordField2" alignment="0" pref="344" max="32767" attributes="0"/>
+                                                      <Component id="senhaAltPWF" alignment="0" pref="344" max="32767" attributes="0"/>
                                                       <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                                       <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jComboBox4" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="usuarioAltCBX" alignment="0" max="32767" attributes="0"/>
                                                   </Group>
                                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" attributes="0">
                                                       <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
                                                       <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jTextField5" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
-                                                      <Component id="jTextField6" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                      <Component id="nomeTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                      <Component id="mailAltTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
-                                              <Component id="jComboBox2" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                              <Component id="RoleAltCBX" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace pref="34" max="32767" attributes="0"/>
                                       </Group>
@@ -1161,8 +1166,8 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jTextField5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jComboBox4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="nomeTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="usuarioAltCBX" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
@@ -1171,13 +1176,13 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jPasswordField2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jTextField6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="senhaAltPWF" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="mailAltTF" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="jComboBox2" min="-2" max="-2" attributes="0"/>
+                                          <Component id="RoleAltCBX" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1189,7 +1194,7 @@
                                     <Property name="text" type="java.lang.String" value="Usu&#xe1;rio"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JTextField" name="jTextField5">
+                                <Component class="javax.swing.JTextField" name="nomeTF">
                                 </Component>
                                 <Component class="javax.swing.JLabel" name="jLabel12">
                                   <Properties>
@@ -1201,21 +1206,21 @@
                                     <Property name="text" type="java.lang.String" value="Senha (Inicial)"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JPasswordField" name="jPasswordField2">
+                                <Component class="javax.swing.JPasswordField" name="senhaAltPWF">
                                 </Component>
                                 <Component class="javax.swing.JLabel" name="jLabel16">
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Endere&#xe7;o de Email"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JTextField" name="jTextField6">
+                                <Component class="javax.swing.JTextField" name="mailAltTF">
                                 </Component>
                                 <Component class="javax.swing.JLabel" name="jLabel17">
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Role"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JComboBox" name="jComboBox2">
+                                <Component class="javax.swing.JComboBox" name="RoleAltCBX">
                                   <Properties>
                                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                                       <StringArray count="3">
@@ -1235,13 +1240,17 @@
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Alterar"/>
                                   </Properties>
+                                  <Events>
+                                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton11MouseClicked"/>
+                                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton11ActionPerformed"/>
+                                  </Events>
                                 </Component>
                                 <Component class="javax.swing.JButton" name="jButton12">
                                   <Properties>
                                     <Property name="text" type="java.lang.String" value="Remover"/>
                                   </Properties>
                                 </Component>
-                                <Component class="javax.swing.JComboBox" name="jComboBox4">
+                                <Component class="javax.swing.JComboBox" name="usuarioAltCBX">
                                   <Properties>
                                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                                       <StringArray count="1">
@@ -1249,6 +1258,9 @@
                                       </StringArray>
                                     </Property>
                                   </Properties>
+                                  <Events>
+                                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="usuarioAltCBXItemStateChanged"/>
+                                  </Events>
                                 </Component>
                               </SubComponents>
                             </Container>
@@ -1424,12 +1436,14 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="salvarB" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
-                                      <Component id="homeL2" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                           <Component id="editarTGB" min="-2" pref="60" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="salvarB" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                                          <Component id="homeL2" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace pref="37" max="32767" attributes="0"/>

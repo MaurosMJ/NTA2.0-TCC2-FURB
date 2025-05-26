@@ -5,16 +5,12 @@
  */
 package UI;
 
-import Entities.LogOcurrenceMonitoring;
 import Entities.Usuario;
-import Enum.LogLevel;
-import Enum.Module;
 import Enum.Role;
 import Persistence.Configs.*;
 import Persistence.Configs.Worker2Persistence.Worker2Config;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.Logs.LogPersistence;
 import Utils.RoundedBorder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,12 +19,15 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.text.ParseException;
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -55,6 +54,67 @@ public class ConfigUI extends javax.swing.JFrame {
         carregarInformacoes();
         carregarInformacoesArquivo();
         exibirInformacoesArray();
+        carregarComponentesCBX();
+        carregarInfoUsuarioAlt();
+    }
+
+    public void carregarComponentesCBX() {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+        for (Usuario user : UserArray) {
+            model.addElement(user.getUsuario());
+        }
+        usuarioRemCBX.setModel(model);
+        usuarioAltCBX.setModel(model);
+    }
+
+    public void carregarInfoUsuarioAlt() {
+        for (Usuario users : UserArray) {
+            if (users.getUsuario().equals(usuarioRemCBX.getSelectedItem().toString())) {
+                nomeTF.setText(users.getNomeCompleto());
+                mailAltTF.setText(users.getEmail());
+                mailAltTF.setText(users.getEmail());
+                senhaAltPWF.setText(new String(users.getSenha()));
+                RoleAltCBX.setModel(new DefaultComboBoxModel<>(Role.values()));
+            }
+        }
+    }
+
+    public void addUser() {
+        String nomeArquivo = "Users.json";
+        String workspace = "UserConfig";
+
+        UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
+        novoUsuario.imageDir = "C:\\Imagens\\usuario.jpg";
+        novoUsuario.usuario = usuarioAddTF.getText();
+        novoUsuario.nomeCompleto = nomeAddTF.getText();
+        novoUsuario.senha = new String(senhaPWF.getPassword());
+        novoUsuario.email = mailAddTF.getText();
+        novoUsuario.role = Role.valueOf(roleAddCBX.getSelectedItem().toString());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        novoUsuario.acesso = LocalDateTime.now().format(formatter);
+
+        List<UsuarioPersistence> listaUsuarios = JsonPersistence.carregarJsonAppdataUsuario(nomeArquivo);
+        if (listaUsuarios == null) {
+            listaUsuarios = new ArrayList<>();
+        }
+
+        for (UsuarioPersistence up : listaUsuarios) {
+            for (UsuarioPersistence.SessionValues user : up.session) {
+                if (user.usuario.equalsIgnoreCase(novoUsuario.usuario)) {
+                    JOptionPane.showMessageDialog(null, "Usuário já existe: " + user.usuario, "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (user.email.equalsIgnoreCase(novoUsuario.email)) {
+                    JOptionPane.showMessageDialog(null, "Já existe um usuário com esse e-mail: " + user.email, "Erro", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
+
+        JsonPersistence.adicionarUsuarioAoJson(nomeArquivo, workspace, novoUsuario);
+        JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void persistirInformacoes() {
@@ -79,7 +139,8 @@ public class ConfigUI extends javax.swing.JFrame {
         String nomeArquivo = "Worker2Config" + ".json";
         Worker2Persistence.Worker2Config config = JsonPersistence.carregarJsonAppdata(nomeArquivo, Worker2Persistence.Worker2Config.class, "/Persistence/Worker2");
 
-        if (config == null || config.session == null) {
+        if (config == null || config.session
+                == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
             return;
         }
@@ -142,15 +203,15 @@ public class ConfigUI extends javax.swing.JFrame {
         jPanel18 = new javax.swing.JPanel();
         LayoutCentral = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        usuarioAddTF = new javax.swing.JTextField();
+        nomeAddTF = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        senhaAddPWF = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        mailAddTF = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        roleAddCBX = new javax.swing.JComboBox();
         userL = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -168,7 +229,7 @@ public class ConfigUI extends javax.swing.JFrame {
         LayoutCentral1 = new javax.swing.JPanel();
         userL1 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox();
+        usuarioRemCBX = new javax.swing.JComboBox();
         Alterar = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel13 = new javax.swing.JPanel();
@@ -183,18 +244,18 @@ public class ConfigUI extends javax.swing.JFrame {
         jPanel29 = new javax.swing.JPanel();
         LayoutCentral3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        nomeTF = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        senhaAltPWF = new javax.swing.JPasswordField();
         jLabel16 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        mailAltTF = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        RoleAltCBX = new javax.swing.JComboBox();
         userL3 = new javax.swing.JLabel();
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
-        jComboBox4 = new javax.swing.JComboBox();
+        usuarioAltCBX = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         Listar1 = new javax.swing.JPanel();
@@ -436,6 +497,11 @@ public class ConfigUI extends javax.swing.JFrame {
         jPanel12.add(jPanel14, java.awt.BorderLayout.PAGE_START);
 
         jButton3.setText("Salvar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Cancelar");
 
@@ -515,13 +581,18 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel6.setText("Role");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Adminstrador", "SUPER" }));
+        roleAddCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Administrador", "SUPER" }));
 
         userL.setText(".");
 
         jLabel7.setText("Usuário");
 
         jButton1.setText("Alterar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Remover");
 
@@ -539,27 +610,28 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(userL, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(LayoutCentralLayout.createSequentialGroup()
-                .addContainerGap(74, Short.MAX_VALUE)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
                     .addGroup(LayoutCentralLayout.createSequentialGroup()
+                        .addContainerGap(74, Short.MAX_VALUE)
                         .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jPasswordField1, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(58, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentralLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7)
+                            .addComponent(jLabel6)
+                            .addGroup(LayoutCentralLayout.createSequentialGroup()
+                                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(senhaAddPWF, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(usuarioAddTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(jLabel4))
+                                .addGap(18, 18, 18)
+                                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel3)
+                                    .addComponent(nomeAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(mailAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(roleAddCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(LayoutCentralLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LayoutCentralLayout.setVerticalGroup(
@@ -579,20 +651,20 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(usuarioAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nomeAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(senhaAddPWF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mailAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(roleAddCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(111, 111, 111))
         );
 
@@ -708,22 +780,19 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel14.setText("Usuário");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
+        usuarioRemCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
 
         javax.swing.GroupLayout LayoutCentral1Layout = new javax.swing.GroupLayout(LayoutCentral1);
         LayoutCentral1.setLayout(LayoutCentral1Layout);
         LayoutCentral1Layout.setHorizontalGroup(
             LayoutCentral1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LayoutCentral1Layout.createSequentialGroup()
-                .addContainerGap(347, Short.MAX_VALUE)
-                .addComponent(userL1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 338, Short.MAX_VALUE))
-            .addGroup(LayoutCentral1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(236, Short.MAX_VALUE)
                 .addGroup(LayoutCentral1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(userL1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(usuarioRemCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 226, Short.MAX_VALUE))
         );
         LayoutCentral1Layout.setVerticalGroup(
             LayoutCentral1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -733,7 +802,7 @@ public class ConfigUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(usuarioRemCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(376, 376, 376))
         );
 
@@ -854,15 +923,30 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jLabel17.setText("Role");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Adminstrador", "SUPER" }));
+        RoleAltCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Convidado", "Adminstrador", "SUPER" }));
 
         userL3.setText(".");
 
         jButton11.setText("Alterar");
+        jButton11.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton11MouseClicked(evt);
+            }
+        });
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         jButton12.setText("Remover");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
+        usuarioAltCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
+        usuarioAltCBX.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                usuarioAltCBXItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout LayoutCentral3Layout = new javax.swing.GroupLayout(LayoutCentral3);
         LayoutCentral3.setLayout(LayoutCentral3Layout);
@@ -883,17 +967,17 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(jLabel17)
                     .addGroup(LayoutCentral3Layout.createSequentialGroup()
                         .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                            .addComponent(senhaAltPWF, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
                             .addComponent(jLabel11)
                             .addComponent(jLabel13)
-                            .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(usuarioAltCBX, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel16)
                             .addComponent(jLabel12)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(nomeTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(mailAltTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(RoleAltCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
         LayoutCentral3Layout.setVerticalGroup(
@@ -911,20 +995,20 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nomeTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usuarioAltCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel13)
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(senhaAltPWF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mailAltTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RoleAltCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(111, 111, 111))
         );
 
@@ -940,7 +1024,7 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Usuários", jPanel1);
 
-        jPanel2.setLayout(new java.awt.GridLayout());
+        jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
         Listar1.setLayout(new java.awt.BorderLayout());
 
@@ -1046,12 +1130,13 @@ public class ConfigUI extends javax.swing.JFrame {
             jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel25Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(salvarB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(homeL2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel25Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
-                        .addComponent(editarTGB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(editarTGB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(salvarB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(homeL2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -1358,6 +1443,65 @@ public class ConfigUI extends javax.swing.JFrame {
         salvarB.setEnabled(false);
     }//GEN-LAST:event_editarTGBStateChanged
 
+    private void usuarioAltCBXItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_usuarioAltCBXItemStateChanged
+        carregarInfoUsuarioAlt();
+    }//GEN-LAST:event_usuarioAltCBXItemStateChanged
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.addUser();
+        this.UserArray.clear();
+        this.carregarInformacoesArquivo();
+        this.carregarInformacoes();
+        this.exibirInformacoesArray();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecionar arquivo");
+
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        int resultado = fileChooser.showOpenDialog(null);
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File arquivoSelecionado = fileChooser.getSelectedFile();
+            String caminhoCompleto = arquivoSelecionado.getAbsolutePath();
+
+            // Exemplo: mostrar em um JTextField ou imprimir
+            System.out.println("Arquivo selecionado: " + caminhoCompleto);
+        } else {
+            System.out.println("Nenhum arquivo selecionado.");
+        }
+    }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton11MouseClicked
+
+    }//GEN-LAST:event_jButton11MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Selecionar arquivo");
+
+        // Permitir apenas seleção de arquivos
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Abrir a janela
+        int resultado = fileChooser.showOpenDialog(null);
+
+        // Se o usuário clicou em "Abrir"
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File arquivoSelecionado = fileChooser.getSelectedFile();
+            String caminhoCompleto = arquivoSelecionado.getAbsolutePath();
+
+            // Exemplo: mostrar em um JTextField ou imprimir
+            System.out.println("Arquivo selecionado: " + caminhoCompleto);
+            // Exemplo de atribuição a uma variável global:
+            // caminhoArquivoSelecionado = caminhoCompleto;
+        } else {
+            System.out.println("Nenhum arquivo selecionado.");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1372,16 +1516,21 @@ public class ConfigUI extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConfigUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfigUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConfigUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfigUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConfigUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfigUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ConfigUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfigUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -1534,6 +1683,7 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel Listar;
     private javax.swing.JPanel Listar1;
     private javax.swing.JPanel Remover;
+    private javax.swing.JComboBox RoleAltCBX;
     private javax.swing.JLabel alterarUsuarioL;
     private javax.swing.JLabel configEmailL;
     private javax.swing.JTextField corpoTF;
@@ -1556,10 +1706,6 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JComboBox jComboBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1612,8 +1758,6 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1621,23 +1765,28 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JLabel listarUsuarioL;
+    private javax.swing.JTextField mailAddTF;
+    private javax.swing.JTextField mailAltTF;
+    private javax.swing.JTextField nomeAddTF;
+    private javax.swing.JTextField nomeTF;
     private javax.swing.JPanel painelCentral;
     private javax.swing.JTextField portaTF;
     private javax.swing.JComboBox protocoloTF;
     private javax.swing.JTextField remetenteTF;
     private javax.swing.JLabel removerUsuarioL;
+    private javax.swing.JComboBox roleAddCBX;
     private javax.swing.JButton salvarB;
+    private javax.swing.JPasswordField senhaAddPWF;
+    private javax.swing.JPasswordField senhaAltPWF;
     private javax.swing.JPasswordField senhaPWF;
     private javax.swing.JTextField tituloTF;
     private javax.swing.JCheckBox tlsCBX;
     private javax.swing.JLabel userL;
     private javax.swing.JLabel userL1;
     private javax.swing.JLabel userL3;
+    private javax.swing.JTextField usuarioAddTF;
+    private javax.swing.JComboBox usuarioAltCBX;
+    private javax.swing.JComboBox usuarioRemCBX;
     // End of variables declaration//GEN-END:variables
 }

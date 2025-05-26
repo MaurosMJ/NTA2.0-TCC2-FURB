@@ -20,7 +20,7 @@ public class Usuario {
     private String senha;
     private String email;
     private Role role;
-    private String acesso; 
+    private String acesso;
 
     public Usuario(String imageDir, String usuario, String nomeCompleto, String senha, String email, Role Role, String acesso) {
         this.imageDir = imageDir;
@@ -87,6 +87,5 @@ public class Usuario {
     public void setAcesso(String acesso) {
         this.acesso = acesso;
     }
-    
-    
+
 }

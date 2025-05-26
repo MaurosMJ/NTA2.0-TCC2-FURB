@@ -5,9 +5,22 @@
  */
 package UI;
 
+import Entities.Usuario;
+import Enum.Role;
+import Persistence.Configs.LoginPersistence;
+import Persistence.Configs.UsuarioPersistence;
+import Persistence.Configs.Worker2Persistence;
+import Persistence.JsonPersistence;
+import static Persistence.JsonPersistence.salvarJsonEmAppData;
+import Persistence.Modules.DnsPersistence;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -15,6 +28,8 @@ import javax.swing.UIManager;
  * @author Mauros
  */
 public class LoginForm extends javax.swing.JFrame {
+
+    private ArrayList<Usuario> UserArray = new ArrayList<>();
 
     /**
      * Creates new form LoginForm
@@ -29,7 +44,8 @@ public class LoginForm extends javax.swing.JFrame {
         initComponents();
         setLayout(null);
         this.initImg();
-
+        carregarInformacoesArquivo();
+        carregarInformacoes();
         setLocationRelativeTo(null);
     }
 
@@ -42,7 +58,7 @@ public class LoginForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        Admin = new javax.swing.JTextField();
+        loginTF = new javax.swing.JTextField();
         userL = new javax.swing.JLabel();
         passwordL = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
@@ -51,23 +67,28 @@ public class LoginForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         logoFurbL = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
+        dadosCHB = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("NTA - Login do usuário");
         setMaximumSize(new java.awt.Dimension(400, 290));
         setMinimumSize(new java.awt.Dimension(400, 290));
-        setPreferredSize(new java.awt.Dimension(400, 290));
+        setPreferredSize(new java.awt.Dimension(400, 315));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        Admin.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        Admin.setText("Admin");
-        Admin.addActionListener(new java.awt.event.ActionListener() {
+        loginTF.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        loginTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AdminActionPerformed(evt);
+                loginTFActionPerformed(evt);
             }
         });
-        getContentPane().add(Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 230, -1));
+        loginTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                loginTFKeyReleased(evt);
+            }
+        });
+        getContentPane().add(loginTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, 230, -1));
 
         userL.setText("jLabel1");
         getContentPane().add(userL, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 72, 150, 120));
@@ -76,6 +97,11 @@ public class LoginForm extends javax.swing.JFrame {
         getContentPane().add(passwordL, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 135, 120, 100));
 
         jPasswordField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyReleased(evt);
+            }
+        });
         getContentPane().add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 230, -1));
 
         ntaLogoL.setText("jLabel3");
@@ -87,7 +113,7 @@ public class LoginForm extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 160, 40));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, 160, 40));
 
         jLabel1.setText("Informe seu login");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, -1, -1));
@@ -98,25 +124,91 @@ public class LoginForm extends javax.swing.JFrame {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 20, 60, 60));
 
+        dadosCHB.setText("Salvar meus dados");
+        dadosCHB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                dadosCHBStateChanged(evt);
+            }
+        });
+        getContentPane().add(dadosCHB, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 200, -1, -1));
+
         getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdminActionPerformed
+    private void loginTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginTFActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_AdminActionPerformed
+    }//GEN-LAST:event_loginTFActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        this.dispose(); // Fecha o login
-        new MainMenuForm().setVisible(true); // Abre o sistema
+
+        if (!(loginTF.getText().length() > 0 && jPasswordField1.getPassword().length > 0)) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Usuario user = this.pesquisarUsuarioPorNome(loginTF.getText());
+        if (user == null) {
+            JOptionPane.showMessageDialog(null, "Usuário não encontrado!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (user.getSenha().equals(new String(jPasswordField1.getPassword())) && user.getUsuario().equals(loginTF.getText())) {
+            this.dispose();
+            new MainMenuForm().setVisible(true);
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Usuário ou senha incorreto!", "Aviso", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void loginTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginTFKeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_loginTFKeyReleased
+
+    private void jPasswordField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyReleased
+        persistirInformacoes();
+    }//GEN-LAST:event_jPasswordField1KeyReleased
+
+    private void dadosCHBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_dadosCHBStateChanged
+        persistirInformacoes();
+    }//GEN-LAST:event_dadosCHBStateChanged
+
+    public void persistirInformacoes() {
+        LoginPersistence config = new LoginPersistence();
+        config.workspace = "Login";
+        config.session = new LoginPersistence.SessionValues();
+        config.session.usuario = loginTF.getText();
+        config.session.senha = new String(jPasswordField1.getPassword());
+        config.session.autoComplete = dadosCHB.isSelected();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        salvarJsonEmAppData("userLoginConfig" + ".json", gson.toJson(config), "/Configs");
+    }
+
+    public void carregarInformacoes() {
+        String nomeArquivo = "userLoginConfig" + ".json";
+        LoginPersistence config = JsonPersistence.carregarJsonAppdata(nomeArquivo, LoginPersistence.class, "/Configs");
+
+        if (config == null || config.session == null) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+
+        try {
+
+            if (config.session.autoComplete == true) {
+                loginTF.setText(config.session.usuario);
+                jPasswordField1.setText(new String(config.session.senha));
+                dadosCHB.setSelected(config.session.autoComplete);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -150,6 +242,35 @@ public class LoginForm extends javax.swing.JFrame {
 
     }
 
+    public void carregarInformacoesArquivo() {
+        String nomeArquivo = "Users.json";
+        List<UsuarioPersistence> listaUsuarios = JsonPersistence.carregarJsonAppdataUsuario(nomeArquivo);
+        if (listaUsuarios == null || listaUsuarios.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+        for (UsuarioPersistence config : listaUsuarios) {
+            for (UsuarioPersistence.SessionValues entry : config.session) {
+                this.addToArray(entry.imageDir, entry.usuario, entry.nomeCompleto, entry.senha, entry.email, entry.role, entry.acesso);
+            }
+        }
+
+    }
+
+    private void addToArray(String imageDir, String user, String nomeCompleto, String senha, String email, Role role, String acesso) {
+        Usuario usuario = new Usuario(imageDir, user, nomeCompleto, senha, email, role, acesso);
+        this.UserArray.add(usuario);
+    }
+
+    private Usuario pesquisarUsuarioPorNome(String input) {
+        for (Usuario user : UserArray) {
+            if (user.getUsuario().toLowerCase().equals(input.toLowerCase())) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     private void initImg() {
         //ScaledImages
         Image ntaLogo = this.getScaledImage("imgs/nta_logo2.png", ntaLogoL, true);
@@ -179,14 +300,15 @@ public class LoginForm extends javax.swing.JFrame {
     private void setScaledImage(javax.swing.JLabel label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField Admin;
+    private javax.swing.JCheckBox dadosCHB;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField loginTF;
     private javax.swing.JLabel logoFurbL;
     private javax.swing.JLabel ntaLogoL;
     private javax.swing.JLabel passwordL;

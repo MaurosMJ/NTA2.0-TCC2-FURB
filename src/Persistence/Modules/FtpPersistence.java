@@ -27,10 +27,8 @@ public class FtpPersistence {
             public String password;
             public int protocolo;
             public String usuario;
-            public String diretorio;
-            public String valorAnterior;
-            public String novoValor;
-            public String conteudo;
+            public String diretorioLocal;
+            public String diretorioRemoto;
             
             //Configurações padrões
             public boolean executar;

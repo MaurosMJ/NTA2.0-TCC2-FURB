@@ -127,7 +127,7 @@ public class ConfigUI extends javax.swing.JFrame {
         JsonPersistence.adicionarUsuarioAoJson(nomeArquivo, workspace, novoUsuario);
         JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
-
+    
     public void persistirInformacoes() {
         Worker2Config config = new Worker2Config();
         config.workspace = "1";

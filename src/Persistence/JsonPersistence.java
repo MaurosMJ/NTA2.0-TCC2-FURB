@@ -8,6 +8,7 @@ package Persistence;
 import Enum.Role;
 import Persistence.Configs.UsuarioPersistence;
 import Persistence.Logs.LogPersistence;
+import Persistence.Worker1.Worker1Persistence;
 import Utils.HostConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -131,6 +132,26 @@ public class JsonPersistence {
         Gson gson = new Gson();
         try {
             Type listType = new TypeToken<List<UsuarioPersistence>>() {
+            }.getType();
+            return gson.fromJson(conteudoJson, listType);
+        } catch (Exception e) {
+            System.err.println("Erro ao desserializar JSON para LogPersistence: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static List<Worker1Persistence> carregarJsonAppdataMonitoramento(String nomeArquivo) {
+        String conteudoJson = lerJsonDeAppData(nomeArquivo, "/Monitoramento");
+
+        if (conteudoJson == null || conteudoJson.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado: " + nomeArquivo);
+            return null;
+        }
+
+        Gson gson = new Gson();
+        try {
+            Type listType = new TypeToken<List<Worker1Persistence>>() {
             }.getType();
             return gson.fromJson(conteudoJson, listType);
         } catch (Exception e) {
@@ -291,21 +312,34 @@ public class JsonPersistence {
         String jsonAtualizado = gson.toJson(todosLogs);
         salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Log");
     }
+    
+    public static void adicionarMonitoramentoAoJson(String nomeArquivo, String workspace, Worker1Persistence.SessionValues novoMonitoramento) {
+
+        List<Worker1Persistence> todoMonitoramento = carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (todoMonitoramento == null) {
+            todoMonitoramento = new ArrayList<>();
+        }
+
+        Worker1Persistence workspaceExistente = null;
+        for (Worker1Persistence up : todoMonitoramento) {
+            if (up.workspace.equalsIgnoreCase(workspace)) {
+                workspaceExistente = up;
+                break;
+            }
+        }
+
+        if (workspaceExistente == null) {
+            workspaceExistente = new Worker1Persistence();
+            workspaceExistente.workspace = workspace;
+            workspaceExistente.session = new ArrayList<>();
+            todoMonitoramento.add(workspaceExistente);
+        }
+
+        workspaceExistente.session.add(novoMonitoramento);
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonAtualizado = gson.toJson(todoMonitoramento);
+        salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Monitoramento");
+    }
 
 }
-
-/*
- // Cria uma nova entrada (registro de log)
- LogPersistence.SessionValues novaEntrada = new LogPersistence.SessionValues();
- novaEntrada.data = "25-03-1999";
- novaEntrada.maquina = "tasy.monitoring.com";
- novaEntrada.level = LogLevel.ERROR;
- novaEntrada.log = "Falha na conexão com o servidor SMTP";
- novaEntrada.icmpRequest = 126;
-
- // Define o módulo
- String modulo = "SMTP";
-
- // Chama o método para adicionar a entrada ao arquivo (por exemplo, "SMTP_Log.json")
- adicionarEntradaAoLog(modulo + "_Log.json", modulo, novaEntrada);
- */

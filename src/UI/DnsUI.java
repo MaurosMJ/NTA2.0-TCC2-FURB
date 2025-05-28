@@ -7,11 +7,14 @@ package UI;
 
 import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
+import Enum.Role;
+import Persistence.Configs.UsuarioPersistence;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.Modules.DnsPersistence.DnsConfig;
 import Persistence.Modules.NtpPersistence.NtpConfig;
 import Persistence.Modules.SocketPersistence.SocketConfig;
+import Persistence.Worker1.Worker1Persistence;
 import Service.DnsClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -31,8 +34,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -758,6 +764,7 @@ public class DnsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_fundoHomeLMouseClicked
 
     private void fundoAddMonitoringAction() {
+        addMonitoring();
         persistirInformacoes();
     }
 
@@ -774,11 +781,11 @@ public class DnsUI extends javax.swing.JFrame {
     private void fundoRecycleBinAction() {
         rHostTF.setText("");
         nomeRHost.setText("");
-        
+
         dominioTF.setText("");
         tipoCBX.setSelectedIndex(0);
         classeCBX.setSelectedIndex(0);
-        
+
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);
@@ -1490,11 +1497,30 @@ public class DnsUI extends javax.swing.JFrame {
             editTB.setSelected(config.session.toggleEditor);
             tipoCBX.setSelectedItem(config.session.tipo);
             classeCBX.setSelectedItem(config.session.classe);
-            
+
         } catch (Exception e) {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void addMonitoring() {
+        String nomeArquivo = "Monitoring.json";
+        String workspace = "DNS";
+
+        Worker1Persistence.SessionValues novoMonitoramento = new Worker1Persistence.SessionValues();
+        novoMonitoramento.dns_Servidor = rHostTF.getText();
+        novoMonitoramento.dns_Classe = classeCBX.getSelectedItem().toString();
+        novoMonitoramento.dns_Dominio = dominioTF.getText();
+        novoMonitoramento.dns_Tipo = tipoCBX.getSelectedItem().toString();
+
+        List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (listaMonitoramento == null) {
+            listaMonitoramento = new ArrayList<>();
+        }
+
+        JsonPersistence.adicionarMonitoramentoAoJson(nomeArquivo, workspace, novoMonitoramento);
+        JOptionPane.showMessageDialog(null, "Monitoramento adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public boolean isBarraPesquisaPrimeiroAcesso() {

@@ -9,9 +9,8 @@ import Entities.LogOccurrenceModule;
 import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
-import Persistence.Modules.SocketPersistence.SocketConfig;
 import Persistence.Modules.TelnetPersistence.TelnetConfig;
-import Service.SocketClient;
+import Persistence.Worker1.Worker1Persistence;
 import Service.Telnet_Client;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -34,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +52,6 @@ import javax.swing.text.MaskFormatter;
 public class TelnetUI extends javax.swing.JFrame {
 
     private ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private final Map<Integer, String> portasPadrao = new HashMap<>();
     private boolean barraPesquisaPrimeiroAcesso = true;
     private Telnet_Client telnet;
@@ -803,6 +802,7 @@ public class TelnetUI extends javax.swing.JFrame {
     }//GEN-LAST:event_fundoHomeLMouseClicked
 
     private void fundoAddMonitoringAction() {
+        addMonitoring();
         persistirInformacoes();
     }
 
@@ -1532,6 +1532,24 @@ public class TelnetUI extends javax.swing.JFrame {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void addMonitoring() {
+        String nomeArquivo = "Monitoring.json";
+        String workspace = "TELNET";
+
+        Worker1Persistence.SessionValues novoMonitoramento = new Worker1Persistence.SessionValues();
+        novoMonitoramento.telnet_Instrucao = promptTF.getText();
+        novoMonitoramento.telnet_Porta = rHostPortTF.getText();
+        novoMonitoramento.telnet_Servidor = rHostPortTF.getText();
+
+        List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (listaMonitoramento == null) {
+            listaMonitoramento = new ArrayList<>();
+        }
+
+        JsonPersistence.adicionarMonitoramentoAoJson(nomeArquivo, workspace, novoMonitoramento);
+        JOptionPane.showMessageDialog(null, "Monitoramento adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public boolean isBarraPesquisaPrimeiroAcesso() {

@@ -10,6 +10,7 @@ import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.Modules.SmbPersistence.SmbConfig;
+import Persistence.Worker1.Worker1Persistence;
 import Service.SmbClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -962,6 +963,7 @@ public class SmbUI extends javax.swing.JFrame {
     }//GEN-LAST:event_fundoHomeLMouseClicked
 
     private void fundoAddMonitoringAction() {
+        addMonitoring();
         persistirInformacoes();
     }
 
@@ -987,7 +989,7 @@ public class SmbUI extends javax.swing.JFrame {
         valorAnteriorTF.setText("");
         novoValorTF.setText("");
         conteudoTF.setText("");
-        
+
         addMonitoringL.setEnabled(false);
         LoadingLineLeftL.setVisible(false);
         LoadingLineRightL.setVisible(false);
@@ -1948,6 +1950,30 @@ public class SmbUI extends javax.swing.JFrame {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void addMonitoring() {
+        String nomeArquivo = "Monitoring.json";
+        String workspace = "SMB";
+
+        Worker1Persistence.SessionValues novoMonitoramento = new Worker1Persistence.SessionValues();
+        novoMonitoramento.smb_Conteudo = conteudoTF.getText();
+        novoMonitoramento.smb_Diretorio = diretorioTF.getText();
+        novoMonitoramento.smb_NovoValor = novoValorTF.getText();
+        novoMonitoramento.smb_Operacao = operacaoCHB.getSelectedIndex();
+        novoMonitoramento.smb_Password = new String(senhaPF.getPassword());
+        novoMonitoramento.smb_Protocolo = protocoloCHB.getSelectedIndex();
+        novoMonitoramento.smb_Servidor = hostTF.getText();
+        novoMonitoramento.smb_Usuario = usuarioTF.getText();
+        novoMonitoramento.smb_ValorAnterior = valorAnteriorTF.getText();
+
+        List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (listaMonitoramento == null) {
+            listaMonitoramento = new ArrayList<>();
+        }
+
+        JsonPersistence.adicionarMonitoramentoAoJson(nomeArquivo, workspace, novoMonitoramento);
+        JOptionPane.showMessageDialog(null, "Monitoramento adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public boolean isBarraPesquisaPrimeiroAcesso() {

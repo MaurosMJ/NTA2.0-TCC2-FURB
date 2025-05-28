@@ -10,6 +10,7 @@ import Enum.LogLevel;
 import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
 import Persistence.Modules.httpPersistence.HttpConfig;
+import Persistence.Worker1.Worker1Persistence;
 import Service.HttpClient;
 import Utils.HostConfig;
 import static Utils.HostConfig.getLogFormat;
@@ -823,6 +824,7 @@ public class HttpUI extends javax.swing.JFrame {
     }//GEN-LAST:event_fundoHomeLMouseClicked
 
     private void fundoAddMonitoringAction() {
+        addMonitoring();
         persistirInformacoes();
     }
 
@@ -1298,29 +1300,29 @@ public class HttpUI extends javax.swing.JFrame {
         }
     }
 
-public Map<String, String> parseParametersString(String parameters) {
-    Map<String, String> paramMap = new HashMap<>();
+    public Map<String, String> parseParametersString(String parameters) {
+        Map<String, String> paramMap = new HashMap<>();
 
-    if (parameters != null && !parameters.trim().isEmpty()) {
-        String[] tokens = parameters.trim().split("\\s+");
+        if (parameters != null && !parameters.trim().isEmpty()) {
+            String[] tokens = parameters.trim().split("\\s+");
 
-        String currentKey = null;
-        for (String token : tokens) {
-            if (token.endsWith(":")) {
-                // Remover ":" do final para usar como chave
-                currentKey = token.substring(0, token.length() - 1).trim();
-            } else if (currentKey != null) {
-                // A palavra seguinte é o valor
-                paramMap.put(currentKey, token.trim());
-                currentKey = null; // Resetar para esperar nova chave
-            } else {
-                System.out.println("Par inválido ignorado: " + token);
+            String currentKey = null;
+            for (String token : tokens) {
+                if (token.endsWith(":")) {
+                    // Remover ":" do final para usar como chave
+                    currentKey = token.substring(0, token.length() - 1).trim();
+                } else if (currentKey != null) {
+                    // A palavra seguinte é o valor
+                    paramMap.put(currentKey, token.trim());
+                    currentKey = null; // Resetar para esperar nova chave
+                } else {
+                    System.out.println("Par inválido ignorado: " + token);
+                }
             }
         }
-    }
 
-    return paramMap;
-}
+        return paramMap;
+    }
 
 
     private void operacaoCHBItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_operacaoCHBItemStateChanged
@@ -1645,6 +1647,25 @@ public Map<String, String> parseParametersString(String parameters) {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void addMonitoring() {
+        String nomeArquivo = "Monitoring.json";
+        String workspace = "HTTP";
+
+        Worker1Persistence.SessionValues novoMonitoramento = new Worker1Persistence.SessionValues();
+        novoMonitoramento.http_Endpoint = endPointTF.getText();
+        novoMonitoramento.http_Operacao = operacaoCHB.getSelectedIndex();
+        novoMonitoramento.http_Parametros = parametrosTF.getText();
+        novoMonitoramento.http_Protocolo = protocoloCHB.getSelectedIndex();
+
+        List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (listaMonitoramento == null) {
+            listaMonitoramento = new ArrayList<>();
+        }
+
+        JsonPersistence.adicionarMonitoramentoAoJson(nomeArquivo, workspace, novoMonitoramento);
+        JOptionPane.showMessageDialog(null, "Monitoramento adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void formatarURL() {

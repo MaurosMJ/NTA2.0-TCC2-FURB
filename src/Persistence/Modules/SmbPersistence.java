@@ -22,7 +22,6 @@ public class SmbPersistence {
         public static class SessionValues {
             //Configurações do modulo
             public String servidor;
-            public String porta;
             public int operacao;
             public String password;
             public int protocolo;

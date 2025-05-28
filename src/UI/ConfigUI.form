@@ -563,33 +563,36 @@
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
-                                          <EmptySpace pref="66" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                              <Group type="102" alignment="0" attributes="0">
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace pref="66" max="32767" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                                          <Component id="senhaAddPWF" alignment="0" max="32767" attributes="0"/>
-                                                          <Component id="usuarioAddTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
-                                                          <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                                                  <Component id="senhaAddPWF" alignment="0" max="32767" attributes="0"/>
+                                                                  <Component id="usuarioAddTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                                  <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="nomeAddTF" min="-2" pref="344" max="-2" attributes="0"/>
+                                                              <Component id="mailAddTF" min="-2" pref="344" max="-2" attributes="0"/>
+                                                          </Group>
                                                       </Group>
-                                                      <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="nomeAddTF" min="-2" pref="344" max="-2" attributes="0"/>
-                                                      <Component id="mailAddTF" min="-2" pref="344" max="-2" attributes="0"/>
+                                                      <Component id="roleAddCBX" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
-                                              <Component id="roleAddCBX" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <EmptySpace max="32767" attributes="0"/>
+                                                  <Component id="localImgL" min="-2" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
-                                          <EmptySpace pref="66" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="localImgL" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1164,31 +1167,34 @@
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
-                                          <EmptySpace pref="98" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                      <Component id="senhaAltPWF" alignment="0" pref="344" max="32767" attributes="0"/>
-                                                      <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="usuarioAltCBX" alignment="0" max="32767" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Group type="102" attributes="0">
+                                                  <EmptySpace pref="98" max="32767" attributes="0"/>
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                      <Component id="nomeTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
-                                                      <Component id="mailAltTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                      <Component id="jLabel17" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                              <Component id="senhaAltPWF" alignment="0" pref="344" max="32767" attributes="0"/>
+                                                              <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="usuarioAltCBX" alignment="0" max="32767" attributes="0"/>
+                                                          </Group>
+                                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="jLabel16" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="nomeTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                              <Component id="mailAltTF" alignment="0" min="-2" pref="344" max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                      <Component id="RoleAltCBX" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
-                                              <Component id="RoleAltCBX" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                              <Group type="102" alignment="0" attributes="0">
+                                                  <EmptySpace max="32767" attributes="0"/>
+                                                  <Component id="localImgAltL" min="-2" max="-2" attributes="0"/>
+                                              </Group>
                                           </Group>
-                                          <EmptySpace pref="34" max="32767" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="localImgAltL" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
                                       </Group>
                                   </Group>

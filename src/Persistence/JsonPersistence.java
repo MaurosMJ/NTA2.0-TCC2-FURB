@@ -10,6 +10,7 @@ import Persistence.Configs.UsuarioPersistence;
 import Persistence.Logs.LogPersistence;
 import Persistence.Worker1.Worker1Persistence;
 import Utils.HostConfig;
+import Utils.Security.Id;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
@@ -278,6 +279,47 @@ public class JsonPersistence {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonAtualizado = gson.toJson(todosUsuarios);
         salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Configs");
+    }
+    
+    public static void removerMonitoramentoDoJson(String nomeArquivo, String uuid) {
+        // Carrega todos os usuários
+        List<Worker1Persistence> todosMonitoramentos = carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (todosMonitoramentos == null) {
+            System.out.println("Nenhum dado encontrado no JSON.");
+            return;
+        }
+
+        boolean usuarioRemovido = false;
+
+        // Percorre todos os workspaces
+        for (Worker1Persistence workspace : todosMonitoramentos) {
+            if (workspace.session != null) {
+                // Remove se o nome de usuário bater
+                Iterator<Worker1Persistence.SessionValues> iterator = workspace.session.iterator();
+                while (iterator.hasNext()) {
+                    Worker1Persistence.SessionValues monitoramento = iterator.next();
+                    if (monitoramento.UUID.equalsIgnoreCase(uuid)) {
+                        iterator.remove();
+                        usuarioRemovido = true;
+                        System.out.println("Monitoramento '" + uuid + "' removido com sucesso.");
+                        break; // Remove apenas o primeiro encontrado. Remova esse break se quiser excluir todos com esse nome.
+                    }
+                }
+            }
+        }
+
+        if (!usuarioRemovido) {
+            System.out.println("Monitoramento '" + uuid + "' não encontrado.");
+            return;
+        }
+
+        // Remove workspaces vazios (sem sessões)
+        todosMonitoramentos.removeIf(w -> w.session == null || w.session.isEmpty());
+
+        // Atualiza e salva o JSON
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonAtualizado = gson.toJson(todosMonitoramentos);
+        salvarJsonEmAppData(nomeArquivo, jsonAtualizado, "/Monitoramento");
     }
 
     public static void adicionarEntradaAoLog(String nomeArquivo, String modulo, LogPersistence.SessionValues novaEntrada) {

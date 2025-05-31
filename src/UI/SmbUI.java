@@ -50,7 +50,6 @@ import javax.swing.text.MaskFormatter;
 public class SmbUI extends javax.swing.JFrame {
 
     private ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private boolean barraPesquisaPrimeiroAcesso = true;
     private SmbClient smb;
 
@@ -1919,6 +1918,7 @@ public class SmbUI extends javax.swing.JFrame {
         config.session.usuario = usuarioTF.getText();
         config.session.diretorio = diretorioTF.getText();
         config.session.operacao = operacaoCHB.getSelectedIndex();
+        config.session.dominio = dominioTF.getText();
         config.session.valorAnterior = valorAnteriorTF.getText();
         config.session.novoValor = novoValorTF.getText();
         config.session.conteudo = conteudoTF.getText();
@@ -1942,6 +1942,7 @@ public class SmbUI extends javax.swing.JFrame {
             protocoloCHB.setSelectedIndex(config.session.protocolo);
             usuarioTF.setText(config.session.usuario);
             diretorioTF.setText(config.session.diretorio);
+            dominioTF.setText(config.session.dominio);
             operacaoCHB.setSelectedIndex(config.session.operacao);
             valorAnteriorTF.setText(config.session.valorAnterior);
             novoValorTF.setText(config.session.novoValor);
@@ -1962,7 +1963,7 @@ public class SmbUI extends javax.swing.JFrame {
         novoMonitoramento.smb_NovoValor = novoValorTF.getText();
         novoMonitoramento.smb_Operacao = operacaoCHB.getSelectedIndex();
         novoMonitoramento.smb_Password = new String(senhaPF.getPassword());
-        novoMonitoramento.smb_Protocolo = protocoloCHB.getSelectedIndex();
+        novoMonitoramento.smb_Protocolo = protocoloCHB.getSelectedItem().toString();
         novoMonitoramento.smb_Servidor = hostTF.getText();
         novoMonitoramento.smb_Usuario = usuarioTF.getText();
         novoMonitoramento.smb_ValorAnterior = valorAnteriorTF.getText();

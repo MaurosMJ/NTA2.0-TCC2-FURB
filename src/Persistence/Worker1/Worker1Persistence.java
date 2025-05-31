@@ -5,6 +5,7 @@
  */
 package Persistence.Worker1;
 
+import Utils.Security.Id;
 import java.util.List;
 
 /**
@@ -18,10 +19,13 @@ public class Worker1Persistence {
 
     public static class SessionValues {
 
+        //Geral
+        public String UUID = Id.gerarIdentificadorUnico();
+
 // [HTTP]
         public String http_Endpoint;
         public int http_Operacao;
-        public int http_Protocolo;
+        public String http_Protocolo;
         public String http_Parametros;
         public String http_Url;
 
@@ -45,7 +49,7 @@ public class Worker1Persistence {
         public String smtp_Servidor;
         public String smtp_Porta;
         public String smtp_Password;
-        public int smtp_Protocolo;
+        public String smtp_Protocolo;
         public String smtp_Remetente;
         public String smtp_Destinatario;
         public String smtp_Titulo;
@@ -58,8 +62,9 @@ public class Worker1Persistence {
         public String smb_Servidor;
         public int smb_Operacao;
         public String smb_Password;
-        public int smb_Protocolo;
+        public String smb_Protocolo;
         public String smb_Usuario;
+        public String smb_Dominio;
         public String smb_Diretorio;
         public String smb_ValorAnterior;
         public String smb_NovoValor;
@@ -77,7 +82,7 @@ public class Worker1Persistence {
         public String ftp_Porta;
         public int ftp_Operacao;
         public String ftp_Password;
-        public int ftp_Protocolo;
+        public String ftp_Protocolo;
         public String ftp_Usuario;
         public String ftp_DiretorioRemoto;
         public String ftp_DiretorioAtual;

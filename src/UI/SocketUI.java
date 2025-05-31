@@ -1481,7 +1481,7 @@ public class SocketUI extends javax.swing.JFrame {
         String workspace = "SOCKET";
 
         Worker1Persistence.SessionValues novoMonitoramento = new Worker1Persistence.SessionValues();
-        novoMonitoramento.socket_Servidor = rHostPortTF.getText();
+        novoMonitoramento.socket_Servidor = rHostTF.getText();
         novoMonitoramento.socket_Porta = rHostPortTF.getText();
 
         List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);

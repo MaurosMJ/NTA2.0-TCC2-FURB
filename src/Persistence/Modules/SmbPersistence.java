@@ -30,6 +30,7 @@ public class SmbPersistence {
             public String valorAnterior;
             public String novoValor;
             public String conteudo;
+            public String dominio;
             
             //Configurações padrões
             public boolean executar;

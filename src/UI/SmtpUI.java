@@ -1927,7 +1927,7 @@ public class SmtpUI extends javax.swing.JFrame {
         novoMonitoramento.smtp_IsStartTls = startTlsCHB.isSelected();
         novoMonitoramento.smtp_Password = new String(senhaPF.getPassword());
         novoMonitoramento.smtp_Porta = portaTF.getText();
-        novoMonitoramento.smtp_Protocolo = protocoloTF.getSelectedIndex();
+        novoMonitoramento.smtp_Protocolo = protocoloTF.getSelectedItem().toString();
         novoMonitoramento.smtp_Remetente = remetenteTF.getText();
         novoMonitoramento.smtp_Servidor = hostTF.getText();
         novoMonitoramento.smtp_Titulo = tituloTF.getText();

@@ -13,6 +13,7 @@ import Persistence.JsonPersistence;
 import static Persistence.JsonPersistence.alterarUsuarioNoJson;
 import static Persistence.JsonPersistence.removerUsuarioDoJson;
 import static Persistence.JsonPersistence.salvarJsonEmAppData;
+import Persistence.Worker1.Worker1Persistence;
 import Utils.ManipularImagem;
 import Utils.RoundedBorder;
 import com.google.gson.Gson;
@@ -23,11 +24,12 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -46,6 +48,10 @@ import javax.swing.table.DefaultTableModel;
 public class ConfigUI extends javax.swing.JFrame {
 
     private ArrayList<Usuario> UserArray = new ArrayList<>();
+    private ArrayList<Worker1Persistence> worker1Array = new ArrayList<>();
+    private Map<Integer, StringBuilder> parametros = new HashMap<>();
+    ;
+
     private String ntaImgDir;
 
     /**
@@ -71,6 +77,24 @@ public class ConfigUI extends javax.swing.JFrame {
         }
         usuarioRemCBX.setModel(model);
         usuarioAltCBX.setModel(model);
+        int cont = 0;
+        model = new DefaultComboBoxModel<>();
+        for (Worker1Persistence monitoring : worker1Array) {
+            for (Worker1Persistence.SessionValues session : monitoring.session) {
+                model.addElement(monitoring.workspace + " #" + cont);
+                cont++;
+            }
+        }
+        monitoramentoRemCBX.setModel(model);
+    }
+
+    private void carregarParametrosTF() {
+        try {
+            parametrosTF.setText(parametros.get(monitoramentoRemCBX.getSelectedIndex()).toString().replace(" | ", "\n"));
+            //        parametrosTF.setText(parametros.
+        } catch (java.lang.NullPointerException e) {
+            System.out.println("Sem dados encotrados! " + e.getMessage());
+        }
     }
 
     public void carregarInfoUsuarioAlt() {
@@ -127,7 +151,7 @@ public class ConfigUI extends javax.swing.JFrame {
         JsonPersistence.adicionarUsuarioAoJson(nomeArquivo, workspace, novoUsuario);
         JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
-    
+
     public void persistirInformacoes() {
         Worker2Config config = new Worker2Config();
         config.workspace = "1";
@@ -297,6 +321,34 @@ public class ConfigUI extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         tlsCBX = new javax.swing.JCheckBox();
         protocoloTF = new javax.swing.JComboBox();
+        jPanel3 = new javax.swing.JPanel();
+        jTabbedPane4 = new javax.swing.JTabbedPane();
+        Listar2 = new javax.swing.JPanel();
+        jPanel30 = new javax.swing.JPanel();
+        jPanel31 = new javax.swing.JPanel();
+        jLabel25 = new javax.swing.JLabel();
+        listarUsuarioL1 = new javax.swing.JLabel();
+        jPanel32 = new javax.swing.JPanel();
+        jPanel33 = new javax.swing.JPanel();
+        homeL5 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        Remover1 = new javax.swing.JPanel();
+        jPanel43 = new javax.swing.JPanel();
+        jLabel31 = new javax.swing.JLabel();
+        removerUsuarioL1 = new javax.swing.JLabel();
+        jPanel44 = new javax.swing.JPanel();
+        jButton7 = new javax.swing.JButton();
+        homeL7 = new javax.swing.JLabel();
+        editarMonTB = new javax.swing.JToggleButton();
+        jPanel45 = new javax.swing.JPanel();
+        jPanel46 = new javax.swing.JPanel();
+        LayoutCentral4 = new javax.swing.JPanel();
+        jLabel32 = new javax.swing.JLabel();
+        monitoramentoRemCBX = new javax.swing.JComboBox();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        parametrosTF = new javax.swing.JTextArea();
+        jLabel33 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ajustes");
@@ -419,6 +471,10 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("Role");
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("Último Acesso");
+        }
 
         Listar.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
@@ -649,27 +705,25 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(userL, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(LayoutCentralLayout.createSequentialGroup()
-                .addContainerGap(66, Short.MAX_VALUE)
-                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addGroup(LayoutCentralLayout.createSequentialGroup()
-                        .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(senhaAddPWF, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(usuarioAddTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3)
-                            .addComponent(nomeAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(mailAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(roleAddCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(66, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentralLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(localImgL)
+                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel6)
+                        .addGroup(LayoutCentralLayout.createSequentialGroup()
+                            .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(senhaAddPWF, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(usuarioAddTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(jLabel4))
+                            .addGap(18, 18, 18)
+                            .addGroup(LayoutCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel3)
+                                .addComponent(nomeAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(mailAddTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(roleAddCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(localImgL, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LayoutCentralLayout.setVerticalGroup(
@@ -1051,26 +1105,24 @@ public class ConfigUI extends javax.swing.JFrame {
                     .addComponent(userL3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(LayoutCentral3Layout.createSequentialGroup()
-                .addContainerGap(98, Short.MAX_VALUE)
-                .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel17)
-                    .addGroup(LayoutCentral3Layout.createSequentialGroup()
-                        .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(senhaAltPWF, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel13)
-                            .addComponent(usuarioAltCBX, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel12)
-                            .addComponent(nomeTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(mailAltTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(RoleAltCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(34, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentral3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(localImgAltL)
+                .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel17)
+                        .addGroup(LayoutCentral3Layout.createSequentialGroup()
+                            .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(senhaAltPWF, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel13)
+                                .addComponent(usuarioAltCBX, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGap(18, 18, 18)
+                            .addGroup(LayoutCentral3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel16)
+                                .addComponent(jLabel12)
+                                .addComponent(nomeTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(mailAltTF, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(RoleAltCBX, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(localImgAltL, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LayoutCentral3Layout.setVerticalGroup(
@@ -1207,19 +1259,24 @@ public class ConfigUI extends javax.swing.JFrame {
                 editarTGBStateChanged(evt);
             }
         });
+        editarTGB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarTGBActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel25Layout = new javax.swing.GroupLayout(jPanel25);
         jPanel25.setLayout(jPanel25Layout);
         jPanel25Layout.setHorizontalGroup(
             jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel25Layout.createSequentialGroup()
-                .addContainerGap(324, Short.MAX_VALUE)
+                .addContainerGap(323, Short.MAX_VALUE)
                 .addComponent(homeL2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(salvarB, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(editarTGB, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(317, Short.MAX_VALUE))
+                .addContainerGap(318, Short.MAX_VALUE))
         );
         jPanel25Layout.setVerticalGroup(
             jPanel25Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1396,6 +1453,300 @@ public class ConfigUI extends javax.swing.JFrame {
         jPanel2.add(jTabbedPane3);
 
         jTabbedPane1.addTab("Notificações", jPanel2);
+
+        jPanel3.setLayout(new java.awt.GridLayout());
+
+        Listar2.setLayout(new java.awt.BorderLayout());
+
+        jPanel30.setPreferredSize(new java.awt.Dimension(50, 594));
+
+        javax.swing.GroupLayout jPanel30Layout = new javax.swing.GroupLayout(jPanel30);
+        jPanel30.setLayout(jPanel30Layout);
+        jPanel30Layout.setHorizontalGroup(
+            jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+        jPanel30Layout.setVerticalGroup(
+            jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 614, Short.MAX_VALUE)
+        );
+
+        Listar2.add(jPanel30, java.awt.BorderLayout.LINE_START);
+
+        jPanel31.setPreferredSize(new java.awt.Dimension(1038, 90));
+
+        jLabel25.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel25.setText("Grid de Monitoramento");
+
+        listarUsuarioL1.setText(".");
+
+        javax.swing.GroupLayout jPanel31Layout = new javax.swing.GroupLayout(jPanel31);
+        jPanel31.setLayout(jPanel31Layout);
+        jPanel31Layout.setHorizontalGroup(
+            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel31Layout.createSequentialGroup()
+                .addGap(181, 181, 181)
+                .addComponent(listarUsuarioL1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(535, Short.MAX_VALUE))
+        );
+        jPanel31Layout.setVerticalGroup(
+            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel31Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(listarUsuarioL1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        Listar2.add(jPanel31, java.awt.BorderLayout.PAGE_START);
+
+        jPanel32.setPreferredSize(new java.awt.Dimension(50, 594));
+
+        javax.swing.GroupLayout jPanel32Layout = new javax.swing.GroupLayout(jPanel32);
+        jPanel32.setLayout(jPanel32Layout);
+        jPanel32Layout.setHorizontalGroup(
+            jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+        jPanel32Layout.setVerticalGroup(
+            jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 614, Short.MAX_VALUE)
+        );
+
+        Listar2.add(jPanel32, java.awt.BorderLayout.LINE_END);
+
+        jPanel33.setPreferredSize(new java.awt.Dimension(1038, 90));
+
+        homeL5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        homeL5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                homeL5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeL5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeL5MouseExited(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel33Layout = new javax.swing.GroupLayout(jPanel33);
+        jPanel33.setLayout(jPanel33Layout);
+        jPanel33Layout.setHorizontalGroup(
+            jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+                .addContainerGap(513, Short.MAX_VALUE)
+                .addComponent(homeL5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(462, Short.MAX_VALUE))
+        );
+        jPanel33Layout.setVerticalGroup(
+            jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel33Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(homeL5, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        Listar2.add(jPanel33, java.awt.BorderLayout.PAGE_END);
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Modulo", "Máquina", "Configuração"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(jTable2);
+
+        Listar2.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane4.addTab("Listar", Listar2);
+
+        Remover1.setLayout(new java.awt.BorderLayout());
+
+        jLabel31.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
+        jLabel31.setText("Remover Monitoramento");
+
+        removerUsuarioL1.setText(".");
+
+        javax.swing.GroupLayout jPanel43Layout = new javax.swing.GroupLayout(jPanel43);
+        jPanel43.setLayout(jPanel43Layout);
+        jPanel43Layout.setHorizontalGroup(
+            jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel43Layout.createSequentialGroup()
+                .addGap(181, 181, 181)
+                .addComponent(removerUsuarioL1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(528, Short.MAX_VALUE))
+        );
+        jPanel43Layout.setVerticalGroup(
+            jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel43Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel43Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(removerUsuarioL1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        Remover1.add(jPanel43, java.awt.BorderLayout.PAGE_START);
+
+        jButton7.setText("Remover");
+        jButton7.setEnabled(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        homeL7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        homeL7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                homeL7MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                homeL7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                homeL7MouseExited(evt);
+            }
+        });
+
+        editarMonTB.setText("Editar");
+        editarMonTB.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                editarMonTBStateChanged(evt);
+            }
+        });
+        editarMonTB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarMonTBActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
+        jPanel44.setLayout(jPanel44Layout);
+        jPanel44Layout.setHorizontalGroup(
+            jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel44Layout.createSequentialGroup()
+                .addContainerGap(321, Short.MAX_VALUE)
+                .addComponent(homeL7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(editarMonTB, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(318, Short.MAX_VALUE))
+        );
+        jPanel44Layout.setVerticalGroup(
+            jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel44Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(homeL7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editarMonTB, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
+        );
+
+        Remover1.add(jPanel44, java.awt.BorderLayout.PAGE_END);
+
+        javax.swing.GroupLayout jPanel45Layout = new javax.swing.GroupLayout(jPanel45);
+        jPanel45.setLayout(jPanel45Layout);
+        jPanel45Layout.setHorizontalGroup(
+            jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel45Layout.setVerticalGroup(
+            jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 588, Short.MAX_VALUE)
+        );
+
+        Remover1.add(jPanel45, java.awt.BorderLayout.LINE_START);
+
+        javax.swing.GroupLayout jPanel46Layout = new javax.swing.GroupLayout(jPanel46);
+        jPanel46.setLayout(jPanel46Layout);
+        jPanel46Layout.setHorizontalGroup(
+            jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel46Layout.setVerticalGroup(
+            jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 588, Short.MAX_VALUE)
+        );
+
+        Remover1.add(jPanel46, java.awt.BorderLayout.LINE_END);
+
+        jLabel32.setText("Cadastro");
+
+        monitoramentoRemCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "." }));
+        monitoramentoRemCBX.setEnabled(false);
+        monitoramentoRemCBX.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                monitoramentoRemCBXItemStateChanged(evt);
+            }
+        });
+        monitoramentoRemCBX.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                monitoramentoRemCBXComponentHidden(evt);
+            }
+        });
+
+        parametrosTF.setEditable(false);
+        parametrosTF.setColumns(20);
+        parametrosTF.setRows(5);
+        parametrosTF.setEnabled(false);
+        jScrollPane5.setViewportView(parametrosTF);
+
+        jLabel33.setText("Parametros");
+
+        javax.swing.GroupLayout LayoutCentral4Layout = new javax.swing.GroupLayout(LayoutCentral4);
+        LayoutCentral4.setLayout(LayoutCentral4Layout);
+        LayoutCentral4Layout.setHorizontalGroup(
+            LayoutCentral4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(LayoutCentral4Layout.createSequentialGroup()
+                .addContainerGap(63, Short.MAX_VALUE)
+                .addGroup(LayoutCentral4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(LayoutCentral4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel32)
+                        .addComponent(monitoramentoRemCBX, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE))
+                    .addComponent(jLabel33, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 72, Short.MAX_VALUE))
+        );
+        LayoutCentral4Layout.setVerticalGroup(
+            LayoutCentral4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LayoutCentral4Layout.createSequentialGroup()
+                .addGap(172, 172, 172)
+                .addComponent(jLabel32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(monitoramentoRemCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(jLabel33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(120, 120, 120))
+        );
+
+        Remover1.add(LayoutCentral4, java.awt.BorderLayout.CENTER);
+
+        jTabbedPane4.addTab("Remover", Remover1);
+
+        jPanel3.add(jTabbedPane4);
+
+        jTabbedPane1.addTab("Monitoramento", jPanel3);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1759,6 +2110,74 @@ public class ConfigUI extends javax.swing.JFrame {
         localImgAltL.setText(user.getImageDir());
     }//GEN-LAST:event_jButton9ActionPerformed
 
+    private void monitoramentoRemCBXItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_monitoramentoRemCBXItemStateChanged
+        carregarParametrosTF();
+    }//GEN-LAST:event_monitoramentoRemCBXItemStateChanged
+
+    private void editarMonTBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarMonTBActionPerformed
+        if (editarMonTB.isSelected()) {
+            monitoramentoRemCBX.setEnabled(true);
+            jButton7.setEnabled(true);
+            carregarParametrosTF();
+            parametrosTF.setEnabled(true);
+        } else {
+            monitoramentoRemCBX.setEnabled(false);
+            jButton7.setEnabled(false);
+            parametrosTF.setEnabled(false);
+        }
+    }//GEN-LAST:event_editarMonTBActionPerformed
+
+    private void editarMonTBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_editarMonTBStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editarMonTBStateChanged
+
+    private void homeL7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeL7MouseExited
+        homeL7.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_homeL7MouseExited
+
+    private void homeL7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeL7MouseEntered
+        homeL7.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_homeL7MouseEntered
+
+    private void homeL7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeL7MouseClicked
+        this.dispose();
+        new MainMenuForm().setVisible(true);
+    }//GEN-LAST:event_homeL7MouseClicked
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        try {
+            JsonPersistence.removerMonitoramentoDoJson("Monitoring.json", obterUltimaLinha(parametros.get(monitoramentoRemCBX.getSelectedIndex()).toString()));
+        } catch (java.lang.NullPointerException e) {
+            System.out.println("Sem monitoramento cadastrado! " + e.getMessage());
+        }
+        parametros.clear();
+        worker1Array.clear();
+        carregarInformacoesArquivo();
+        exibirInformacoesArray();
+        carregarComponentesCBX();
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void homeL5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeL5MouseExited
+        homeL5.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+    }//GEN-LAST:event_homeL5MouseExited
+
+    private void homeL5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeL5MouseEntered
+        homeL5.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+    }//GEN-LAST:event_homeL5MouseEntered
+
+    private void homeL5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_homeL5MouseClicked
+        this.dispose();
+        new MainMenuForm().setVisible(true);
+    }//GEN-LAST:event_homeL5MouseClicked
+
+    private void editarTGBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarTGBActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editarTGBActionPerformed
+
+    private void monitoramentoRemCBXComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_monitoramentoRemCBXComponentHidden
+        // TODO add your handling code here:
+    }//GEN-LAST:event_monitoramentoRemCBXComponentHidden
+
     private void alterUser() {
         UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
         novoUsuario.usuario = usuarioAltCBX.getSelectedItem().toString();
@@ -1794,6 +2213,15 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         }
         return null;
+    }
+
+    public static String obterUltimaLinha(String texto) {
+        if (texto == null || texto.isEmpty()) {
+            return "";
+        }
+
+        String[] linhas = texto.split("\\R");
+        return linhas[linhas.length - 1];
     }
 
     /**
@@ -1852,6 +2280,8 @@ public class ConfigUI extends javax.swing.JFrame {
         javax.swing.JLabel homeLN3 = homeL3;
         javax.swing.JLabel homeLN4 = homeL4;
         javax.swing.JLabel homeLN2 = homeL2;
+        javax.swing.JLabel homeLN5 = homeL5;
+        javax.swing.JLabel homeLN7 = homeL7;
         homeLN.setBounds(homeLN.getX(), homeLN.getY(), homeLN.getWidth() - 20, homeLN.getHeight() - 20);
         Image homeLogo = this.getScaledImage("imgs/home_Icon.png", homeLN, true);
 
@@ -1863,6 +2293,8 @@ public class ConfigUI extends javax.swing.JFrame {
         setScaledImage(homeLN3, homeLogo);
         setScaledImage(homeLN4, homeLogo);
         setScaledImage(homeLN2, homeLogo);
+        setScaledImage(homeLN5, homeLogo);
+        setScaledImage(homeLN7, homeLogo);
 
         setScaledImage(removerUsuarioL, userRemoveLogo);
         setScaledImage(userL1, userLogo1);
@@ -1877,14 +2309,21 @@ public class ConfigUI extends javax.swing.JFrame {
         homeL3.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL4.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        homeL5.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        homeL7.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
 
         Font fonteTabela = new Font("Segoe UI", Font.PLAIN, 13);
         jTable1.setFont(fonteTabela);
+        jTable2.setFont(fonteTabela);
 
         jTable1.setShowGrid(true);
         jTable1.setGridColor(Color.LIGHT_GRAY);
         jTable1.setRowHeight(25);  // altura confortável para leitura
         jTable1.setIntercellSpacing(new Dimension(1, 1));  // define espaçamento entre células
+        jTable2.setShowGrid(true);
+        jTable2.setGridColor(Color.LIGHT_GRAY);
+        jTable2.setRowHeight(25);  // altura confortável para leitura
+        jTable2.setIntercellSpacing(new Dimension(1, 1));  // define espaçamento entre células
 
         DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
         esquerda.setHorizontalAlignment(SwingConstants.LEFT);
@@ -1897,6 +2336,9 @@ public class ConfigUI extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(2).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
         jTable1.getColumnModel().getColumn(3).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
         jTable1.getColumnModel().getColumn(4).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
+        jTable2.getColumnModel().getColumn(0).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
+        jTable2.getColumnModel().getColumn(1).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
+        jTable2.getColumnModel().getColumn(2).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
     }
 
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
@@ -1951,6 +2393,16 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         }
 
+        nomeArquivo = "Monitoring.json";
+        List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
+        if (listaMonitoramento == null || listaMonitoramento.isEmpty()) {
+            System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
+            return;
+        }
+        for (Worker1Persistence config : listaMonitoramento) {
+            this.addToArray(config);
+        }
+
     }
 
     private void addToArray(String imageDir, String user, String nomeCompleto, String senha, String email, Role role, String acesso) {
@@ -1958,14 +2410,17 @@ public class ConfigUI extends javax.swing.JFrame {
         this.UserArray.add(usuario);
     }
 
-    private void exibirInformacoesArray() {
+    private void addToArray(Worker1Persistence input) {
+        this.worker1Array.add(input);
+    }
 
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //22/03/1999 01:00:00
+    private void exibirInformacoesArray() {
+        DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model2 = (DefaultTableModel) jTable2.getModel();
+        model1.setRowCount(0);
 
         for (Usuario user : UserArray) {
-            model.addRow(new Object[]{
+            model1.addRow(new Object[]{
                 user.getUsuario(),
                 user.getNomeCompleto(),
                 user.getEmail(),
@@ -1973,6 +2428,159 @@ public class ConfigUI extends javax.swing.JFrame {
                 user.getAcesso()
             });
         }
+        int cont = 0;
+        for (Worker1Persistence monitoring : worker1Array) {
+            for (Worker1Persistence.SessionValues session : monitoring.session) {
+                try {
+
+                    StringBuilder config = new StringBuilder();
+                    String host;
+                    switch (monitoring.workspace.toUpperCase()) {
+                        case "HTTP":
+                            host = session.http_Endpoint;
+                            config.append("Operação: ")
+                                    .append(session.http_Operacao).append(" | ")
+                                    .append("Parametros: ")
+                                    .append(session.http_Parametros).append(" | ")
+                                    .append("Protocolo: ")
+                                    .append(session.http_Protocolo).append(" | ")
+                                    .append("URL: ")
+                                    .append(session.http_Url).append(".");
+                            break;
+
+                        case "DNS":
+                            host = session.dns_Servidor;
+                            config.append("Classe DNS: ")
+                                    .append(session.dns_Classe).append(" | ")
+                                    .append("Dominio: ")
+                                    .append(session.dns_Dominio).append(" | ")
+                                    .append("Tipo: ")
+                                    .append(session.dns_Tipo).append(".");
+                            break;
+
+                        case "FTP":
+                            host = session.ftp_Servidor;
+                            config.append("Diretório Atual: ")
+                                    .append(session.ftp_DiretorioAtual).append(" | ")
+                                    .append("Diretorio Remoto: ")
+                                    .append(session.ftp_DiretorioRemoto).append(" | ")
+                                    .append("Operação: ")
+                                    .append(session.ftp_Operacao).append(" | ")
+                                    .append("Senha: ")
+                                    .append(session.ftp_Password).append(" | ")
+                                    .append("Porta: ")
+                                    .append(session.ftp_Porta).append(" | ")
+                                    .append("Protocolo: ")
+                                    .append(session.ftp_Protocolo).append(" | ")
+                                    .append("Usuário: ")
+                                    .append(session.ftp_Usuario).append(".");
+                            break;
+
+                        case "ICMP":
+                            host = session.icmp_Servidor;
+                            config.append("Quantidade: ")
+                                    .append(session.icmp_Quantidade).append(".");
+                            break;
+
+                        case "NTP":
+                            host = session.ntp_Servidor;
+                            break;
+
+                        case "SMB":
+                            host = session.smb_Servidor;
+                            config.append("Conteúdo: ")
+                                    .append(session.smb_Conteudo).append(" | ")
+                                    .append("Diretório: ")
+                                    .append(session.smb_Diretorio).append(" | ")
+                                    .append("Dominio: ")
+                                    .append(session.smb_Dominio).append(" | ")
+                                    .append("Novo Valor: ")
+                                    .append(session.smb_NovoValor).append(" | ")
+                                    .append("Operação: ")
+                                    .append(session.smb_Operacao).append(" | ")
+                                    .append("Senha: ")
+                                    .append(session.smb_Password).append(" | ")
+                                    .append("Protocolo: ")
+                                    .append(session.smb_Protocolo).append(" | ")
+                                    .append("Usuário: ")
+                                    .append(session.smb_Usuario).append(" | ")
+                                    .append("Valor Anterior: ")
+                                    .append(session.smb_ValorAnterior).append(".");
+                            break;
+
+                        case "SMTP":
+                            host = session.smtp_Servidor;
+                            config.append("Corpo: ")
+                                    .append(session.smtp_CorpoEmail).append(" | ")
+                                    .append("Destinatário: ")
+                                    .append(session.smtp_Destinatario).append(" | ")
+                                    .append("Autenticação: ")
+                                    .append(session.smtp_IsAutenticacao).append(" | ")
+                                    .append("Relay: ")
+                                    .append(session.smtp_IsRelay).append(" | ")
+                                    .append("STARTTLS: ")
+                                    .append(session.smtp_IsStartTls).append(" | ")
+                                    .append("Senha: ")
+                                    .append(session.smtp_Password).append(" | ")
+                                    .append("Porta: ")
+                                    .append(session.smtp_Porta).append(" | ")
+                                    .append("Protocolo: ")
+                                    .append(session.smtp_Protocolo).append(" | ")
+                                    .append("Rementente: ")
+                                    .append(session.smtp_Remetente).append(" | ")
+                                    .append("Título: ")
+                                    .append(session.smtp_Titulo).append(".");
+                            break;
+
+                        case "SOCKET":
+                            host = session.socket_Servidor;
+                            config.append("Porta: ")
+                                    .append(session.socket_Porta).append(".");
+                            break;
+
+                        case "SSH":
+                            host = session.ssh_Servidor;
+                            config.append("Instrução: ")
+                                    .append(session.ssh_Instrucao).append(" | ")
+                                    .append("Porta: ")
+                                    .append(session.ssh_Porta).append(" | ")
+                                    .append("Senha: ")
+                                    .append(session.ssh_Senha).append(" | ")
+                                    .append("Usuário: ")
+                                    .append(session.ssh_Usuario).append(".");
+                            break;
+
+                        case "TELNET":
+                            host = session.telnet_Servidor;
+                            config.append("Instrução: ")
+                                    .append(session.telnet_Instrucao).append(" | ")
+                                    .append("Porta: ")
+                                    .append(session.telnet_Porta).append(".");
+                            break;
+
+                        default:
+                            System.out.println("Workspace desconhecido: " + monitoring.workspace);
+                            host = "NA";
+                            break;
+                    }
+
+                    model2.addRow(new Object[]{
+                        monitoring.workspace,
+                        host,
+                        config.toString()
+                    });
+
+                    config.append("\n").append(session.UUID);
+
+                    parametros.put(cont, config);
+                    cont++;
+                } catch (Exception ex) {
+                    System.out.println("Erro ao processar sessão para workspace " + monitoring.workspace + ": " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
+        }
+
     }
 
 
@@ -1982,9 +2590,12 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel LayoutCentral;
     private javax.swing.JPanel LayoutCentral1;
     private javax.swing.JPanel LayoutCentral3;
+    private javax.swing.JPanel LayoutCentral4;
     private javax.swing.JPanel Listar;
     private javax.swing.JPanel Listar1;
+    private javax.swing.JPanel Listar2;
     private javax.swing.JPanel Remover;
+    private javax.swing.JPanel Remover1;
     private javax.swing.JComboBox RoleAltCBX;
     private javax.swing.JButton alterarB;
     private javax.swing.JLabel alterarUsuarioL;
@@ -1994,6 +2605,7 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JTextField destinatarioTF;
     private javax.swing.JToggleButton editarAddTB;
     private javax.swing.JToggleButton editarAltTB;
+    private javax.swing.JToggleButton editarMonTB;
     private javax.swing.JToggleButton editarRemTB;
     private javax.swing.JToggleButton editarTGB;
     private javax.swing.JLabel homeL;
@@ -2001,12 +2613,15 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JLabel homeL2;
     private javax.swing.JLabel homeL3;
     private javax.swing.JLabel homeL4;
+    private javax.swing.JLabel homeL5;
+    private javax.swing.JLabel homeL7;
     private javax.swing.JTextField hostTF;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2025,7 +2640,11 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -2053,7 +2672,16 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel27;
     private javax.swing.JPanel jPanel28;
     private javax.swing.JPanel jPanel29;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel30;
+    private javax.swing.JPanel jPanel31;
+    private javax.swing.JPanel jPanel32;
+    private javax.swing.JPanel jPanel33;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel43;
+    private javax.swing.JPanel jPanel44;
+    private javax.swing.JPanel jPanel45;
+    private javax.swing.JPanel jPanel46;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -2061,23 +2689,31 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JLabel listarUsuarioL;
+    private javax.swing.JLabel listarUsuarioL1;
     private javax.swing.JLabel localImgAltL;
     private javax.swing.JLabel localImgL;
     private javax.swing.JTextField mailAddTF;
     private javax.swing.JTextField mailAltTF;
+    private javax.swing.JComboBox monitoramentoRemCBX;
     private javax.swing.JTextField nomeAddTF;
     private javax.swing.JTextField nomeTF;
     private javax.swing.JPanel painelCentral;
+    private javax.swing.JTextArea parametrosTF;
     private javax.swing.JTextField portaTF;
     private javax.swing.JComboBox protocoloTF;
     private javax.swing.JTextField remetenteTF;
     private javax.swing.JLabel removerUsuarioL;
+    private javax.swing.JLabel removerUsuarioL1;
     private javax.swing.JComboBox roleAddCBX;
     private javax.swing.JButton salvarB;
     private javax.swing.JPasswordField senhaAddPWF;

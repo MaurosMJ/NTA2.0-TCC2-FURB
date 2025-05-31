@@ -52,9 +52,8 @@ import javax.swing.text.MaskFormatter;
 public class HttpUI extends javax.swing.JFrame {
 
     private ArrayList<LogOccurrenceModule> LogArray = new ArrayList<>();
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private boolean barraPesquisaPrimeiroAcesso = true;
-    Map<String, String> parametrosMap;
+    private Map<String, String> parametrosMap;
 
     /**
      * Creates new form SocketUI
@@ -1657,7 +1656,8 @@ public class HttpUI extends javax.swing.JFrame {
         novoMonitoramento.http_Endpoint = endPointTF.getText();
         novoMonitoramento.http_Operacao = operacaoCHB.getSelectedIndex();
         novoMonitoramento.http_Parametros = parametrosTF.getText();
-        novoMonitoramento.http_Protocolo = protocoloCHB.getSelectedIndex();
+        novoMonitoramento.http_Protocolo = protocoloCHB.getSelectedItem().toString();
+        novoMonitoramento.http_Url = urlTF.getText();
 
         List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
         if (listaMonitoramento == null) {

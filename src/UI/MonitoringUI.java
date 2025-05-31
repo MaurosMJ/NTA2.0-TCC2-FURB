@@ -134,12 +134,12 @@ public final class MonitoringUI extends javax.swing.JFrame {
         jTable1.getColumnModel().getColumn(5).setCellRenderer(criarRendererComZebra(SwingConstants.RIGHT));    // ICMP Echo Request
 
         //"#EAF1F8"
-            Color cor1 = Color.decode("#F2F2F2");
-            Color cor = Color.decode("#E8E8E8");
-            jPanel3.setBackground(cor1);
-            jPanel1.setBackground(cor);
-            jPanel4.setBackground(cor1);
-            jPanel5.setBackground(cor);
+        Color cor1 = Color.decode("#F2F2F2");
+        Color cor = Color.decode("#E8E8E8");
+        jPanel3.setBackground(cor1);
+        jPanel1.setBackground(cor);
+        jPanel4.setBackground(cor1);
+        jPanel5.setBackground(cor);
     }
 
     private DefaultTableCellRenderer criarRendererComZebra(int alinhamento) {
@@ -255,15 +255,27 @@ public final class MonitoringUI extends javax.swing.JFrame {
     }
 
     private void exibirInformacoesArray() {
-
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); //22/03/1999 01:00:00
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        List<LogOcurrenceMonitoring> listaOrdenada = new ArrayList<>(LogArray);
+        listaOrdenada.sort((log1, log2) -> {
+            try {
+                Date data1 = sdf.parse(log1.getOccurrence());
+                Date data2 = sdf.parse(log2.getOccurrence());
+                return data2.compareTo(data1); // mais recente primeiro
+            } catch (ParseException e) {
+                return 0;
+            }
+        });
+
         if (dataCHB.isSelected()) {
             try {
                 Date dataInicial = sdf.parse(dataInicialFTF.getText().trim());
                 Date dataFinal = sdf.parse(dataFinalFTF.getText().trim());
-                for (LogOcurrenceMonitoring log : LogArray) {
+
+                for (LogOcurrenceMonitoring log : listaOrdenada) {
                     if (permitirLogGeracao(log.getLevel())) {
                         Date dataLog = sdf.parse(log.getOccurrence());
                         if (dataLog != null && !dataLog.before(dataInicial) && !dataLog.after(dataFinal)) {
@@ -282,7 +294,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha corretamente as datas nos campos ou verifique se o arquivo está com datas válidas!", "Data inválida", JOptionPane.WARNING_MESSAGE);
             }
         } else {
-            for (LogOcurrenceMonitoring log : LogArray) {
+            for (LogOcurrenceMonitoring log : listaOrdenada) {
                 if (permitirLogGeracao(log.getLevel())) {
                     model.addRow(new Object[]{
                         log.getOccurrence(),
@@ -876,7 +888,8 @@ public final class MonitoringUI extends javax.swing.JFrame {
     }//GEN-LAST:event_homeLMouseExited
 
     private void configLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_configLMouseClicked
-        // TODO add your handling code here:
+        this.dispose();
+        new ConfigUI().setVisible(true);
     }//GEN-LAST:event_configLMouseClicked
 
     private void configLMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_configLMouseEntered

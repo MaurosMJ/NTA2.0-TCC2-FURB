@@ -1817,7 +1817,7 @@ public class FtpUI extends javax.swing.JFrame {
         novoMonitoramento.ftp_Operacao = operacaoCHB.getSelectedIndex();
         novoMonitoramento.ftp_Password = new String(senhaPF.getPassword());
         novoMonitoramento.ftp_Porta = portaTF.getText();
-        novoMonitoramento.ftp_Protocolo = protocoloCHB.getSelectedIndex();
+        novoMonitoramento.ftp_Protocolo = protocoloCHB.getSelectedItem().toString();
         novoMonitoramento.ftp_Servidor = hostTF.getSelectedText();
         novoMonitoramento.ftp_Usuario = usuarioTF.getText();
 

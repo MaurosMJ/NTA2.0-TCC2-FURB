@@ -15,6 +15,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,8 +46,8 @@ import javax.swing.text.MaskFormatter;
 public final class MonitoringUI extends javax.swing.JFrame {
 
     private boolean barraPesquisaPrimeiroAcesso = true;
-    private boolean worker1 = false;
-    private boolean worker2 = false;
+    private boolean statusWorker1 = false;
+    private boolean statusWorker2 = false;
     private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
 
     /**
@@ -57,8 +58,19 @@ public final class MonitoringUI extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         initImg();
         inicializaFTF();
+        obterStatusWorkers();
         SwingUtilities.invokeLater(() -> carregarInformacoesArquivo());
         SwingUtilities.invokeLater(() -> exibirInformacoesArray());
+    }
+
+    void obterStatusWorkers() {
+        if (ServiceHandler.isJarRunning("NtaWorker1.jar")) {
+            this.statusWorker1 = true;
+        }
+
+        if (ServiceHandler.isJarRunning("NtaWorker2.jar")) {
+            this.statusWorker2 = true;
+        }
     }
 
     private void initImg() {
@@ -234,15 +246,20 @@ public final class MonitoringUI extends javax.swing.JFrame {
         String dataAtual = sdf.format(new Date());
         changeL.setText("Atualização: " + dataAtual);
 
-        if (isWorker1()) {
+        obterStatusWorkers();
+        if (statusWorker1) {
             worker1LL.setText("Worker1: OK");
+            worker1L.setEnabled(true);
         } else {
             worker1LL.setText("Worker1: NOK");
+            worker1L.setEnabled(false);
         }
-        if (isWorker2()) {
+        if (statusWorker2) {
             worker2LL.setText("Worker2: OK");
+            worker2L.setEnabled(true);
         } else {
             worker2LL.setText("Worker2: NOK");
+            worker2L.setEnabled(false);
         }
 
     }
@@ -348,22 +365,6 @@ public final class MonitoringUI extends javax.swing.JFrame {
                 }
             }
         }
-    }
-
-    public boolean isWorker1() {
-        return worker1;
-    }
-
-    public void setWorker1(boolean worker1) {
-        this.worker1 = worker1;
-    }
-
-    public void setWorker2(boolean worker2) {
-        this.worker2 = worker2;
-    }
-
-    public boolean isWorker2() {
-        return worker2;
     }
 
     /**
@@ -826,7 +827,7 @@ public final class MonitoringUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Data", "Máquina", "Level", "Módulo", "Log", "ICMP Echo Request"
+                "Data", "Máquina", "Level", "Módulo", "Log", "Latência"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -845,7 +846,22 @@ public final class MonitoringUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void worker2LMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker2LMouseClicked
-
+        obterStatusWorkers();
+        if (!statusWorker2) {
+            try {
+                String workingDir = System.getProperty("user.dir");
+                String scriptPath = workingDir + File.separator + "NTA_Admin" + File.separator + "NtaWorker2" + File.separator + "start" + (isWindows() ? ".bat" : ".sh");
+                ServiceHandler.startJar(scriptPath);
+                carregarBarraStatus();
+            } catch (java.lang.NullPointerException e) {
+                System.out.println("Não encontrado o Script de inicialização!" + e.getMessage());
+            }
+        } else {
+            ServiceHandler.stopJar("NtaWorker2.jar");
+            System.out.println("Encerrando Worker2.jar");
+        }
+        obterStatusWorkers();
+        carregarBarraStatus();
     }//GEN-LAST:event_worker2LMouseClicked
 
     private void worker2LMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker2LMouseEntered
@@ -858,7 +874,21 @@ public final class MonitoringUI extends javax.swing.JFrame {
     }//GEN-LAST:event_worker2LMouseExited
 
     private void worker1LMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker1LMouseClicked
-        // TODO add your handling code here:
+        obterStatusWorkers();
+        if (!statusWorker1) {
+            try {
+                String workingDir = System.getProperty("user.dir");
+                String scriptPath = workingDir + File.separator + "NTA_Admin" + File.separator + "NtaWorker1" + File.separator + "start" + (isWindows() ? ".bat" : ".sh");
+                ServiceHandler.startJar(scriptPath);
+            } catch (java.lang.NullPointerException e) {
+                System.out.println("Não encontrado o Script de inicialização!" + e.getMessage());
+            }
+        } else {
+            ServiceHandler.stopJar("NtaWorker1.jar");
+            System.out.println("Encerrando Worker1.jar");
+        }
+        obterStatusWorkers();
+        carregarBarraStatus();
     }//GEN-LAST:event_worker1LMouseClicked
 
     private void worker1LMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_worker1LMouseEntered
@@ -1028,6 +1058,10 @@ public final class MonitoringUI extends javax.swing.JFrame {
         LogArray.clear();
         carregarInformacoesArquivo();
         exibirInformacoesArray();
+    }
+
+    public static boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     /**

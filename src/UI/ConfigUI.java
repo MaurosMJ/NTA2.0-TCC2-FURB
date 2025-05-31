@@ -6,6 +6,7 @@
 package UI;
 
 import Entities.Usuario;
+import Enum.LogLevel;
 import Enum.Role;
 import Persistence.Configs.*;
 import Persistence.Configs.Worker2Persistence.Worker2Config;
@@ -46,7 +47,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Mauros
  */
 public class ConfigUI extends javax.swing.JFrame {
-
+    
     private ArrayList<Usuario> UserArray = new ArrayList<>();
     private ArrayList<Worker1Persistence> worker1Array = new ArrayList<>();
     private Map<Integer, StringBuilder> parametros = new HashMap<>();
@@ -68,10 +69,10 @@ public class ConfigUI extends javax.swing.JFrame {
         carregarComponentesCBX();
         carregarInfoUsuarioAlt();
     }
-
+    
     public void carregarComponentesCBX() {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-
+        
         for (Usuario user : UserArray) {
             model.addElement(user.getUsuario());
         }
@@ -87,7 +88,7 @@ public class ConfigUI extends javax.swing.JFrame {
         }
         monitoramentoRemCBX.setModel(model);
     }
-
+    
     private void carregarParametrosTF() {
         try {
             parametrosTF.setText(parametros.get(monitoramentoRemCBX.getSelectedIndex()).toString().replace(" | ", "\n"));
@@ -96,7 +97,7 @@ public class ConfigUI extends javax.swing.JFrame {
             System.out.println("Sem dados encotrados! " + e.getMessage());
         }
     }
-
+    
     public void carregarInfoUsuarioAlt() {
         for (Usuario users : UserArray) {
             if (users.getUsuario().equals(usuarioRemCBX.getSelectedItem().toString())) {
@@ -108,33 +109,33 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         }
     }
-
+    
     public void addUser() {
         String nomeArquivo = "Users.json";
         String workspace = "UserConfig";
-
+        
         UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
         novoUsuario.usuario = usuarioAddTF.getText();
         novoUsuario.nomeCompleto = nomeAddTF.getText();
         novoUsuario.senha = new String(senhaPWF.getPassword());
         novoUsuario.email = mailAddTF.getText();
         novoUsuario.role = Role.valueOf(roleAddCBX.getSelectedItem().toString());
-
+        
         if (ntaImgDir != null) {
             novoUsuario.imageDir = ntaImgDir;
         } else {
             novoUsuario.imageDir = "Sem imagem";
         }
         ntaImgDir = null;
-
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         novoUsuario.acesso = LocalDateTime.now().format(formatter);
-
+        
         List<UsuarioPersistence> listaUsuarios = JsonPersistence.carregarJsonAppdataUsuario(nomeArquivo);
         if (listaUsuarios == null) {
             listaUsuarios = new ArrayList<>();
         }
-
+        
         for (UsuarioPersistence up : listaUsuarios) {
             for (UsuarioPersistence.SessionValues user : up.session) {
                 if (user.usuario.equalsIgnoreCase(novoUsuario.usuario)) {
@@ -147,11 +148,11 @@ public class ConfigUI extends javax.swing.JFrame {
                 }
             }
         }
-
+        
         JsonPersistence.adicionarUsuarioAoJson(nomeArquivo, workspace, novoUsuario);
         JOptionPane.showMessageDialog(null, "Usuário adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
-
+    
     public void persistirInformacoes() {
         Worker2Config config = new Worker2Config();
         config.workspace = "1";
@@ -159,39 +160,41 @@ public class ConfigUI extends javax.swing.JFrame {
         config.session.servidor = hostTF.getText();
         config.session.porta = portaTF.getText();
         config.session.senha = new String(senhaPWF.getPassword());
-        config.session.protocolo = protocoloTF.getSelectedIndex();
+        config.session.protocolo = protocoloTF.getSelectedItem().toString();
         config.session.remetente = remetenteTF.getText();
         config.session.destinatario = destinatarioTF.getText();
         config.session.tituloMail = tituloTF.getText();
         config.session.corpoMail = corpoTF.getText();
         config.session.tls = tlsCBX.isSelected();
-
+        config.session.nivel = LogLevel.valueOf(nivelCBX.getSelectedItem().toString());
+        
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         salvarJsonEmAppData("Worker2Config" + ".json", gson.toJson(config), "/Persistence/Worker2");
     }
-
+    
     public void carregarInformacoes() {
         String nomeArquivo = "Worker2Config" + ".json";
         Worker2Persistence.Worker2Config config = JsonPersistence.carregarJsonAppdata(nomeArquivo, Worker2Persistence.Worker2Config.class, "/Persistence/Worker2");
-
+        
         if (config == null || config.session
                 == null) {
             System.out.println("Arquivo de configuração não encontrado ou inválido: " + nomeArquivo);
             return;
         }
-
+        
         try {
             portaTF.setText(config.session.porta);
             hostTF.setText(config.session.servidor);
-
+            
             senhaPWF.setText(new String(config.session.senha));
-            protocoloTF.setSelectedIndex(config.session.protocolo);
+            protocoloTF.setSelectedItem(config.session.protocolo);
+            nivelCBX.setSelectedItem(config.session.nivel.toString());
             remetenteTF.setText(config.session.remetente);
             destinatarioTF.setText(config.session.destinatario);
             tituloTF.setText(config.session.tituloMail);
             corpoTF.setText(config.session.corpoMail);
             tlsCBX.setSelected(config.session.tls);
-
+            
         } catch (Exception e) {
             System.err.println("Erro ao carregar valores do JSON para os componentes: " + e.getMessage());
             e.printStackTrace();
@@ -321,6 +324,8 @@ public class ConfigUI extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         tlsCBX = new javax.swing.JCheckBox();
         protocoloTF = new javax.swing.JComboBox();
+        jLabel7 = new javax.swing.JLabel();
+        nivelCBX = new javax.swing.JComboBox();
         jPanel3 = new javax.swing.JPanel();
         jTabbedPane4 = new javax.swing.JTabbedPane();
         Listar2 = new javax.swing.JPanel();
@@ -1239,6 +1244,11 @@ public class ConfigUI extends javax.swing.JFrame {
 
         salvarB.setText("Salvar");
         salvarB.setEnabled(false);
+        salvarB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salvarBActionPerformed(evt);
+            }
+        });
 
         homeL2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         homeL2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1374,6 +1384,11 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText("Nível minimo");
+
+        nivelCBX.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "DEBUG", "FINE", "INFO", "WARNING", "ERROR", "SEVERE" }));
+        nivelCBX.setEnabled(false);
+
         javax.swing.GroupLayout painelCentralLayout = new javax.swing.GroupLayout(painelCentral);
         painelCentral.setLayout(painelCentralLayout);
         painelCentralLayout.setHorizontalGroup(
@@ -1381,29 +1396,36 @@ public class ConfigUI extends javax.swing.JFrame {
             .addGroup(painelCentralLayout.createSequentialGroup()
                 .addContainerGap(56, Short.MAX_VALUE)
                 .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(tituloTF)
-                        .addComponent(senhaPWF, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(hostTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-                        .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(remetenteTF, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(jLabel23))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel24)
-                    .addComponent(corpoTF)
-                    .addComponent(jLabel19)
-                    .addComponent(portaTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22)
-                    .addComponent(destinatarioTF)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelCentralLayout.createSequentialGroup()
-                        .addComponent(protocoloTF, 0, 251, Short.MAX_VALUE)
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(tlsCBX)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)))
-                .addContainerGap(122, Short.MAX_VALUE))
+                    .addGroup(painelCentralLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(painelCentralLayout.createSequentialGroup()
+                        .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(nivelCBX, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(tituloTF)
+                                    .addComponent(senhaPWF, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(hostTF, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                                    .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(remetenteTF, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(jLabel23)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addGroup(painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel24)
+                            .addComponent(corpoTF)
+                            .addComponent(jLabel19)
+                            .addComponent(portaTF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel22)
+                            .addComponent(destinatarioTF)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelCentralLayout.createSequentialGroup()
+                                .addComponent(protocoloTF, 0, 251, Short.MAX_VALUE)
+                                .addGap(18, 18, Short.MAX_VALUE)
+                                .addComponent(tlsCBX)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)))
+                        .addContainerGap(122, Short.MAX_VALUE))))
         );
         painelCentralLayout.setVerticalGroup(
             painelCentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1443,7 +1465,11 @@ public class ConfigUI extends javax.swing.JFrame {
                         .addComponent(jLabel24)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(corpoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(318, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nivelCBX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(260, Short.MAX_VALUE))
         );
 
         Listar1.add(painelCentral, java.awt.BorderLayout.CENTER);
@@ -1454,7 +1480,7 @@ public class ConfigUI extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Notificações", jPanel2);
 
-        jPanel3.setLayout(new java.awt.GridLayout());
+        jPanel3.setLayout(new java.awt.GridLayout(1, 0));
 
         Listar2.setLayout(new java.awt.BorderLayout());
 
@@ -1828,39 +1854,39 @@ public class ConfigUI extends javax.swing.JFrame {
     }//GEN-LAST:event_homeL4MouseClicked
 
     private void hostTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_hostTFKeyReleased
-        persistirInformacoes();
+        
     }//GEN-LAST:event_hostTFKeyReleased
 
     private void portaTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portaTFKeyReleased
-        persistirInformacoes();
+        
     }//GEN-LAST:event_portaTFKeyReleased
 
     private void senhaPWFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaPWFKeyReleased
-        persistirInformacoes();
+        
     }//GEN-LAST:event_senhaPWFKeyReleased
 
     private void protocoloTFItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_protocoloTFItemStateChanged
-        persistirInformacoes();
+        
     }//GEN-LAST:event_protocoloTFItemStateChanged
 
     private void tlsCBXStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tlsCBXStateChanged
-        persistirInformacoes();
+        
     }//GEN-LAST:event_tlsCBXStateChanged
 
     private void remetenteTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_remetenteTFKeyReleased
-        persistirInformacoes();
+        
     }//GEN-LAST:event_remetenteTFKeyReleased
 
     private void destinatarioTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_destinatarioTFKeyReleased
-        persistirInformacoes();
+        
     }//GEN-LAST:event_destinatarioTFKeyReleased
 
     private void tituloTFMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tituloTFMouseEntered
-        persistirInformacoes();
+        
     }//GEN-LAST:event_tituloTFMouseEntered
 
     private void corpoTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_corpoTFKeyReleased
-        persistirInformacoes();
+        
     }//GEN-LAST:event_corpoTFKeyReleased
 
     private void editarTGBStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_editarTGBStateChanged
@@ -1875,6 +1901,7 @@ public class ConfigUI extends javax.swing.JFrame {
             tituloTF.setEnabled(true);
             corpoTF.setEnabled(true);
             salvarB.setEnabled(true);
+            nivelCBX.setEnabled(true);
             return;
         }
         hostTF.setEnabled(false);
@@ -1887,6 +1914,7 @@ public class ConfigUI extends javax.swing.JFrame {
         tituloTF.setEnabled(false);
         corpoTF.setEnabled(false);
         salvarB.setEnabled(false);
+        nivelCBX.setEnabled(false);
     }//GEN-LAST:event_editarTGBStateChanged
 
     private void usuarioAltCBXItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_usuarioAltCBXItemStateChanged
@@ -1900,7 +1928,7 @@ public class ConfigUI extends javax.swing.JFrame {
         if (!"Sem imagem".equals(localImgL.getText())) {
             ntaImgDir = ManipularImagem.copiarImagemParaAppData(localImgL.getText());
         }
-
+        
         if (usuarioAddTF.getText().length() > 0 && nomeAddTF.getText().length() > 0 && senhaAddPWF.getPassword().length > 0 && new String(senhaAddPWF.getPassword()).length() > 0) {
             this.addUser();
             this.UserArray.clear();
@@ -1915,17 +1943,17 @@ public class ConfigUI extends javax.swing.JFrame {
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         JFileChooser fileChooser;
-
+        
         String userHome = System.getProperty("user.home");
         String imagensPath = userHome + File.separator + "Pictures";
         File imagensDir = new File(imagensPath);
-
+        
         if (imagensDir.exists() && imagensDir.isDirectory()) {
             fileChooser = new JFileChooser(imagensDir);
         } else {
             fileChooser = new JFileChooser();
         }
-
+        
         fileChooser.setDialogTitle("Selecionar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
@@ -1934,13 +1962,13 @@ public class ConfigUI extends javax.swing.JFrame {
                 "Imagens (*.jpg, *.jpeg, *.png, *.bmp, *.gif)", "jpg", "jpeg", "png", "bmp", "gif"
         );
         fileChooser.setFileFilter(imageFilter);
-
+        
         int resultado = fileChooser.showOpenDialog(null);
-
+        
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File arquivoSelecionado = fileChooser.getSelectedFile();
             String caminhoCompleto = arquivoSelecionado.getAbsolutePath();
-
+            
             System.out.println("Imagem selecionada: " + caminhoCompleto);
             localImgAltL.setText(caminhoCompleto);
             alterarIconAddUser(caminhoCompleto, userL3);
@@ -1955,17 +1983,17 @@ public class ConfigUI extends javax.swing.JFrame {
 
     private void alterarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarBActionPerformed
         JFileChooser fileChooser;
-
+        
         String userHome = System.getProperty("user.home");
         String imagensPath = userHome + File.separator + "Pictures";
         File imagensDir = new File(imagensPath);
-
+        
         if (imagensDir.exists() && imagensDir.isDirectory()) {
             fileChooser = new JFileChooser(imagensDir);
         } else {
             fileChooser = new JFileChooser();
         }
-
+        
         fileChooser.setDialogTitle("Selecionar imagem");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
@@ -1974,13 +2002,13 @@ public class ConfigUI extends javax.swing.JFrame {
                 "Imagens (*.jpg, *.jpeg, *.png, *.bmp, *.gif)", "jpg", "jpeg", "png", "bmp", "gif"
         );
         fileChooser.setFileFilter(imageFilter);
-
+        
         int resultado = fileChooser.showOpenDialog(null);
-
+        
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File arquivoSelecionado = fileChooser.getSelectedFile();
             String caminhoCompleto = arquivoSelecionado.getAbsolutePath();
-
+            
             System.out.println("Imagem selecionada: " + caminhoCompleto);
             localImgL.setText(caminhoCompleto);
             alterarIconAddUser(caminhoCompleto, userL);
@@ -1999,7 +2027,7 @@ public class ConfigUI extends javax.swing.JFrame {
     }//GEN-LAST:event_editarAddTBStateChanged
 
     private void editarAddTBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarAddTBActionPerformed
-
+        
         if (editarAddTB.isSelected()) {
             alterarB.setEnabled(true);
             jButton2.setEnabled(true);
@@ -2031,7 +2059,7 @@ public class ConfigUI extends javax.swing.JFrame {
             usuarioRemCBX.setEnabled(true);
             jButton5.setEnabled(true);
             alterarIconAddUser(this.pesquisarUsuarioPorNome(usuarioRemCBX.getSelectedItem().toString()).getImageDir(), userL1);
-
+            
         } else {
             usuarioRemCBX.setEnabled(false);
             jButton5.setEnabled(false);
@@ -2064,7 +2092,7 @@ public class ConfigUI extends javax.swing.JFrame {
             jButton11.setEnabled(false);
             jButton12.setEnabled(false);
             jButton9.setEnabled(false);
-
+            
         }
     }//GEN-LAST:event_editarAltTBActionPerformed
 
@@ -2083,11 +2111,11 @@ public class ConfigUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-
+        
         if (!"Sem imagem".equals(localImgAltL.getText())) {
             ntaImgDir = ManipularImagem.copiarImagemParaAppData(localImgAltL.getText());
         }
-
+        
         if (usuarioAltCBX.getSelectedItem().toString().length() > 0 && nomeTF.getText().length() > 0 && senhaAltPWF.getPassword().length > 0 && mailAltTF.getText().length() > 0) {
             this.alterUser();
             this.UserArray.clear();
@@ -2098,13 +2126,13 @@ public class ConfigUI extends javax.swing.JFrame {
             return;
         }
         JOptionPane.showMessageDialog(null, "Campos obrigatórios não preenchidos!", "Aviso", JOptionPane.WARNING_MESSAGE);
-
+        
         this.UserArray.clear();
         this.carregarInformacoesArquivo();
         this.carregarInformacoes();
         this.exibirInformacoesArray();
         carregarComponentesCBX();
-
+        
         Usuario user = this.pesquisarUsuarioPorNome(usuarioAltCBX.getSelectedItem().toString());
         alterarIconAddUser(user.getImageDir(), userL3);
         localImgAltL.setText(user.getImageDir());
@@ -2178,6 +2206,11 @@ public class ConfigUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_monitoramentoRemCBXComponentHidden
 
+    private void salvarBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarBActionPerformed
+        persistirInformacoes();
+        JOptionPane.showMessageDialog(null, "Configuração salva! Será necessário reiniciar o Worker2 para o serviço atualizar as configurações.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_salvarBActionPerformed
+    
     private void alterUser() {
         UsuarioPersistence.SessionValues novoUsuario = new UsuarioPersistence.SessionValues();
         novoUsuario.usuario = usuarioAltCBX.getSelectedItem().toString();
@@ -2185,27 +2218,27 @@ public class ConfigUI extends javax.swing.JFrame {
         novoUsuario.senha = new String(senhaAltPWF.getPassword());
         novoUsuario.email = mailAltTF.getText();
         novoUsuario.role = Role.valueOf(RoleAltCBX.getSelectedItem().toString());
-
+        
         if (ntaImgDir != null) {
             novoUsuario.imageDir = ntaImgDir;
         } else {
             novoUsuario.imageDir = "Sem imagem";
         }
         ntaImgDir = null;
-
+        
         alterarUsuarioNoJson("Users.json", usuarioAltCBX.getSelectedItem().toString(), novoUsuario);
     }
-
+    
     private void alterarIconAddUser(String local, javax.swing.JLabel lbl) {
-
+        
         if ("Sem imagem".equals(local)) {
             local = getClass().getClassLoader().getResource("imgs/userIcon.png").getPath();
         }
-
+        
         Image alterarUsuarioLogo = this.getScaledImage(local, lbl);
         setScaledImage(lbl, alterarUsuarioLogo);
     }
-
+    
     private Usuario pesquisarUsuarioPorNome(String input) {
         for (Usuario user : UserArray) {
             if (user.getUsuario().toLowerCase().equals(input.toLowerCase())) {
@@ -2214,12 +2247,12 @@ public class ConfigUI extends javax.swing.JFrame {
         }
         return null;
     }
-
+    
     public static String obterUltimaLinha(String texto) {
         if (texto == null || texto.isEmpty()) {
             return "";
         }
-
+        
         String[] linhas = texto.split("\\R");
         return linhas[linhas.length - 1];
     }
@@ -2238,7 +2271,7 @@ public class ConfigUI extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -2263,7 +2296,7 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         });
     }
-
+    
     private void initImg() {
         //ScaledImages
         Image userLogo = this.getScaledImage("imgs/userIcon.png", userL, true);
@@ -2272,9 +2305,9 @@ public class ConfigUI extends javax.swing.JFrame {
         Image userRemoveLogo = this.getScaledImage("imgs/userRemoveIcon.png", removerUsuarioL, true);
         Image alterarUsuarioLogo = this.getScaledImage("imgs/userEditIcon.png", alterarUsuarioL, true);
         Image listarUsuarioLogo = this.getScaledImage("imgs/userListIcon.png", listarUsuarioL, true);
-
+        
         Image configEmailLogo = this.getScaledImage("imgs/notificationWorker.png", configEmailL, true);
-
+        
         javax.swing.JLabel homeLN = homeL;
         javax.swing.JLabel homeLN1 = homeL1;
         javax.swing.JLabel homeLN3 = homeL3;
@@ -2295,15 +2328,15 @@ public class ConfigUI extends javax.swing.JFrame {
         setScaledImage(homeLN2, homeLogo);
         setScaledImage(homeLN5, homeLogo);
         setScaledImage(homeLN7, homeLogo);
-
+        
         setScaledImage(removerUsuarioL, userRemoveLogo);
         setScaledImage(userL1, userLogo1);
         setScaledImage(alterarUsuarioL, alterarUsuarioLogo);
         setScaledImage(userL3, userLogo1);
         setScaledImage(listarUsuarioL, listarUsuarioLogo);
-
+        
         setScaledImage(configEmailL, configEmailLogo);
-
+        
         homeL.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL3.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
@@ -2311,11 +2344,11 @@ public class ConfigUI extends javax.swing.JFrame {
         homeL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL5.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         homeL7.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
-
+        
         Font fonteTabela = new Font("Segoe UI", Font.PLAIN, 13);
         jTable1.setFont(fonteTabela);
         jTable2.setFont(fonteTabela);
-
+        
         jTable1.setShowGrid(true);
         jTable1.setGridColor(Color.LIGHT_GRAY);
         jTable1.setRowHeight(25);  // altura confortável para leitura
@@ -2327,10 +2360,10 @@ public class ConfigUI extends javax.swing.JFrame {
 
         DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
         esquerda.setHorizontalAlignment(SwingConstants.LEFT);
-
+        
         DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
         centro.setHorizontalAlignment(SwingConstants.CENTER);
-
+        
         jTable1.getColumnModel().getColumn(0).setCellRenderer(criarRendererComZebra(SwingConstants.CENTER));
         jTable1.getColumnModel().getColumn(1).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
         jTable1.getColumnModel().getColumn(2).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
@@ -2340,11 +2373,11 @@ public class ConfigUI extends javax.swing.JFrame {
         jTable2.getColumnModel().getColumn(1).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
         jTable2.getColumnModel().getColumn(2).setCellRenderer(criarRendererComZebra(SwingConstants.LEFT));
     }
-
+    
     private Image getScaledImage(String directory, javax.swing.JLabel label, boolean scaled) {
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(directory));
         Image image = icon.getImage();
-
+        
         if (scaled) {
             Image ScaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
             return ScaledImage;
@@ -2352,19 +2385,19 @@ public class ConfigUI extends javax.swing.JFrame {
             return image;
         }
     }
-
+    
     private Image getScaledImage(String directory, javax.swing.JLabel label) {
         ImageIcon icon = new ImageIcon(directory);
         Image image = icon.getImage();
-
+        
         Image ScaledImage = image.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
         return ScaledImage;
     }
-
+    
     private void setScaledImage(javax.swing.JLabel label, Image image) {
         label.setIcon(new javax.swing.ImageIcon(image));
     }
-
+    
     private DefaultTableCellRenderer criarRendererComZebra(int alinhamento) {
         return new DefaultTableCellRenderer() {
             @Override
@@ -2379,7 +2412,7 @@ public class ConfigUI extends javax.swing.JFrame {
             }
         };
     }
-
+    
     public void carregarInformacoesArquivo() {
         String nomeArquivo = "Users.json";
         List<UsuarioPersistence> listaUsuarios = JsonPersistence.carregarJsonAppdataUsuario(nomeArquivo);
@@ -2392,7 +2425,7 @@ public class ConfigUI extends javax.swing.JFrame {
                 this.addToArray(entry.imageDir, entry.usuario, entry.nomeCompleto, entry.senha, entry.email, entry.role, entry.acesso);
             }
         }
-
+        
         nomeArquivo = "Monitoring.json";
         List<Worker1Persistence> listaMonitoramento = JsonPersistence.carregarJsonAppdataMonitoramento(nomeArquivo);
         if (listaMonitoramento == null || listaMonitoramento.isEmpty()) {
@@ -2402,23 +2435,23 @@ public class ConfigUI extends javax.swing.JFrame {
         for (Worker1Persistence config : listaMonitoramento) {
             this.addToArray(config);
         }
-
+        
     }
-
+    
     private void addToArray(String imageDir, String user, String nomeCompleto, String senha, String email, Role role, String acesso) {
         Usuario usuario = new Usuario(imageDir, user, nomeCompleto, senha, email, role, acesso);
         this.UserArray.add(usuario);
     }
-
+    
     private void addToArray(Worker1Persistence input) {
         this.worker1Array.add(input);
     }
-
+    
     private void exibirInformacoesArray() {
         DefaultTableModel model1 = (DefaultTableModel) jTable1.getModel();
         DefaultTableModel model2 = (DefaultTableModel) jTable2.getModel();
         model1.setRowCount(0);
-
+        
         for (Usuario user : UserArray) {
             model1.addRow(new Object[]{
                 user.getUsuario(),
@@ -2432,7 +2465,7 @@ public class ConfigUI extends javax.swing.JFrame {
         for (Worker1Persistence monitoring : worker1Array) {
             for (Worker1Persistence.SessionValues session : monitoring.session) {
                 try {
-
+                    
                     StringBuilder config = new StringBuilder();
                     String host;
                     switch (monitoring.workspace.toUpperCase()) {
@@ -2447,7 +2480,7 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("URL: ")
                                     .append(session.http_Url).append(".");
                             break;
-
+                        
                         case "DNS":
                             host = session.dns_Servidor;
                             config.append("Classe DNS: ")
@@ -2457,7 +2490,7 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("Tipo: ")
                                     .append(session.dns_Tipo).append(".");
                             break;
-
+                        
                         case "FTP":
                             host = session.ftp_Servidor;
                             config.append("Diretório Atual: ")
@@ -2475,17 +2508,17 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("Usuário: ")
                                     .append(session.ftp_Usuario).append(".");
                             break;
-
+                        
                         case "ICMP":
                             host = session.icmp_Servidor;
                             config.append("Quantidade: ")
                                     .append(session.icmp_Quantidade).append(".");
                             break;
-
+                        
                         case "NTP":
                             host = session.ntp_Servidor;
                             break;
-
+                        
                         case "SMB":
                             host = session.smb_Servidor;
                             config.append("Conteúdo: ")
@@ -2507,7 +2540,7 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("Valor Anterior: ")
                                     .append(session.smb_ValorAnterior).append(".");
                             break;
-
+                        
                         case "SMTP":
                             host = session.smtp_Servidor;
                             config.append("Corpo: ")
@@ -2531,13 +2564,13 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("Título: ")
                                     .append(session.smtp_Titulo).append(".");
                             break;
-
+                        
                         case "SOCKET":
                             host = session.socket_Servidor;
                             config.append("Porta: ")
                                     .append(session.socket_Porta).append(".");
                             break;
-
+                        
                         case "SSH":
                             host = session.ssh_Servidor;
                             config.append("Instrução: ")
@@ -2549,7 +2582,7 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("Usuário: ")
                                     .append(session.ssh_Usuario).append(".");
                             break;
-
+                        
                         case "TELNET":
                             host = session.telnet_Servidor;
                             config.append("Instrução: ")
@@ -2557,21 +2590,21 @@ public class ConfigUI extends javax.swing.JFrame {
                                     .append("Porta: ")
                                     .append(session.telnet_Porta).append(".");
                             break;
-
+                        
                         default:
                             System.out.println("Workspace desconhecido: " + monitoring.workspace);
                             host = "NA";
                             break;
                     }
-
+                    
                     model2.addRow(new Object[]{
                         monitoring.workspace,
                         host,
                         config.toString()
                     });
-
+                    
                     config.append("\n").append(session.UUID);
-
+                    
                     parametros.put(cont, config);
                     cont++;
                 } catch (Exception ex) {
@@ -2580,7 +2613,7 @@ public class ConfigUI extends javax.swing.JFrame {
                 }
             }
         }
-
+        
     }
 
 
@@ -2648,6 +2681,7 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -2705,6 +2739,7 @@ public class ConfigUI extends javax.swing.JFrame {
     private javax.swing.JTextField mailAddTF;
     private javax.swing.JTextField mailAltTF;
     private javax.swing.JComboBox monitoramentoRemCBX;
+    private javax.swing.JComboBox nivelCBX;
     private javax.swing.JTextField nomeAddTF;
     private javax.swing.JTextField nomeTF;
     private javax.swing.JPanel painelCentral;

@@ -7,6 +7,7 @@ package UI;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
+import java.util.Locale;
 import javax.swing.UIManager;
 
 /**
@@ -54,6 +55,7 @@ public class JanelaValidacao extends javax.swing.JFrame {
     public static void main(String args[]) {
         // Define diretamente o FlatLaf como Look and Feel
         try {
+            Locale.setDefault(new Locale("pt", "BR"));
             //"#EAF1F8"
             Color cor = Color.decode("#F2F2F2");
             UIManager.put("Panel.background", cor);

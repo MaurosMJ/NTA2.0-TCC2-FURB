@@ -568,7 +568,7 @@
                 <Column editable="false" title="Level" type="java.lang.Object"/>
                 <Column editable="false" title="M&#xf3;dulo" type="java.lang.Object"/>
                 <Column editable="false" title="Log" type="java.lang.Object"/>
-                <Column editable="false" title="ICMP Echo Request" type="java.lang.Object"/>
+                <Column editable="false" title="Lat&#xea;ncia" type="java.lang.Object"/>
               </Table>
             </Property>
           </Properties>

@@ -15,6 +15,7 @@ import Persistence.JsonPersistence;
 import Persistence.Logs.LogPersistence;
 import UserConfig.UserProperties;
 import Utils.RoundedBorder;
+import Utils.ServiceHandler;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,6 +35,8 @@ public class MainMenuForm extends javax.swing.JFrame {
 
     private ArrayList<LogOcurrenceMonitoring> LogArray = new ArrayList<>();
     private ArrayList<Usuario> UserArray = new ArrayList<>();
+    private boolean statusWk1 = false;
+    private boolean statusWk2 = false;
 
     /**
      * Creates new form MainApplication
@@ -48,6 +51,7 @@ public class MainMenuForm extends javax.swing.JFrame {
 
         initComponents();
         setLayout(null);
+        obterStatusWorkers();
         this.initImg();
         exibirLogoNTA();
         carregarInformacoesArquivoLog();
@@ -1138,11 +1142,19 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_dnsLogoLMouseEntered
 
     private void workerL1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL1MouseEntered
-        // TODO add your handling code here:
+        workerL1.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+
+        if (statusWk1) {
+            setTextInfoButton("O Worker1 está ativado!");
+        } else {
+            setTextInfoButton("O Worker1 está desativado! Ative ele no monitoramento.");
+        }
+
     }//GEN-LAST:event_workerL1MouseEntered
 
     private void workerL1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL1MouseExited
-        // TODO add your handling code here:
+        workerL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
     }//GEN-LAST:event_workerL1MouseExited
 
     private void workerTF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workerTF1ActionPerformed
@@ -1150,11 +1162,19 @@ public class MainMenuForm extends javax.swing.JFrame {
     }//GEN-LAST:event_workerTF1ActionPerformed
 
     private void workerL2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL2MouseEntered
-        // TODO add your handling code here:
+        workerL2.setBorder(new RoundedBorder(Color.BLUE, 3, 20));
+
+        if (statusWk2) {
+            setTextInfoButton("O Worker2 está ativado!");
+        } else {
+            setTextInfoButton("O Worker2 está desativado! Ative ele no monitoramento.");
+        }
+
     }//GEN-LAST:event_workerL2MouseEntered
 
     private void workerL2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_workerL2MouseExited
-        // TODO add your handling code here:
+        workerL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
+        exibirLogoNTA();
     }//GEN-LAST:event_workerL2MouseExited
 
     private void workerTF2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workerTF2ActionPerformed
@@ -1290,18 +1310,28 @@ public class MainMenuForm extends javax.swing.JFrame {
         });
     }
 
+    void obterStatusWorkers() {
+        if (ServiceHandler.isJarRunning("NtaWorker1.jar")) {
+            this.statusWk1 = true;
+        }
+
+        if (ServiceHandler.isJarRunning("NtaWorker2.jar")) {
+            this.statusWk2 = true;
+        }
+    }
+
     private void initImg() {
         //ScaledImages
-        Image infoButtonLogo = this.getScaledImage("imgs/info_button.png", InfoL, true);
-        Image httpLogo = this.getScaledImage("imgs/http_Icon.png", httpLogoL, true);
-        Image smbLogo = this.getScaledImage("imgs/smb_Icon.png", smbLogoL, true);
+        Image infoButtonLogo = this.getScaledImage("imgs/info_Button.png", InfoL, true);
+        Image httpLogo = this.getScaledImage("imgs/http_icon.png", httpLogoL, true);
+        Image smbLogo = this.getScaledImage("imgs/smb_icon.png", smbLogoL, true);
         Image socketLogo = this.getScaledImage("imgs/socket_icon.png", socketLogoL, true);
         Image mailLogo = this.getScaledImage("imgs/mail_icon.png", mailLogoL, true);
         Image sysAdminLogo = this.getScaledImage("imgs/sysadmin_icon.png", admSistemaLogoL, true);
         Image monitoramentoLogo = this.getScaledImage("imgs/remote_monitoring.png", monitoramentoLogoL, true);
-        Image ftpLogo = this.getScaledImage("imgs/ftp_Icon.png", ftpLogoL, true);
-        Image telnetLogo = this.getScaledImage("imgs/telnet_Icon.png", telnetLogoL, true);
-        Image sshLogo = this.getScaledImage("imgs/ssh_Icon.png", sshLogoL, true);
+        Image ftpLogo = this.getScaledImage("imgs/ftp_icon.png", ftpLogoL, true);
+        Image telnetLogo = this.getScaledImage("imgs/telnet_icon.png", telnetLogoL, true);
+        Image sshLogo = this.getScaledImage("imgs/ssh_icon.png", sshLogoL, true);
 
         Image warningLogo = this.getScaledImage("imgs/warning_static.png", warningLogoL, true);
         Image errorLogo = this.getScaledImage("imgs/error_static.png", errorLogoL, true);
@@ -1310,6 +1340,7 @@ public class MainMenuForm extends javax.swing.JFrame {
         Image icmpLogo = this.getScaledImage("imgs/ICMP_Icon.png", icmpLogoL, true);
         Image ntpLogo = this.getScaledImage("imgs/ntp_Icon.png", ntpLogoL, true);
         Image dnsLogo = this.getScaledImage("imgs/dns_Icon.png", dnsLogoL, true);
+
         Image worker1Logo = this.getScaledImage("imgs/Worker.png", workerLogoL1, true);
         Image worker2Logo = this.getScaledImage("imgs/notificationWorker.png", workerLogoL2, true);
 
@@ -1355,13 +1386,27 @@ public class MainMenuForm extends javax.swing.JFrame {
         workerL1.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         workerL2.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 1, 20));
         fundoLogin.setBorder(new RoundedBorder(Color.LIGHT_GRAY, 2, 20));
-        
 
         Color cor = Color.decode("#E8E8E8");
         statusPanel.setBackground(cor);
         infoButtonPanel.setBackground(cor);
-        workerLogoL1.setEnabled(false);
-        workerLogoL2.setEnabled(false);
+
+        if (statusWk1) {
+            workerLogoL1.setEnabled(true);
+            workerTF1.setText("OK");
+        } else {
+            workerLogoL1.setEnabled(false);
+            workerTF1.setText("Nok");
+        }
+
+        if (statusWk2) {
+            workerLogoL2.setEnabled(true);
+            workerTF2.setText("OK");
+        } else {
+            workerLogoL2.setEnabled(false);
+            workerTF2.setText("Nok");
+        }
+
         Image userLogo;
         if ("Sem imagem".equals(UserProperties.getUsuarioLogado().getImageDir())) {
             userLogo = this.getScaledImage("imgs/userIcon.png", userImgL, true);

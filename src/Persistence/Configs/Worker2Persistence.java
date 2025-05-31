@@ -5,6 +5,8 @@
  */
 package Persistence.Configs;
 
+import Enum.LogLevel;
+
 /**
  *
  * @author Mauros
@@ -24,11 +26,12 @@ public class Worker2Persistence {
             public String porta;
             public String senha;
             public boolean tls;
-            public int protocolo;
+            public String protocolo;
             public String remetente;
             public String destinatario;
             public String tituloMail;
             public String corpoMail;
+            public LogLevel nivel;
 
         }
 
